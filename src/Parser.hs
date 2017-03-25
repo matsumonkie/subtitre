@@ -1,33 +1,34 @@
 module Parser (
-  subtitlesParser
+  subtitles
 ) where
 
 import Type
-import qualified Text.Parsec as Parsec
+import Text.Parsec
+import Text.Parsec.Combinator
 import qualified Data.Text as T
 
-subtitlesParser :: Parsec.Parsec String () [SubtitleCtx]
-subtitlesParser = do
-  subtitles <- Parsec.many subtitleParser
+subtitles :: Parsec String () [SubtitleCtx]
+subtitles = do
+  subtitles <- subtitleCtx `sepBy` endOfLine
+  eof
   return subtitles
 
-subtitleParser :: Parsec.Parsec String () SubtitleCtx
-subtitleParser = do
-  seq <- read <$> Parsec.many1 Parsec.digit
-  Parsec.newline
-  timingCtx <- timingParser
-  Parsec.newline
-  sentences <- Parsec.manyTill sentenceParser Parsec.newline
-  return $ SubtitleCtx seq timingCtx sentences
+subtitleCtx :: Parsec String () SubtitleCtx
+subtitleCtx = do
+  sequence <- read <$> many1 digit
+  newline
+  timingCtx <- timingCtx
+  newline
+  lines <- sentence `endBy` endOfLine
+  return $ SubtitleCtx sequence timingCtx lines
 
-sentenceParser :: Parsec.Parsec String () T.Text
-sentenceParser = do
-  sentence <- Parsec.manyTill Parsec.anyChar Parsec.newline
+sentence :: Parsec String () T.Text
+sentence = do
+  sentence <- many1 (noneOf "\n\r")
   return $ T.pack sentence
 
--- 00:00:26,722 --> 00:00:29,023
-timingParser :: Parsec.Parsec String () TimingCtx
-timingParser = do
+timingCtx :: Parsec String () TimingCtx
+timingCtx = do
   bhour <- twoDigits
   colon
   bmin <- twoDigits
@@ -45,8 +46,8 @@ timingParser = do
   emsec <- threeDigits
   return $ TimingCtx (Timing bhour bmin bsec bmsec) (Timing ehour emin esec emsec)
   where
-    twoDigits = read <$> Parsec.count 2 Parsec.digit
-    threeDigits = read <$> Parsec.count 3 Parsec.digit
-    colon = Parsec.char ':'
-    comma = Parsec.char ','
-    separator = Parsec.string " --> "
+    twoDigits = read <$> count 2 digit
+    threeDigits = read <$> count 3 digit
+    colon = char ':'
+    comma = char ','
+    separator = (string " --> " <?> "wrong timingCtx separator")

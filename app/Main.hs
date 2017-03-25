@@ -21,6 +21,6 @@ main = do
     Right subCtx -> pPrint subCtx
     Left error -> pPrint error
   where
-    parse = Parsec.parse subtitlesParser ""
+    parse = Parsec.parse subtitles "game of thrones"
 
 --main = undefined
