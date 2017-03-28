@@ -1,11 +1,14 @@
 module Parser (
-  subtitles
+  parseSubtitles
 ) where
 
 import Type
-import Text.Parsec
 import Text.Parsec.Combinator
 import qualified Data.Text as T
+import Text.Parsec
+
+parseSubtitles :: String -> Either ParseError [SubtitleCtx]
+parseSubtitles = parse subtitles "game of thrones"
 
 subtitles :: Parsec String () [SubtitleCtx]
 subtitles = do
