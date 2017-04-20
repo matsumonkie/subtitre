@@ -1,6 +1,9 @@
 module Lib
-    ( someFunc
-    ) where
+( someFunc
+, parseSentenceStructure
+) where
+
+import SentenceStructParser
 
 someFunc :: IO ()
 someFunc = putStrLn "someFunc"

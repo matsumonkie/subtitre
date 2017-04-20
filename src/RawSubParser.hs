@@ -1,4 +1,8 @@
-module Parser (
+{-
+  Take an .srt file as an input and deserialize it
+-}
+
+module RawSubParser (
   parseSubtitles
 ) where
 
@@ -7,30 +11,29 @@ import Text.Parsec.Combinator
 import qualified Data.Text as T
 import Text.Parsec
 
-parseSubtitles :: String -> Either ParseError [SubtitleCtx]
+parseSubtitles :: T.Text -> Either ParseError [RawSubCtx]
 parseSubtitles = parse subtitles "game of thrones"
 
-subtitles :: Parsec String () [SubtitleCtx]
+subtitles :: Parsec T.Text () [RawSubCtx]
 subtitles = do
   subtitles <- subtitleCtx `sepBy` endOfLine
   eof
   return subtitles
 
-subtitleCtx :: Parsec String () SubtitleCtx
+subtitleCtx :: Parsec T.Text () RawSubCtx
 subtitleCtx = do
   sequence <- read <$> many1 digit
   newline
   timingCtx <- timingCtx
   newline
   lines <- sentence `endBy` endOfLine
-  return $ SubtitleCtx sequence timingCtx lines
+  return $ SubCtx sequence timingCtx lines
 
-sentence :: Parsec String () T.Text
+sentence :: Parsec T.Text () T.Text
 sentence = do
-  sentence <- many1 (noneOf "\n\r")
-  return $ T.pack sentence
+  T.pack <$> many1 (noneOf "\n\r")
 
-timingCtx :: Parsec String () TimingCtx
+timingCtx :: Parsec T.Text () TimingCtx
 timingCtx = do
   bhour <- twoDigits
   colon

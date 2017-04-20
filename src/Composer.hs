@@ -1,3 +1,7 @@
+{-
+  Serialize RawSub
+-}
+
 {-# LANGUAGE OverloadedStrings #-}
 
 module Composer (
@@ -7,12 +11,12 @@ module Composer (
 import Type
 import qualified Data.Text as T
 
-composeSubtitles :: [SubtitleCtx] -> T.Text
+composeSubtitles :: [RawSubCtx] -> T.Text
 composeSubtitles subCtxts =
   T.intercalate "\n\n" $ map composeSub subCtxts
 
-composeSub :: SubtitleCtx -> T.Text
-composeSub (SubtitleCtx sequence timingCtx sentences) =
+composeSub :: RawSubCtx -> T.Text
+composeSub (SubCtx sequence timingCtx sentences) =
   T.intercalate "\n" [seq, composedTimingCtx, composedSentences]
   where
     seq = T.pack $ show sequence
