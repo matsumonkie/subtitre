@@ -15,8 +15,9 @@ module Type (
 , Sentence
 , SubCtx(..)
 , RawSubCtx
-, RichSentence
-, RichWord(..)
+, SentenceInfos
+, WordInfos(..)
+, RichSubCtx(..)
 ) where
 
 import qualified Data.Text as T
@@ -32,19 +33,19 @@ type Second = Int
 type MSecond = Int
 
 -- 00:00:26,722 --> 00:00:29,023
-data TimingCtx = TimingCtx Timing Timing deriving Show
-data Timing = Timing Hour Minute Second MSecond deriving Show
-data SubCtx a = SubCtx Sequence TimingCtx a deriving Show
+data TimingCtx = TimingCtx Timing Timing deriving (Show, Eq)
+data Timing = Timing Hour Minute Second MSecond deriving (Show, Eq)
+data SubCtx a = SubCtx Sequence TimingCtx a deriving (Show, Eq)
 type RawSubCtx  = SubCtx [Sentence]
-type RichSubCtx = SubCtx [RichSentence]
+type RichSubCtx = SubCtx [(Sentence, SentenceInfos)]
 
-type RichSentence = [RichWord]
-type RichWord = (Word, Lemma, Tag)
+type SentenceInfos = [WordInfos]
+type WordInfos = (Word, Lemma, Tag)
 type Word = T.Text
 type Lemma = T.Text
 type Tag = T.Text
 
-p :: RichSentence
+p :: SentenceInfos
 p = [ ("the", "", "")
     , ("butler", "", "")
     , ("looks up", "", "")
@@ -52,7 +53,7 @@ p = [ ("the", "", "")
     , ("higness", "", "")
     ]
 
-instance ToJSON RichWord where
+instance ToJSON WordInfos where
   toJSON (word, lemma, tag) =
     object [ "word"  .= word
            , "type"  .= lemma

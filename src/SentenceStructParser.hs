@@ -1,8 +1,8 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 {-
   Take a structured sentence and deserialize it
 -}
-
-{-# LANGUAGE OverloadedStrings #-}
 
 module SentenceStructParser (
   parseSentenceStructure
@@ -14,16 +14,16 @@ import qualified Data.Text as T
 import Data.Functor
 import Text.Parsec
 
-parseSentenceStructure :: T.Text -> Either ParseError RichSentence
+parseSentenceStructure :: T.Text -> Either ParseError SentenceInfos
 parseSentenceStructure = parse sentence "game of thrones"
 
-sentence :: Parsec T.Text () RichSentence
+sentence :: Parsec T.Text () SentenceInfos
 sentence = do
   words <- wordCtx `sepBy` endOfLine
   eof
   return words
 
-wordCtx :: Parsec T.Text () RichWord
+wordCtx :: Parsec T.Text () WordInfos
 wordCtx = do
   lemma <- word
   space
