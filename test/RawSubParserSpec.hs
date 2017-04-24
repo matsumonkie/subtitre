@@ -18,11 +18,11 @@ spec = do
   describe "RawSubParserSpec" $ do
     describe "parse" $ do
 
-      it "end without newline" $ do
-        parseSubtitles arg `shouldBe` Right [res ["(Hello)"]]
-
       it "end with newline" $ do
         parseSubtitles (arg <> "\n") `shouldBe` Right [res ["(Hello)"]]
+
+      it "end without newline" $ do
+        parseSubtitles arg `shouldBe` Right [res ["(Hello)"]]
 
       it "multiple arg" $ do
         parseSubtitles (arg <> "\nworld") `shouldBe` Right [res ["(Hello)", "world"]]

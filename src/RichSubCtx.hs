@@ -25,12 +25,7 @@ createRichSubCtx (SubCtx sequence timingCtx sentences) = do
   let structuredSentence = structuredSentences !! 0
   let sentenceInfos = parseSentenceStructure structuredSentence :: Either ParseError SentenceInfos
   let ru = trace (show $ sentenceInfos) res sentenceInfos
-  {-
-( -LRB-
-line NN
-1 CD
-) -RRB-
-  -}
+
   case ru of
     Right foo -> return $ SubCtx sequence timingCtx [foo]
     Left _ -> return $ SubCtx sequence timingCtx []
@@ -47,7 +42,8 @@ runSpacy sentence = do
   T.pack <$> spacy
   where
     spacy :: IO String
-    spacy = readProcess "python" ["example.py", "-s", T.unpack sentence] []
+--    spacy = readProcess "python" ["example.py", "-s", T.unpack sentence] []
+    spacy = readProcess "./client.py" ["-s", T.unpack sentence] []
 
 serializeRichSubCtx :: RichSubCtx -> T.Text
 serializeRichSubCtx richSubCtx =
