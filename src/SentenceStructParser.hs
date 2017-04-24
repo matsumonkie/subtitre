@@ -9,7 +9,6 @@ module SentenceStructParser (
 ) where
 
 import Type
-import Text.Parsec.Combinator
 import qualified Data.Text as T
 import Data.Functor
 import Text.Parsec
@@ -19,15 +18,15 @@ parseSentenceStructure = parse sentence "game of thrones"
 
 sentence :: Parsec T.Text () SentenceInfos
 sentence = do
-  words <- wordCtx `sepBy` endOfLine
-  eof
+  words <- many1 (wordCtx <* optional endOfLine) <?> "A"
+  eof <?> "C"
   return words
 
 wordCtx :: Parsec T.Text () WordInfos
 wordCtx = do
-  lemma <- word
-  space
-  tag <- word
+  lemma <- word <?> "D"
+  space <?> "E"
+  tag <- word <?> "F"
   return ("", lemma, tag)
   where
-    word = T.pack <$> many1 (noneOf "\n\r ")
+    word = (T.pack <$> many1 (noneOf "\n\r ")) <?> "G"

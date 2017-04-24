@@ -58,3 +58,15 @@ instance ToJSON WordInfos where
     object [ "word"  .= word
            , "type"  .= lemma
            ]
+
+instance ToJSON TimingCtx where
+  toJSON (TimingCtx (Timing bh bm bs bms) (Timing h m s ms)) =
+    object [ "h" .= h
+           ]
+
+instance ToJSON RichSubCtx where
+  toJSON (SubCtx sequence timingCtx sentences) =
+    object [ "sequence" .= sequence
+           , "timingCtx" .= timingCtx
+           , "sentences" .= sentences
+           ]

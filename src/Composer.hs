@@ -1,5 +1,5 @@
 {-
-  Serialize RichSub
+  Serialize RawSub
 -}
 
 {-# LANGUAGE OverloadedStrings #-}

@@ -17,6 +17,10 @@ spec = do
     describe "parse" $ do
       it "simple line" $ do
         parseSentenceStructure "-PRON- PRP" `shouldBe` (Right [("", "-PRON-", "PRP")] :: Either Text.Parsec.ParseError [WordInfos])
+
+      it "new line at end of file" $ do
+        parseSentenceStructure "-PRON- PRP\n" `shouldBe` (Right [("", "-PRON-", "PRP")] :: Either Text.Parsec.ParseError [WordInfos])
+
       it "multiple argument" $ do
         length <$> parseSentenceStructure multipleArg `shouldBe` Right 6
 

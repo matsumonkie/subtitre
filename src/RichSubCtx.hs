@@ -2,6 +2,7 @@
 
 module RichSubCtx (
   createRichSubCtx
+, serializeRichSubCtx
 ) where
 
 import Type
@@ -13,31 +14,41 @@ import GHC.IO.Handle
 import Text.Pretty.Simple (pPrint)
 import SentenceStructParser
 import Data.Maybe
+import Control.Monad.Trans.Except
+import Control.Monad.Trans.Class
+import Control.Monad.IO.Class
+import Debug.Trace
 
-{-
-createRichSubCtx :: RawSubCtx -> IO RichSubCtx
+createRichSubCtx :: RawSubCtx -> ExceptT ParseError IO RichSubCtx
 createRichSubCtx (SubCtx sequence timingCtx sentences) = do
-  structuredSentences <- mapM runSpacy sentences :: IO [T.Text]
-  let sentencesInfos = map parseSentenceStructure structuredSentences :: [Either ParseError SentenceInfos]
-  let bar = zipp (zip sentencesInfos sentences) :: [Maybe (Sentence, SentenceInfos)]
-  return $ SubCtx sequence timingCtx (catMaybes bar)
+  structuredSentences <- liftIO $ mapM runSpacy sentences
+  let structuredSentence = structuredSentences !! 0
+  let sentenceInfos = parseSentenceStructure structuredSentence :: Either ParseError SentenceInfos
+  let ru = trace (show $ sentenceInfos) res sentenceInfos
+  {-
+( -LRB-
+line NN
+1 CD
+) -RRB-
+  -}
+  case ru of
+    Right foo -> return $ SubCtx sequence timingCtx [foo]
+    Left _ -> return $ SubCtx sequence timingCtx []
   where
-    zipp :: [(Either ParseError SentenceInfos, T.Text)] -> [Maybe (Sentence, SentenceInfos)]
-    zipp parsedSentences = map (\(a, b) -> either (const Nothing) (\y -> Just (b, y)) a) parsedSentences
--}
+    res :: Either ParseError SentenceInfos -> Either ParseError (Sentence, SentenceInfos)
+    res si = si >>= (bar $ trace (T.unpack $ sentences !! 0) (sentences !! 0))
 
-createRichSubCtx :: RawSubCtx -> IO RichSubCtx
-createRichSubCtx (SubCtx sequence timingCtx sentences) = do
-  structuredSentences <- mapM runSpacy sentences :: IO [T.Text]
-  let sentencesInfos = map parseSentenceStructure structuredSentences :: [Either ParseError SentenceInfos]
-  let bar = zipp (zip sentencesInfos sentences) :: [Maybe (Sentence, SentenceInfos)]
-  return $ SubCtx sequence timingCtx (catMaybes bar)
-  where
-    zipp :: [(Either ParseError SentenceInfos, T.Text)] -> [Maybe (Sentence, SentenceInfos)]
-    zipp parsedSentences = map (\(a, b) -> either (const Nothing) (\y -> Just (b, y)) a) parsedSentences
+bar :: Sentence -> SentenceInfos -> Either ParseError (Sentence, SentenceInfos)
+bar sentence sentenceInfos =
+  Right (sentence, sentenceInfos)
 
 runSpacy :: T.Text -> IO T.Text
 runSpacy sentence = do
   T.pack <$> spacy
   where
+    spacy :: IO String
     spacy = readProcess "python" ["example.py", "-s", T.unpack sentence] []
+
+serializeRichSubCtx :: RichSubCtx -> T.Text
+serializeRichSubCtx richSubCtx =
+  undefined

@@ -65,3 +65,7 @@ translateDialog = do
 wrapText :: T.Text -> T.Text
 wrapText text =
   T.append "[" $ T.append text "]"
+
+foo :: (Monad m) => m a -> (a -> m b) -> m b
+foo a f =
+  a >>= f

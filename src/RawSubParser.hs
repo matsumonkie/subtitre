@@ -16,22 +16,26 @@ parseSubtitles = parse subtitles "game of thrones"
 
 subtitles :: Parsec T.Text () [RawSubCtx]
 subtitles = do
-  subtitles <- subtitleCtx `sepBy` endOfLine
-  eof
+--  subtitles <- many1 (subtitleCtx <* optional endOfLine) <?> "A"
+--  subtitles <- (subtitleCtx `sepBy` endOfLine)  <?> "B"
+  subtitles <- (subtitleCtx `sepBy` (string "\n\n"))  <?> "B"
+  eof <?> "C"
   return subtitles
 
 subtitleCtx :: Parsec T.Text () RawSubCtx
 subtitleCtx = do
-  sequence <- read <$> many1 digit
-  newline
-  timingCtx <- timingCtx
-  newline
-  lines <- sentence `endBy` endOfLine
+  sequence <- read <$> many1 digit  <?> "I"
+  newline  <?> "G"
+  timingCtx <- timingCtx  <?> "J"
+  newline <?> "H"
+  lines <- many1 (sentence <* optional endOfLine) <?> "A"
+
+--  lines <- sentence `endBy` endOfLine <?> "A"
   return $ SubCtx sequence timingCtx lines
 
 sentence :: Parsec T.Text () T.Text
 sentence = do
-  T.pack <$> many1 (noneOf "\n\r")
+  T.pack <$> many1 (noneOf "\n\r")  <?> "E"
 
 timingCtx :: Parsec T.Text () TimingCtx
 timingCtx = do
