@@ -42,7 +42,6 @@ runSpacy sentence = do
   T.pack <$> spacy
   where
     spacy :: IO String
---    spacy = readProcess "python" ["example.py", "-s", T.unpack sentence] []
     spacy = readProcess "./client.py" ["-s", T.unpack sentence] []
 
 serializeRichSubCtx :: RichSubCtx -> T.Text
