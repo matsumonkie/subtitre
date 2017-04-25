@@ -8,36 +8,32 @@ module RawSubParser (
 
 import Type
 import Text.Parsec.Combinator
-import qualified Data.Text as T
+import Data.Text
 import Text.Parsec
 
-parseSubtitles :: T.Text -> Either ParseError [RawSubCtx]
+parseSubtitles :: Text -> Either ParseError [RawSubCtx]
 parseSubtitles = parse subtitles "game of thrones"
 
-subtitles :: Parsec T.Text () [RawSubCtx]
+subtitles :: Parsec Text () [RawSubCtx]
 subtitles = do
---  subtitles <- many1 (subtitleCtx <* optional endOfLine) <?> "A"
---  subtitles <- (subtitleCtx `sepBy` endOfLine)  <?> "B"
   subtitles <- (subtitleCtx `sepBy` (string "\n\n"))  <?> "B"
   eof <?> "C"
   return subtitles
 
-subtitleCtx :: Parsec T.Text () RawSubCtx
+subtitleCtx :: Parsec Text () RawSubCtx
 subtitleCtx = do
   sequence <- read <$> many1 digit  <?> "I"
   newline  <?> "G"
   timingCtx <- timingCtx  <?> "J"
   newline <?> "H"
   lines <- many1 (sentence <* optional endOfLine) <?> "A"
-
---  lines <- sentence `endBy` endOfLine <?> "A"
   return $ SubCtx sequence timingCtx lines
 
-sentence :: Parsec T.Text () T.Text
+sentence :: Parsec Text () Text
 sentence = do
-  T.pack <$> many1 (noneOf "\n\r")  <?> "E"
+  pack <$> many1 (noneOf "\n\r")  <?> "E"
 
-timingCtx :: Parsec T.Text () TimingCtx
+timingCtx :: Parsec Text () TimingCtx
 timingCtx = do
   bhour <- twoDigits
   colon
@@ -56,8 +52,8 @@ timingCtx = do
   emsec <- threeDigits
   return $ TimingCtx (Timing bhour bmin bsec bmsec) (Timing ehour emin esec emsec)
   where
-    twoDigits = read <$> count 2 digit
-    threeDigits = read <$> count 3 digit
+    twoDigits = read <$> Text.Parsec.count 2 digit
+    threeDigits = read <$> Text.Parsec.count 3 digit
     colon = char ':'
     comma = char ','
     separator = (string " --> " <?> "wrong timingCtx separator")

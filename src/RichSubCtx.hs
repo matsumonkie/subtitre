@@ -7,7 +7,7 @@ module RichSubCtx (
 
 import Type
 import Text.Parsec.Combinator
-import qualified Data.Text as T
+import Data.Text hiding (map, zip)
 import Text.Parsec
 import System.Process
 import GHC.IO.Handle
@@ -18,32 +18,26 @@ import Control.Monad.Trans.Except
 import Control.Monad.Trans.Class
 import Control.Monad.IO.Class
 import Debug.Trace
+import Data.Either
 
 createRichSubCtx :: RawSubCtx -> ExceptT ParseError IO RichSubCtx
 createRichSubCtx (SubCtx sequence timingCtx sentences) = do
   structuredSentences <- liftIO $ mapM runSpacy sentences
-  let structuredSentence = structuredSentences !! 0
-  let sentenceInfos = parseSentenceStructure structuredSentence :: Either ParseError SentenceInfos
-  let ru = trace (show $ sentenceInfos) res sentenceInfos
-
-  case ru of
-    Right foo -> return $ SubCtx sequence timingCtx [foo]
-    Left _ -> return $ SubCtx sequence timingCtx []
+  let sentencesInfos = map parseSentenceStructure structuredSentences :: [Either ParseError SentenceInfos]
+  return $ subCtx (rights $ map merge $ zip sentences sentencesInfos)
   where
-    res :: Either ParseError SentenceInfos -> Either ParseError (Sentence, SentenceInfos)
-    res si = si >>= (bar $ trace (T.unpack $ sentences !! 0) (sentences !! 0))
+    subCtx = SubCtx sequence timingCtx
+    merge :: (Sentence, Either ParseError SentenceInfos) -> Either ParseError (Sentence, SentenceInfos)
+    merge (s, e) = fmap (pair s) e
+    pair a b = (a, b)
 
-bar :: Sentence -> SentenceInfos -> Either ParseError (Sentence, SentenceInfos)
-bar sentence sentenceInfos =
-  Right (sentence, sentenceInfos)
-
-runSpacy :: T.Text -> IO T.Text
+runSpacy :: Text -> IO Text
 runSpacy sentence = do
-  T.pack <$> spacy
+  pack <$> spacy
   where
     spacy :: IO String
-    spacy = readProcess "./client.py" ["-s", T.unpack sentence] []
+    spacy = readProcess "./client.py" ["-s", unpack sentence] []
 
-serializeRichSubCtx :: RichSubCtx -> T.Text
+serializeRichSubCtx :: RichSubCtx -> Text
 serializeRichSubCtx richSubCtx =
   undefined

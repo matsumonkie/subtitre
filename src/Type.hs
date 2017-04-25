@@ -38,6 +38,10 @@ data Timing = Timing Hour Minute Second MSecond deriving (Show, Eq)
 data SubCtx a = SubCtx Sequence TimingCtx a deriving (Show, Eq)
 type RawSubCtx  = SubCtx [Sentence]
 type RichSubCtx = SubCtx [(Sentence, SentenceInfos)]
+type RichSubCtx' = (RawSubCtx, SentenceInfos)
+
+-- (SubCtx Sequence TimingCtx [Sentence], [SentenceInfos])
+
 
 type SentenceInfos = [WordInfos]
 type WordInfos = (Word, Lemma, Tag)
