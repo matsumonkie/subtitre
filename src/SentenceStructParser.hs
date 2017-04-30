@@ -18,15 +18,26 @@ parseSentenceStructure = parse sentence "game of thrones"
 
 sentence :: Parsec Text () SentenceInfos
 sentence = do
-  words <- many1 (wordCtx <* optional endOfLine) <?> "A"
-  eof <?> "C"
+  words <- many1 (wordCtx <* optional endOfLine)
+  eof
   return words
 
 wordCtx :: Parsec Text () WordInfos
 wordCtx = do
-  lemma <- word <?> "D"
-  space <?> "E"
-  tag <- word <?> "F"
-  return ("", lemma, tag)
+  orig <- word
+  space
+  lemma <- word
+  space
+  tag <- tagParser
+  return (orig, lemma, tag)
+
+tagParser :: Parsec Text () Tag
+tagParser = do
+  mkTag <$> word
   where
-    word = (pack <$> many1 (noneOf "\n\r ")) <?> "G"
+    mkTag tag = case tag of
+      "VERB" -> Verb
+      "ADJ" -> Adj
+      _ -> Else
+
+word = (pack <$> many1 (noneOf "\n\r ")) <?> "word"

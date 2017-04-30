@@ -28,8 +28,7 @@ createRichSubCtx (SubCtx sequence timingCtx sentences) = do
   where
     subCtx = SubCtx sequence timingCtx
     merge :: (Sentence, Either ParseError SentenceInfos) -> Either ParseError (Sentence, SentenceInfos)
-    merge (s, e) = fmap (pair s) e
-    pair a b = (a, b)
+    merge (s, e) = ((,) s) <$> e
 
 runSpacy :: Text -> IO Text
 runSpacy sentence = do

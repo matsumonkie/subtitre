@@ -16,17 +16,15 @@ spec = do
   describe "SentenceStructParser" $ do
     describe "parse" $ do
       it "simple line" $ do
-        parseSentenceStructure "-PRON- PRP" `shouldBe` (Right [("", "-PRON-", "PRP")] :: Either Text.Parsec.ParseError [WordInfos])
+        parseSentenceStructure "I -PRON- PRON" `shouldBe` (Right [("I", "-PRON-", Else)] :: Either Text.Parsec.ParseError SentenceInfos)
 
       it "new line at end of file" $ do
-        parseSentenceStructure "-PRON- PRP\n" `shouldBe` (Right [("", "-PRON-", "PRP")] :: Either Text.Parsec.ParseError [WordInfos])
+        parseSentenceStructure "I -PRON- PRON\n" `shouldBe` (Right [("I", "-PRON-", Else)] :: Either Text.Parsec.ParseError [WordInfos])
 
       it "multiple argument" $ do
-        length <$> parseSentenceStructure multipleArg `shouldBe` Right 6
+        length <$> parseSentenceStructure multipleArg `shouldBe` Right 4
 
-multipleArg = "-PRON- PRP\n\
-              \want VBP\n\
-              \to TO\n\
-              \meet VB\n\
-              \-PRON- PRP\n\
-              \! ."
+multipleArg = "I -PRON- PRON\n\
+              \wanted want VERB\n\
+              \ice ice NOUN\n\
+              \creams cream NOUN"

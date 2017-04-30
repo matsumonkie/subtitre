@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-
   Take an .srt file as an input and deserialize it
 -}
@@ -10,13 +11,16 @@ import Type
 import Text.Parsec.Combinator
 import Data.Text
 import Text.Parsec
+import Data.Functor.Identity
+import Data.Monoid
+import Control.Monad
 
 parseSubtitles :: Text -> Either ParseError [RawSubCtx]
 parseSubtitles = parse subtitles "game of thrones"
 
 subtitles :: Parsec Text () [RawSubCtx]
 subtitles = do
-  subtitles <- (subtitleCtx `sepBy` (string "\n\n"))  <?> "B"
+  subtitles <- (subtitleCtx `sepBy` endOfLine) <?> "B"
   eof <?> "C"
   return subtitles
 
@@ -26,8 +30,13 @@ subtitleCtx = do
   newline  <?> "G"
   timingCtx <- timingCtx  <?> "J"
   newline <?> "H"
-  lines <- many1 (sentence <* optional endOfLine) <?> "A"
+  lines <- sentence `sepEndBy` endOfLine
   return $ SubCtx sequence timingCtx lines
+  where
+    bar = do
+      ss `sepBy` endOfLine
+    ss = do
+      sentence `sepEndBy` endOfLine
 
 sentence :: Parsec Text () Text
 sentence = do

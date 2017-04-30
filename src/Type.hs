@@ -18,6 +18,7 @@ module Type (
 , SentenceInfos
 , WordInfos(..)
 , RichSubCtx(..)
+, Tag(..)
 ) where
 
 import qualified Data.Text as T
@@ -47,14 +48,14 @@ type SentenceInfos = [WordInfos]
 type WordInfos = (Word, Lemma, Tag)
 type Word = T.Text
 type Lemma = T.Text
-type Tag = T.Text
+data Tag = Verb | Adj | Else deriving (Show, Eq)
 
 p :: SentenceInfos
-p = [ ("the", "", "")
-    , ("butler", "", "")
-    , ("looks up", "", "")
-    , ("his", "", "")
-    , ("higness", "", "")
+p = [ ("the", "", Else)
+    , ("butler", "", Else)
+    , ("looks up", "", Verb)
+    , ("his", "", Else)
+    , ("higness", "", Else)
     ]
 
 instance ToJSON WordInfos where

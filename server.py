@@ -27,7 +27,7 @@ while True:
 
   doc = nlp(unicode(request, "utf-8"))
 
-  response = "\n".join([(w.lemma_ + " " + w.tag_) for w in doc])
+  response = "\n".join([(w.text + " " + w.lemma_ + " " + w.pos_) for w in doc])
   client.sendall(response)
   print "[SERVER] replying"
   print ""

@@ -24,12 +24,22 @@ spec = do
       it "end without newline" $ do
         parseSubtitles arg `shouldBe` Right [res ["(Hello)"]]
 
-      it "multiple arg" $ do
+      it "multiple line" $ do
         parseSubtitles (arg <> "\nworld") `shouldBe` Right [res ["(Hello)", "world"]]
+
+      it "multiple sub" $ do
+        parseSubtitles (multipleSubs) `shouldBe` Right [res ["hello"], res ["world"]]
 
 arg = "1\n\
       \00:00:26,722 --> 00:00:29,023\n\
       \(Hello)"
+
+multipleSubs = "1\n\
+      \00:00:26,722 --> 00:00:29,023\n\
+      \hello\n\n\
+      \1\n\
+      \00:00:26,722 --> 00:00:29,023\n\
+      \world"
 
 res :: [T.Text] -> RawSubCtx
 res text =
