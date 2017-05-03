@@ -29,6 +29,7 @@ wordCtx = do
   lemma <- word
   space
   tag <- tagParser
+  let translation = Nothing
   return (orig, lemma, tag)
 
 tagParser :: Parsec Text () Tag

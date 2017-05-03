@@ -20,30 +20,29 @@ parseSubtitles = parse subtitles "game of thrones"
 
 subtitles :: Parsec Text () [RawSubCtx]
 subtitles = do
-  subtitles <- (subtitleCtx `sepBy` endOfLine) <?> "B"
-  eof <?> "C"
+  subtitles <- subtitleCtxP `sepBy` endOfLine
+  eof
   return subtitles
 
-subtitleCtx :: Parsec Text () RawSubCtx
-subtitleCtx = do
-  sequence <- read <$> many1 digit  <?> "I"
-  newline  <?> "G"
-  timingCtx <- timingCtx  <?> "J"
-  newline <?> "H"
-  lines <- sentence `sepEndBy` endOfLine
+subtitleCtxP :: Parsec Text () RawSubCtx
+subtitleCtxP = do
+  sequence <- sequenceP
+  newline
+  timingCtx <- timingCtxP
+  newline
+  lines <- sentenceP `sepEndBy` endOfLine
   return $ SubCtx sequence timingCtx lines
-  where
-    bar = do
-      ss `sepBy` endOfLine
-    ss = do
-      sentence `sepEndBy` endOfLine
 
-sentence :: Parsec Text () Text
-sentence = do
-  pack <$> many1 (noneOf "\n\r")  <?> "E"
+sequenceP :: Parsec Text () Sequence
+sequenceP =
+  read <$> many1 digit <?> "RawSubParser sequence"
 
-timingCtx :: Parsec Text () TimingCtx
-timingCtx = do
+sentenceP :: Parsec Text () Text
+sentenceP = do
+  pack <$> many1 (noneOf "\n\r") <?> "RawSubParser sentence"
+
+timingCtxP :: Parsec Text () TimingCtx
+timingCtxP = do
   bhour <- twoDigits
   colon
   bmin <- twoDigits
@@ -65,4 +64,4 @@ timingCtx = do
     threeDigits = read <$> Text.Parsec.count 3 digit
     colon = char ':'
     comma = char ','
-    separator = (string " --> " <?> "wrong timingCtx separator")
+    separator = (string " --> " <?> "RawSubParser timingCtx separator")

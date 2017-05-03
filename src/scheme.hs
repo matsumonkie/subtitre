@@ -1,19 +1,19 @@
+{-
 
+Steal -> Find subtitle online
 
+Parse -> Parse raw subtitle
 
+Structurize -> Structurize Sentence
 
-Find subtitle online
+Enrich -> Enrich metadata (lemma, type, level, ...)
 
-Parse raw subtitle
+  Store -> Store Rich sub
 
-Structurize Sentence
+  Fetch -> Fetch Rich sub
 
-Enrich metadata (translations, level, ...)
+Translate -> Translate
 
-Store Rich sub
+Display -> Display
 
-Translate
-
-Serve
-
-Display
+-}

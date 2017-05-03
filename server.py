@@ -4,9 +4,10 @@ print "[SERVER] starting"
 
 import socket
 import spacy
+from spacy.tokens import Doc
 
 HOST = 'localhost'
-PORT = 15555
+PORT = 15556
 MESSAGE_SIZE = 4096
 MAX_CONNECTIONS = 1
 

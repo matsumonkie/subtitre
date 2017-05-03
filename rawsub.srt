@@ -1,9 +1,12 @@
 1
 00:00:26,722 --> 00:00:29,023
-I wanted to meet his higness
-
+I wanted to meet his higness!
 
 2
 00:00:26,722 --> 00:00:29,023
 (line 1)
 and line 2
+
+3
+00:00:26,722 --> 00:00:29,023
+Please!? Explain...

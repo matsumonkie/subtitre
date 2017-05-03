@@ -5,7 +5,7 @@ import argparse
 import json
 
 HOST = "localhost"
-PORT = 15555
+PORT = 15556
 MESSAGE_SIZE = 4096
 
 parser = argparse.ArgumentParser()

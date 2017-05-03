@@ -19,36 +19,36 @@ module Type (
 , WordInfos(..)
 , RichSubCtx(..)
 , Tag(..)
+, Translation
 ) where
 
-import qualified Data.Text as T
+import Data.Text
 import Prelude hiding (Word)
 import Data.Aeson
 import GHC.Generics
+import GHC.Exts hiding (Word)
+import qualified Data.HashMap.Strict as HM
+import Data.Monoid
 
 type Sequence = Int
-type Sentence = T.Text
+type Sentence = Text
 type Hour = Int
 type Minute = Int
 type Second = Int
 type MSecond = Int
 
--- 00:00:26,722 --> 00:00:29,023
 data TimingCtx = TimingCtx Timing Timing deriving (Show, Eq)
 data Timing = Timing Hour Minute Second MSecond deriving (Show, Eq)
 data SubCtx a = SubCtx Sequence TimingCtx a deriving (Show, Eq)
 type RawSubCtx  = SubCtx [Sentence]
 type RichSubCtx = SubCtx [(Sentence, SentenceInfos)]
-type RichSubCtx' = (RawSubCtx, SentenceInfos)
-
--- (SubCtx Sequence TimingCtx [Sentence], [SentenceInfos])
-
 
 type SentenceInfos = [WordInfos]
 type WordInfos = (Word, Lemma, Tag)
-type Word = T.Text
-type Lemma = T.Text
+type Word = Text
+type Lemma = Text
 data Tag = Verb | Adj | Else deriving (Show, Eq)
+type Translation = (WordInfos, Maybe Text)
 
 p :: SentenceInfos
 p = [ ("the", "", Else)
@@ -57,21 +57,3 @@ p = [ ("the", "", Else)
     , ("his", "", Else)
     , ("higness", "", Else)
     ]
-
-instance ToJSON WordInfos where
-  toJSON (word, lemma, tag) =
-    object [ "word"  .= word
-           , "type"  .= lemma
-           ]
-
-instance ToJSON TimingCtx where
-  toJSON (TimingCtx (Timing bh bm bs bms) (Timing h m s ms)) =
-    object [ "h" .= h
-           ]
-
-instance ToJSON RichSubCtx where
-  toJSON (SubCtx sequence timingCtx sentences) =
-    object [ "sequence" .= sequence
-           , "timingCtx" .= timingCtx
-           , "sentences" .= sentences
-           ]
