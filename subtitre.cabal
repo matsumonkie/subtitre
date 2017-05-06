@@ -23,7 +23,8 @@ library
                      , Type
                      , Serializer
                      , Translator.Online
-                     , Translator.Local
+                     , Translator.Offline
+                     , Translator.Translate
                      , Composer.RawSubCtx
                      , Composer.RichSubCtx
   build-depends:       aeson

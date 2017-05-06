@@ -1,8 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE OverlappingInstances #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Type (
   Sequence
@@ -21,6 +21,9 @@ module Type (
 , Tag(..)
 , Translation
 , Lemma
+, TestM
+, MOffTr(..)
+, MOnTr(..)
 ) where
 
 import Data.Text
@@ -30,6 +33,15 @@ import GHC.Generics
 import GHC.Exts hiding (Word)
 import qualified Data.HashMap.Strict as HM
 import Data.Monoid
+import Data.Functor.Identity
+
+class Monad m => MOffTr m where
+  fetchOfflineTranslations :: WordInfos -> m Translation
+
+class Monad m => MOnTr m where
+  fetchOnlineTranslations :: Text -> m Value
+
+newtype TestM a = TestM (Identity a) deriving (Functor, Applicative, Monad)
 
 type Sequence = Int
 type Sentence = Text

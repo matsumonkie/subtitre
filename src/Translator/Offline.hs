@@ -1,6 +1,8 @@
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
-module Translator.Local (
+module Translator.Offline (
   translate
 ) where
 
@@ -10,8 +12,16 @@ import Data.HashMap.Strict
 import Data.Maybe
 import Prelude hiding (lookup)
 import Control.Applicative
+import Data.Functor.Identity
+import Text.Pretty.Simple (pPrint, pString)
 
 type Dictionary = HashMap Text Text
+
+instance MOffTr IO where
+  fetchOfflineTranslations = translate
+
+instance MOffTr TestM where
+  fetchOfflineTranslations = translate
 
 verbs :: Dictionary
 verbs =
@@ -23,7 +33,7 @@ adjs :: Dictionary
 adjs =
   fromList [("his", "sa/son")]
 
-translate :: WordInfos -> IO Translation
+translate :: MOffTr m => WordInfos -> m Translation
 translate wi@(word, lemma, tag) =
   return $ case tag of
     Else -> (wi, Nothing)

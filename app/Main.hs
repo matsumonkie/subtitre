@@ -22,7 +22,7 @@ import qualified Data.Text.Lazy.IO as LTextIO (putStrLn)
 subtitleFile = "mini-sample.srt"
 subtitleStructFile = "struct.srt"
 
-main :: IO ()
+--main :: IO ()
 main = do
   content1 <- readFile subtitleFile
   case parseSubtitles content1 of

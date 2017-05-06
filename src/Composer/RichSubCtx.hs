@@ -1,7 +1,3 @@
-{-
-  Serialize RichSub
--}
-
 {-# LANGUAGE OverloadedStrings #-}
 
 module Composer.RichSubCtx (
@@ -12,14 +8,14 @@ import Type
 import Prelude hiding (concat, length, words)
 import Data.Text hiding (map)
 import Data.Maybe
-import Translator.Online
+import Translator.Translate
 import Data.Monoid
 
-compose :: [RichSubCtx] -> IO Text
+compose :: (MOffTr m, MOnTr m) => [RichSubCtx] -> m Text
 compose subCtxs =
   intercalate "\n\n" <$> mapM composeSub subCtxs
 
-composeSub :: RichSubCtx -> IO Text
+composeSub :: (MOffTr m, MOnTr m) => RichSubCtx -> m Text
 composeSub (SubCtx sequence timingCtx sentences) = do
   composedSentences <- composeSentence sentences
   return $ intercalate "\n" [seq, composedTimingCtx, composedSentences]
@@ -37,17 +33,17 @@ composeTimingCtx (TimingCtx btiming etiming) =
 intToText :: Int -> Text
 intToText i = pack $ show i
 
-composeSentence :: [(Sentence, SentenceInfos)] -> IO Text
+composeSentence :: (MOffTr m, MOnTr m) => [(Sentence, SentenceInfos)] -> m Text
 composeSentence sentencesInfos = do
   sentences <- mapM translateSentence sentencesInfos
   return $ intercalate "\n" sentences
 
-translateSentence :: (Sentence, SentenceInfos) -> IO Text
+translateSentence :: (MOffTr m, MOnTr m) => (Sentence, SentenceInfos) -> m Text
 translateSentence (sentence, sentencesInfos) =
   (intercalate " ") <$> reorganized
   where
-    reorganized = (reorganizeSentence sentence <$> translations) :: IO [Text]
-    translations = mapM translate sentencesInfos :: IO [Translation]
+    reorganized = (reorganizeSentence sentence <$> translations)
+    translations = mapM translate sentencesInfos
 
 reorganizeSentence :: Sentence -> [Translation] -> [Text]
 reorganizeSentence sentence translations =

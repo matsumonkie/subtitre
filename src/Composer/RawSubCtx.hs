@@ -4,7 +4,7 @@
 
 {-# LANGUAGE OverloadedStrings #-}
 
-module Composer.RawSub (
+module Composer.RawSubCtx (
   compose
 ) where
 
