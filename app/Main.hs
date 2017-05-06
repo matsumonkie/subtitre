@@ -19,7 +19,7 @@ import qualified Data.ByteString.Lazy as LByteString (ByteString, toStrict)
 import Data.Text.Encoding (decodeUtf8)
 import qualified Data.Text.Lazy.IO as LTextIO (putStrLn)
 
-subtitleFile = "rawsub.srt"
+subtitleFile = "mini-sample.srt"
 subtitleStructFile = "struct.srt"
 
 main :: IO ()
@@ -31,7 +31,12 @@ main = do
 --      let e = createRichSubCtx (subCtxts !! 0) :: ExceptT ParseError IO RichSubCtx
       let es = mapM createRichSubCtx subCtxts :: ExceptT ParseError IO [RichSubCtx]
       es' <- runExceptT es :: IO (Either ParseError [RichSubCtx])
-      pPrint $ fmap compose es'
+      case (fmap compose es') of
+        Left _ -> pPrint "nope"
+        Right e -> do
+          e' <- e
+          pPrint e'
+
 --      e' <- runExceptT e :: IO (Either ParseError RichSubCtx)
 --      pPrint $ fmap compose es'
 --      case e' of

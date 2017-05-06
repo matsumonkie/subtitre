@@ -12,20 +12,20 @@ import Type
 import Prelude hiding (concat, length, words)
 import Data.Text hiding (map)
 import Data.Maybe
-import Translator.Word
+import Translator.Online
 import Data.Monoid
 
-compose :: [RichSubCtx] -> Text
+compose :: [RichSubCtx] -> IO Text
 compose subCtxs =
-  intercalate "\n\n" $ map composeSub subCtxs
+  intercalate "\n\n" <$> mapM composeSub subCtxs
 
-composeSub :: RichSubCtx -> Text
-composeSub (SubCtx sequence timingCtx sentences) =
-  intercalate "\n" [seq, composedTimingCtx, composedSentences]
+composeSub :: RichSubCtx -> IO Text
+composeSub (SubCtx sequence timingCtx sentences) = do
+  composedSentences <- composeSentence sentences
+  return $ intercalate "\n" [seq, composedTimingCtx, composedSentences]
   where
     seq = pack $ show sequence
     composedTimingCtx = composeTimingCtx timingCtx
-    composedSentences = composeSentence sentences
 
 composeTimingCtx :: TimingCtx -> Text
 composeTimingCtx (TimingCtx btiming etiming) =
@@ -37,19 +37,20 @@ composeTimingCtx (TimingCtx btiming etiming) =
 intToText :: Int -> Text
 intToText i = pack $ show i
 
-composeSentence :: [(Sentence, SentenceInfos)] -> Text
-composeSentence sentencesInfos =
-  intercalate "\n" $ map translateSentence sentencesInfos
+composeSentence :: [(Sentence, SentenceInfos)] -> IO Text
+composeSentence sentencesInfos = do
+  sentences <- mapM translateSentence sentencesInfos
+  return $ intercalate "\n" sentences
 
-translateSentence :: (Sentence, SentenceInfos) -> Text
+translateSentence :: (Sentence, SentenceInfos) -> IO Text
 translateSentence (sentence, sentencesInfos) =
-  intercalate " " reorganized
+  (intercalate " ") <$> reorganized
   where
-    reorganized = reorganizeSentence translations sentence
-    translations = map translate sentencesInfos
+    reorganized = (reorganizeSentence sentence <$> translations) :: IO [Text]
+    translations = mapM translate sentencesInfos :: IO [Translation]
 
-reorganizeSentence :: [Translation] -> Sentence -> [Text]
-reorganizeSentence translations sentence =
+reorganizeSentence :: Sentence -> [Translation] -> [Text]
+reorganizeSentence sentence translations =
   map format withCorrectSpacing
   where
     format :: Translation -> Text

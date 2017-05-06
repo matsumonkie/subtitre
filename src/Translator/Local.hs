@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Translator.Word (
+module Translator.Local (
   translate
 ) where
 
@@ -23,9 +23,9 @@ adjs :: Dictionary
 adjs =
   fromList [("his", "sa/son")]
 
-translate :: WordInfos -> Translation
+translate :: WordInfos -> IO Translation
 translate wi@(word, lemma, tag) =
-  case tag of
+  return $ case tag of
     Else -> (wi, Nothing)
     _    -> (wi, translation)
   where

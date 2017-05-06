@@ -12,6 +12,16 @@ import Prelude hiding (Word, concat)
 import Data.Aeson
 import Data.Monoid
 
+instance FromJSON Tag where
+  parseJSON =
+    withText "String" parse
+    where
+      parse x =
+        return $ case x of
+          "verb" -> Verb
+          "Adj" -> Adj
+          _ -> Else
+
 instance ToJSON Tag where
   toJSON tag =
     case tag of

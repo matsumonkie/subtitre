@@ -20,6 +20,7 @@ module Type (
 , RichSubCtx(..)
 , Tag(..)
 , Translation
+, Lemma
 ) where
 
 import Data.Text
