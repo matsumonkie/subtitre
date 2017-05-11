@@ -1,3 +1,5 @@
+{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeSynonymInstances #-}
@@ -21,9 +23,6 @@ module Type (
 , Tag(..)
 , Translation
 , Lemma
-, TestM
-, MOffTr(..)
-, MOnTr(..)
 ) where
 
 import Data.Text
@@ -34,14 +33,9 @@ import GHC.Exts hiding (Word)
 import qualified Data.HashMap.Strict as HM
 import Data.Monoid
 import Data.Functor.Identity
-
-class Monad m => MOffTr m where
-  fetchOfflineTranslations :: WordInfos -> m Translation
-
-class Monad m => MOnTr m where
-  fetchOnlineTranslations :: Text -> m Value
-
-newtype TestM a = TestM (Identity a) deriving (Functor, Applicative, Monad)
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Class
+import Control.Monad.Reader (ReaderT, runReaderT)
 
 type Sequence = Int
 type Sentence = Text

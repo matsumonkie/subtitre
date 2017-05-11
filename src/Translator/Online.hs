@@ -23,18 +23,7 @@ import Data.ByteString.Lazy
 import Text.Pretty.Simple (pPrint, pString)
 import GHC.Exts
 
-instance MOnTr IO where
-  fetchOnlineTranslations = fetchTranslations'
-
-instance MOnTr TestM where
-  fetchOnlineTranslations _ =
-    return $ Object $ fromList res
-    where
-      res = [ ("numbers", Array $ fromList [Number 1, Number 2, Number 3])
-            , ("boolean", Bool True)
-            ]
-
-translate :: MOnTr m => WordInfos -> m Translation
+translate :: WordInfos -> IO Translation
 translate wi@(word, lemma, tag) = do
   translations <- translationsBasedOnTag toTranslate tag
   return (wi, listToMaybe translations)
@@ -60,15 +49,15 @@ instance FromJSON Tr where
     text <- o .: "text"
     return $ Tr text
 
-translationsBasedOnTag :: MOnTr m => Text -> Tag -> m [Text]
+translationsBasedOnTag :: Text -> Tag -> IO [Text]
 translationsBasedOnTag toTranslate tag = do
-  translations <- fromJSON <$> (fetchOnlineTranslations toTranslate)
+  translations <- fromJSON <$> (fetchTranslations toTranslate)
   let correctDefs = Prelude.filter (((==) tag) . pos) (Prelude.concat translations)
   let rightTrans = Prelude.map getText $ Prelude.concat (Prelude.map tr correctDefs)
   return rightTrans
 
-fetchTranslations' :: Text -> IO Value
-fetchTranslations' toTranslate = do
+fetchTranslations :: Text -> IO Value
+fetchTranslations toTranslate = do
   r <- getWith opts url
   return $ (r ^.. responseBody . key "def") !! 0
   where

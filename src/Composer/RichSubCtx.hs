@@ -11,11 +11,11 @@ import Data.Maybe
 import Translator.Translate
 import Data.Monoid
 
-compose :: (MOffTr m, MOnTr m) => [RichSubCtx] -> m Text
+compose :: [RichSubCtx] -> IO Text
 compose subCtxs =
   intercalate "\n\n" <$> mapM composeSub subCtxs
 
-composeSub :: (MOffTr m, MOnTr m) => RichSubCtx -> m Text
+composeSub :: RichSubCtx -> IO Text
 composeSub (SubCtx sequence timingCtx sentences) = do
   composedSentences <- composeSentence sentences
   return $ intercalate "\n" [seq, composedTimingCtx, composedSentences]
@@ -33,12 +33,12 @@ composeTimingCtx (TimingCtx btiming etiming) =
 intToText :: Int -> Text
 intToText i = pack $ show i
 
-composeSentence :: (MOffTr m, MOnTr m) => [(Sentence, SentenceInfos)] -> m Text
+composeSentence :: [(Sentence, SentenceInfos)] -> IO Text
 composeSentence sentencesInfos = do
   sentences <- mapM translateSentence sentencesInfos
   return $ intercalate "\n" sentences
 
-translateSentence :: (MOffTr m, MOnTr m) => (Sentence, SentenceInfos) -> m Text
+translateSentence :: (Sentence, SentenceInfos) -> IO Text
 translateSentence (sentence, sentencesInfos) =
   (intercalate " ") <$> reorganized
   where

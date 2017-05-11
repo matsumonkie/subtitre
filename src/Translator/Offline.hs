@@ -17,12 +17,6 @@ import Text.Pretty.Simple (pPrint, pString)
 
 type Dictionary = HashMap Text Text
 
-instance MOffTr IO where
-  fetchOfflineTranslations = translate
-
-instance MOffTr TestM where
-  fetchOfflineTranslations = translate
-
 verbs :: Dictionary
 verbs =
   fromList [ ("want", "vouloir")
@@ -33,7 +27,7 @@ adjs :: Dictionary
 adjs =
   fromList [("his", "sa/son")]
 
-translate :: MOffTr m => WordInfos -> m Translation
+translate :: WordInfos -> IO Translation
 translate wi@(word, lemma, tag) =
   return $ case tag of
     Else -> (wi, Nothing)

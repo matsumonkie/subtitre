@@ -25,10 +25,11 @@ import Debug.Trace
 import Data.Either
 import Data.Aeson
 import Data.ByteString.Lazy.Internal
+import Control.Monad.IO.Class
 
 createRichSubCtx :: RawSubCtx -> ExceptT ParseError IO RichSubCtx
 createRichSubCtx (SubCtx sequence timingCtx sentences) = do
-  structuredSentences <- liftIO $ mapM runSpacy sentences
+  structuredSentences <- lift $ mapM runSpacy sentences
   let sentencesInfos = map parseSentenceStructure structuredSentences :: [Either ParseError SentenceInfos]
   return $ subCtx $ rights $ map merge $ zip sentences sentencesInfos
   where
