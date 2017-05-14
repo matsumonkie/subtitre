@@ -27,15 +27,15 @@ import Data.Aeson
 import Data.ByteString.Lazy.Internal
 import Control.Monad.IO.Class
 
-createRichSubCtx :: RawSubCtx -> ExceptT ParseError IO RichSubCtx
+createRichSubCtx :: RawSubCtx -> IO (Either [ParseError] RichSubCtx)
 createRichSubCtx (SubCtx sequence timingCtx sentences) = do
-  structuredSentences <- lift $ mapM runSpacy sentences
+  structuredSentences <- mapM runSpacy sentences :: IO [Text]
   let sentencesInfos = map parseSentenceStructure structuredSentences :: [Either ParseError SentenceInfos]
-  return $ subCtx $ rights $ map merge $ zip sentences sentencesInfos
+  return $ case (lefts sentencesInfos) of
+        errors@(x:xs) -> Left errors
+        _  -> Right $ subCtx (zip sentences (rights sentencesInfos))
   where
     subCtx = SubCtx sequence timingCtx
-    merge :: (Sentence, Either ParseError SentenceInfos) -> Either ParseError (Sentence, SentenceInfos)
-    merge (s, e) = ((,) s) <$> e
 
 runSpacy :: Text -> IO Text
 runSpacy sentence = do

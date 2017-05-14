@@ -2,12 +2,8 @@
 
 module RichSubCtxSpec (main, spec) where
 
-import Text.Parsec
 import Test.Hspec
-import Data.Functor
 import Type
-import RichSubCtx
---import Control.Monad.Trans.Except
 
 main :: IO ()
 main = hspec spec
