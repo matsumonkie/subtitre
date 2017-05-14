@@ -4,7 +4,8 @@
 -}
 
 module RawSubParser (
-  parseSubtitles
+  parseSubtitlesOfFile
+, parseSubtitles
 ) where
 
 import Type
@@ -14,12 +15,34 @@ import Text.Parsec
 import Data.Functor.Identity
 import Data.Monoid
 import Control.Monad
+import Data.Text.IO
+import qualified System.IO as SIO
+import qualified System.IO.Error as SIE
+import qualified Control.Exception as Ex
+import GHC.IO.Exception
+
+
+parseSubtitlesOfFile :: FilePath -> IO (Either ParseError [RawSubCtx])
+parseSubtitlesOfFile file = do
+  result <- Ex.tryJust invalidArgument (readWith SIO.utf8) :: IO (Either () Text)
+  content <- either (const $ readWith SIO.latin1) return result :: IO Text
+  return $ parseSubtitles content
+  where
+    readWith :: SIO.TextEncoding -> IO Text
+    readWith encoding = do
+      handle <- SIO.openFile file SIO.ReadMode
+      SIO.hSetEncoding handle encoding
+      hGetContents handle
+    invalidArgument :: IOException -> Maybe ()
+    invalidArgument IOError { ioe_type = InvalidArgument } = Just ()
+    invalidArgument _ = Nothing
 
 parseSubtitles :: Text -> Either ParseError [RawSubCtx]
 parseSubtitles = parse subtitles "game of thrones"
 
 subtitles :: Parsec Text () [RawSubCtx]
 subtitles = do
+  optional bom
   subtitles <- subtitleCtxP `sepBy` endOfLine
   eof
   return subtitles
@@ -27,9 +50,9 @@ subtitles = do
 subtitleCtxP :: Parsec Text () RawSubCtx
 subtitleCtxP = do
   sequence <- sequenceP
-  newline
+  endOfLine
   timingCtx <- timingCtxP
-  newline
+  endOfLine
   lines <- sentenceP `sepEndBy` endOfLine
   return $ SubCtx sequence timingCtx lines
 
@@ -47,21 +70,26 @@ timingCtxP = do
   colon
   bmin <- twoDigits
   colon
-  bsec <- twoDigits
+  bsec <- readSeconds
   comma
-  bmsec <- threeDigits
+  bmsec <- readMSeconds
   separator
   ehour <- twoDigits
   colon
   emin <- twoDigits
   colon
-  esec <- twoDigits
+  esec <- readSeconds
   comma
-  emsec <- threeDigits
+  emsec <- readMSeconds
   return $ TimingCtx (Timing bhour bmin bsec bmsec) (Timing ehour emin esec emsec)
   where
+    readSeconds = try twoDigits <|> oneDigit
+    readMSeconds = try threeDigits <|> twoDigits
+    oneDigit = read <$> Text.Parsec.count 1 digit
     twoDigits = read <$> Text.Parsec.count 2 digit
     threeDigits = read <$> Text.Parsec.count 3 digit
     colon = char ':'
     comma = char ','
     separator = (string " --> " <?> "RawSubParser timingCtx separator")
+
+bom = char '\65279'

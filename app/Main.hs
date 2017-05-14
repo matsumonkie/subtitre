@@ -25,8 +25,8 @@ subtitleStructFile = "struct.srt"
 
 main :: IO ()
 main = do
-  content1 <- readFile subtitleFile
-  case parseSubtitles content1 of
+  res <- parseSubtitlesOfFile subtitleFile
+  case res of
     Right subCtxts -> do
       let e = createRichSubCtx (subCtxts !! 0) :: ExceptT ParseError IO RichSubCtx
       let e' = mapM createRichSubCtx subCtxts :: ExceptT ParseError IO [RichSubCtx]
