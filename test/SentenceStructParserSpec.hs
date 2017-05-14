@@ -26,6 +26,7 @@ satisfyIsRight parsed =
   parsed `shouldSatisfy` isRight
 
 sherlock = "sherlock.srt"
+sample = "sample.srt"
 mrRobot = "mr. robot.srt"
 friends = "friends.srt"
 house = "house.srt"
@@ -49,17 +50,17 @@ spec = do
 
       context "real subtitles" $ do
         it "works" $ do
-          eRawSubCtxs <- parseFile sherlock :: IO (Either ParseError [RawSubCtx])
-          case eRawSubCtxs of
-            Left _ -> "a" `shouldBe` "a"
-            Right rawSubCtxs -> do
-              eRichSubCtxs <- mapM createRichSubCtx (rawSubCtxs)
-              lefts eRichSubCtxs `shouldBe` []
+          parsingDoesntFail sample
+--          parsingDoesntFail mrRobot
+         {-
+          parsingDoesntFail house
+          parsingDoesntFail gameOfThrones
+          parsingDoesntFail friends
+          -}
 
-          {-
-          parseFile mrRobot >>= satisfyIsRight
-          parseFile house >>= satisfyIsRight
-          parseFile gameOfThrones >>= satisfyIsRight
-          parseFile friends >>= satisfyIsRight
-
--}
+parsingDoesntFail :: FilePath -> Expectation
+parsingDoesntFail file = do
+  eRawSubCtxs <- parseFile file :: IO (Either ParseError [RawSubCtx])
+  let rawSubCtxs = either (const []) id eRawSubCtxs :: [RawSubCtx]
+  eRichSubCtxs <- mapM (createRichSubCtx) rawSubCtxs :: IO [Either [ParseError] RichSubCtx]
+  lefts eRichSubCtxs `shouldBe` []
