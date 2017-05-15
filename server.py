@@ -4,15 +4,16 @@ print "[SERVER] starting"
 
 import socket
 import spacy
-import time
 import signal
 import sys
+import time
+import struct
 
+from spacy.symbols import ORTH, LEMMA, POS
 from spacy.tokens import Doc
 
 HOST = 'localhost'
 PORT = 15556
-MESSAGE_SIZE = 4096
 MAX_CONNECTIONS = 1
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -22,39 +23,56 @@ print "[SERVER] loading spacy"
 
 nlp = spacy.load('en_core_web_sm')
 
+nlp.tokenizer.add_special_case(u'<*>', [{ ORTH: u'<*>', LEMMA: u'<*>', POS: u'VERB' }])
+nlp.tokenizer.add_special_case(u'<$>', [{ ORTH: u'<$>', LEMMA: u'<$>', POS: u'VERB' }])
+
 print "[SERVER] listening"
-total = 0.0
-timePgm = 0.0
 socket.listen(MAX_CONNECTIONS)
 client = ""
 
+def toToken(word):
+  if word.lemma_ == "<*>":
+    return " <*> "
+  elif word.lemma_ == "<$>":
+    return " <$> "
+  else:
+    return word.text + " " + word.lemma_ + " " + word.pos_
+
+def send_msg(sock, msg):
+  msg = struct.pack('>I', len(msg)) + msg
+  sock.sendall(msg)
+
+def recv_msg(sock):
+  raw_msglen = recvall(sock, 4)
+  if not raw_msglen:
+    return None
+  msglen = struct.unpack('>I', raw_msglen)[0]
+  return recvall(sock, msglen)
+
+def recvall(sock, n):
+  data = ''
+  while len(data) < n:
+    packet = sock.recv(n - len(data))
+    if not packet:
+      return None
+    data += packet
+  return data
+
 while True:
   try:
-  #  print "[SERVER] accepting request"
-  #  print "server:before"
-  #  print request
-  #  print "server:before"
-    startPgm = time.time()
     client, address = socket.accept()
-    start = time.time()
-    request = client.recv(MESSAGE_SIZE)
+    print "[SERVER] accepting request"
+    request = recv_msg(client)
     doc = nlp(unicode(request, "utf-8"))
+    response = "\n".join([toToken(w) for w in doc])
 
-    response = "\n".join([(w.text + " " + w.lemma_ + " " + w.pos_) for w in doc])
-    client.sendall(response.encode("utf-8"))
-    total = total + (time.time() - start)
-    timePgm = timePgm + (time.time() - startPgm)
-#  print "[SERVER] replying"
-#  print ""
+    print "[SERVER] replying"
+    print response
+    send_msg(client, response.encode("utf-8"))
   except KeyboardInterrupt:
     if hasattr(client, 'close'):
       print "[SERVER] closing client"
       client.close()
-    print "time process"
-    print total
-    print round(total)
-    print "time total"
-    print timePgm
-    print round(timePgm)
-    print "[SERVER] closing"
+    else:
+      print "[SERVER] closing"
     sys.exit()

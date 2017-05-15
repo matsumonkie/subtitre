@@ -12,7 +12,7 @@ import Text.Parsec.Combinator
 import Data.Text hiding (map, zip)
 import Data.Text.Lazy (toStrict)
 import Data.Text.Lazy.Encoding
-import Text.Parsec
+import Text.Parsec hiding (parse)
 import System.Process
 import GHC.IO.Handle
 import Text.Pretty.Simple (pPrint)
@@ -26,14 +26,43 @@ import Data.Either
 import Data.Aeson
 import Data.ByteString.Lazy.Internal
 import Control.Monad.IO.Class
+import Data.Monoid
 
-createRichSubCtx :: RawSubCtx -> IO (Either [ParseError] RichSubCtx)
-createRichSubCtx (SubCtx sequence timingCtx sentences) = do
-  structuredSentences <- mapM runSpacy sentences :: IO [Text]
-  let sentencesInfos = map parseSentenceStructure structuredSentences :: [Either ParseError SentenceInfos]
-  return $ case (lefts sentencesInfos) of
-        errors@(x:xs) -> Left errors
-        _  -> Right $ subCtx (zip sentences (rights sentencesInfos))
+sentenceSeparator = " <$> " :: Text
+subSeparator      = " <*> " :: Text
+
+createRichSubCtx :: [RawSubCtx] -> IO [Either [ParseError] RichSubCtx]
+createRichSubCtx allRawSubCtx = do
+  content <- runSpacy $ mergeSubs allRawSubCtx
+  let unmerged    = unmergeSubs content
+  let parsed      = map parse unmerged
+  let richSubCtxs = map toRichSubCtx (zip allRawSubCtx parsed)
+  return richSubCtxs
+
+mergeSubs :: [RawSubCtx] -> Text
+mergeSubs allRawSubCtx =
+  intercalate subSeparator $ map getSentence allRawSubCtx
+  where
+    getSentence :: RawSubCtx -> Text
+    getSentence (SubCtx _ _ sentences) = intercalate sentenceSeparator sentences
+
+unmergeSubs :: Text -> [[Text]]
+unmergeSubs allSubs =
+  map (splitOn ("\n" <> sentenceSeparator <> "\n")) (splitOn ("\n" <> subSeparator <> "\n") allSubs)
+
+parse :: [Text] -> Either [ParseError] [SentenceInfos]
+parse twoSentences =
+  case lefts parsed of
+    [] -> Right $ rights parsed
+    errors -> Left errors
+  where
+    parsed = map parseSentenceStructure twoSentences :: [Either ParseError SentenceInfos]
+
+toRichSubCtx :: (RawSubCtx, Either [ParseError] [SentenceInfos]) -> Either [ParseError] RichSubCtx
+toRichSubCtx ((SubCtx sequence timingCtx sentences), parsed) =
+  case parsed of
+    Left errors -> Left errors
+    Right sentencesInfos -> Right $ subCtx (zip sentences sentencesInfos)
   where
     subCtx = SubCtx sequence timingCtx
 

@@ -4,31 +4,41 @@ import socket
 import argparse
 import json
 import time
+import struct
 
-startPgm = 0.0
-start = time.time()
 HOST = "localhost"
 PORT = 15556
-MESSAGE_SIZE = 4096
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--sentence", help="sentence to structure")
 args = parser.parse_args()
 sentence = args.sentence
 
+def send_msg(sock, msg):
+  msg = struct.pack('>I', len(msg)) + msg
+  sock.sendall(msg)
+
+def recv_msg(sock):
+  raw_msglen = recvall(sock, 4)
+  if not raw_msglen:
+      return None
+  msglen = struct.unpack('>I', raw_msglen)[0]
+  return recvall(sock, msglen)
+
+def recvall(sock, n):
+  data = ''
+  while len(data) < n:
+    packet = sock.recv(n - len(data))
+    if not packet:
+      return None
+    data += packet
+  return data
+
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((HOST, PORT))
 
-#socket.send(unicode(sentence, "utf-8"))
-#sentence2 = sentence.encode("utf-8")
+send_msg(socket, sentence)
+response = recv_msg(socket)
 
-socket.send(sentence)
-response = socket.recv(MESSAGE_SIZE)
-doc = response
-print str(doc)
-
+print response
 socket.close()
-
-startPgm = (time.time() - start)
-print startPgm
-print round(startPgm)

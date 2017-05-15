@@ -51,16 +51,14 @@ spec = do
       context "real subtitles" $ do
         it "works" $ do
           parsingDoesntFail sample
---          parsingDoesntFail mrRobot
-         {-
+          parsingDoesntFail mrRobot
           parsingDoesntFail house
           parsingDoesntFail gameOfThrones
           parsingDoesntFail friends
-          -}
 
 parsingDoesntFail :: FilePath -> Expectation
 parsingDoesntFail file = do
-  eRawSubCtxs <- parseFile file :: IO (Either ParseError [RawSubCtx])
-  let rawSubCtxs = either (const []) id eRawSubCtxs :: [RawSubCtx]
-  eRichSubCtxs <- mapM (createRichSubCtx) rawSubCtxs :: IO [Either [ParseError] RichSubCtx]
-  lefts eRichSubCtxs `shouldBe` []
+  rawParsed <- parseFile file :: IO (Either ParseError [RawSubCtx])
+  let subs = either (const []) (id) rawParsed :: [RawSubCtx]
+  richSubs <- createRichSubCtx subs
+  lefts richSubs `shouldBe` []
