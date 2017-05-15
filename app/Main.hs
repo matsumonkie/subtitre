@@ -28,10 +28,9 @@ main = do
   res <- parseSubtitlesOfFile subtitleFile
   case res of
     Right subCtxts -> do
-      let e = createRichSubCtx (subCtxts !! 0) :: ExceptT ParseError IO RichSubCtx
-      let e' = mapM createRichSubCtx subCtxts :: ExceptT ParseError IO [RichSubCtx]
-      e'' <- runExceptT e :: IO (Either ParseError RichSubCtx)
-      case e'' of
+      e <- createRichSubCtx subCtxts :: IO [Either [ParseError] RichSubCtx]
+      let e' = e !! 0
+      case e' of
         Left error ->
           pPrint "test"
         Right richSub ->
