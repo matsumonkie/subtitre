@@ -71,7 +71,7 @@ runSpacy sentence = do
   pack <$> spacy
   where
     spacy :: IO String
-    spacy = readProcess "./client.py" ["-s", unpack sentence] []
+    spacy = readProcess "./spacy/client.py" ["-s", unpack sentence] []
 
 serializeRichSubCtx :: RichSubCtx -> Text
 serializeRichSubCtx richSubCtx =

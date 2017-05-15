@@ -2,12 +2,10 @@
 
 print "[SERVER] starting"
 
-import socket
 import spacy
 import signal
 import sys
-import time
-import struct
+from util import *
 
 from spacy.symbols import ORTH, LEMMA, POS
 from spacy.tokens import Doc
@@ -37,26 +35,6 @@ def toToken(word):
     return " <$> "
   else:
     return word.text + " " + word.lemma_ + " " + word.pos_
-
-def send_msg(sock, msg):
-  msg = struct.pack('>I', len(msg)) + msg
-  sock.sendall(msg)
-
-def recv_msg(sock):
-  raw_msglen = recvall(sock, 4)
-  if not raw_msglen:
-    return None
-  msglen = struct.unpack('>I', raw_msglen)[0]
-  return recvall(sock, msglen)
-
-def recvall(sock, n):
-  data = ''
-  while len(data) < n:
-    packet = sock.recv(n - len(data))
-    if not packet:
-      return None
-    data += packet
-  return data
 
 while True:
   try:

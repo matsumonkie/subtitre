@@ -26,7 +26,6 @@ satisfyIsRight parsed =
   parsed `shouldSatisfy` isRight
 
 sherlock = "sherlock.srt"
-sample = "sample.srt"
 mrRobot = "mr. robot.srt"
 friends = "friends.srt"
 house = "house.srt"
@@ -50,7 +49,6 @@ spec = do
 
       context "real subtitles" $ do
         it "works" $ do
-          parsingDoesntFail sample
           parsingDoesntFail mrRobot
           parsingDoesntFail house
           parsingDoesntFail gameOfThrones
