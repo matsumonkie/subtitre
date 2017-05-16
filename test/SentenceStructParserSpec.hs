@@ -41,9 +41,9 @@ spec = do
     describe "parse" $ do
       context "simple sample" $ do
         it "simple line" $ do
-          parseSentenceStructure "I -PRON- PRON" `shouldBe` (Right [("I", "-PRON-", Else)] :: Either Text.Parsec.ParseError SentenceInfos)
+          parseSentenceStructure "I -PRON- PRON" `shouldBe` (Right [("I", "-PRON-", Pron)] :: Either Text.Parsec.ParseError SentenceInfos)
         it "new line at end of file" $ do
-          parseSentenceStructure "I -PRON- PRON\n" `shouldBe` (Right [("I", "-PRON-", Else)] :: Either Text.Parsec.ParseError [WordInfos])
+          parseSentenceStructure "I -PRON- PRON\n" `shouldBe` (Right [("I", "-PRON-", Pron)] :: Either Text.Parsec.ParseError [WordInfos])
         it "multiple argument" $ do
           length <$> parseSentenceStructure multipleArg `shouldBe` Right 4
 
@@ -59,4 +59,7 @@ parsingDoesntFail file = do
   rawParsed <- parseFile file :: IO (Either ParseError [RawSubCtx])
   let subs = either (const []) (id) rawParsed :: [RawSubCtx]
   richSubs <- createRichSubCtx subs
+  case (richSubs) of
+    Right (SubCtx _ _  ((s, si):ss)   ):r -> putStrLn $ show si
+
   lefts richSubs `shouldBe` []

@@ -27,13 +27,13 @@ adjs :: Dictionary
 adjs =
   fromList [("his", "sa/son")]
 
-translate :: WordInfos -> IO Translation
+translate :: WordInfos -> IO [Text]
 translate wi@(word, lemma, tag) =
   return $ case tag of
-    Else -> (wi, Nothing)
-    _    -> (wi, translation)
+    Else -> []
+    _    -> maybe [] (\x -> [x]) translation
   where
-    translation = lookup (snd dict) (fst dict)
+    translation = lookup (snd dict) (fst dict) :: Maybe Text
     dict = case tag of
       Verb -> (verbs, lemma)
       Adj -> (adjs, word)

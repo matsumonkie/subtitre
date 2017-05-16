@@ -54,7 +54,19 @@ type SentenceInfos = [WordInfos]
 type WordInfos = (Word, Lemma, Tag)
 type Word = Text
 type Lemma = Text
-data Tag = Verb | Adj | Else deriving (Show, Eq)
+data Tag = Adj
+         | Adv
+         | Conj
+         | Noun
+         | Num
+         | Pron
+         | Propn
+         | Punct
+         | Sym
+         | Verb
+         | Else
+         deriving (Show, Eq)
+
 type Translation = (WordInfos, Maybe Text)
 
 p :: SentenceInfos

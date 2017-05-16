@@ -37,8 +37,14 @@ tagParser = do
   mkTag <$> word
   where
     mkTag tag = case tag of
-      "VERB" -> Verb
-      "ADJ" -> Adj
-      _ -> Else
+      "ADJ"   -> Adj
+      "ADV"   -> Adv
+      "CONJ"  -> Conj
+      "NOUN"  -> Noun
+      "PRON"  -> Pron
+      "PUNCT" -> Punct
+      "SYM"   -> Sym
+      "VERB"  -> Verb
+      _       -> Else
 
 word = (pack <$> many1 (noneOf "\n\r ")) <?> "word"

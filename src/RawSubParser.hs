@@ -21,7 +21,6 @@ import qualified System.IO.Error as SIE
 import qualified Control.Exception as Ex
 import GHC.IO.Exception
 
-
 parseSubtitlesOfFile :: FilePath -> IO (Either ParseError [RawSubCtx])
 parseSubtitlesOfFile file = do
   result <- Ex.tryJust invalidArgument (readWith SIO.utf8) :: IO (Either () Text)

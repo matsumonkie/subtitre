@@ -18,9 +18,15 @@ instance FromJSON Tag where
     where
       parse x =
         return $ case x of
-          "verb" -> Verb
-          "Adj" -> Adj
-          _ -> Else
+          "adj"   -> Adj
+          "adv"   -> Adv
+          "conj"  -> Conj
+          "noun"  -> Noun
+          "pron"  -> Pron
+          "punct" -> Punct
+          "sym"   -> Sym
+          "verb"  -> Verb
+          _       -> Else
 
 instance ToJSON Tag where
   toJSON tag =

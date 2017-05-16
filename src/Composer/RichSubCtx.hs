@@ -2,6 +2,7 @@
 
 module Composer.RichSubCtx (
   compose
+, composeSentence
 ) where
 
 import Type
@@ -10,6 +11,8 @@ import Data.Text hiding (map)
 import Data.Maybe
 import Translator.Translate
 import Data.Monoid
+import Control.Lens
+import Debug.Trace
 
 compose :: [RichSubCtx] -> IO Text
 compose subCtxs =
@@ -39,35 +42,37 @@ composeSentence sentencesInfos = do
   return $ intercalate "\n" sentences
 
 translateSentence :: (Sentence, SentenceInfos) -> IO Text
-translateSentence (sentence, sentencesInfos) =
-  (intercalate " ") <$> reorganized
+translateSentence (sentence, sentenceInfos) = do
+  intercalate " " <$> reorganized
   where
-    reorganized = (reorganizeSentence sentence <$> translations)
-    translations = mapM translate sentencesInfos
+    reorganized = reorganizeSentence sentence translations :: IO [Text]
+    translations = map zipWithWI sentenceInfos :: [(WordInfos, IO [Text])]
+    zipWithWI :: WordInfos -> (WordInfos, IO [Text])
+    zipWithWI wi = (wi, translate wi)
 
-reorganizeSentence :: Sentence -> [Translation] -> [Text]
-reorganizeSentence sentence translations =
-  map format withCorrectSpacing
+reorganizeSentence :: Sentence -> [(WordInfos, IO[Text])] -> IO [Text]
+reorganizeSentence sentence translations = do
+  translations' <- mapM getTranslations translations :: IO [(WordInfos, [Text])]
+  let a = map formatWithTranslation translations' :: [Text]
+  return $ setCorrectSpacing (words sentence) a []
   where
-    format :: Translation -> Text
-    format ((word, _, _), mTranslation) =
-      case mTranslation of
-        Just translation -> word <> " (" <> translation <> ")"
-        Nothing -> word
-    withCorrectSpacing = setCorrectSpacing (words sentence) translations []
+    getTranslations :: (WordInfos, IO[Text]) -> IO (WordInfos, [Text])
+    getTranslations (wi, iTranslations) = do
+      translations <- iTranslations
+      return (wi, translations)
 
-setCorrectSpacing :: [Text] -> [Translation] -> [Translation] -> [Translation]
+formatWithTranslation :: (WordInfos, [Text]) -> Text
+formatWithTranslation ((word, _, _), translations) =
+  case (translations ^? element 0) of
+    Just translation -> word <> " (" <> translation <> ")"
+    Nothing -> word
+
+setCorrectSpacing :: [Text] -> [Text] -> [Text] -> [Text]
 setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =
-  if (length a1 > translationLength b1) then
-    setCorrectSpacing a ((mergeTranslations b1 b2) : bs) acc
+  if (length a1 > length b1) then
+    setCorrectSpacing a ((b1 <> b2) : bs) acc
   else
     setCorrectSpacing as (b2:bs) (acc ++ [b1])
 setCorrectSpacing (a:as) (b:bs) acc = setCorrectSpacing as bs (acc ++ [b])
+setCorrectSpacing [] (b:bs) acc = setCorrectSpacing [] bs (acc ++ [b])
 setCorrectSpacing _ _ acc = acc
-
-translationLength :: Translation -> Int
-translationLength ((word, _, _), _) = length word
-
-mergeTranslations :: Translation -> Translation -> Translation
-mergeTranslations t1@((word1, lemma1, tag1), mTr1) t2@((word2, lemma2, tag2), mTr2) =
-  ((word1 <> word2, lemma1, tag1), mTr1 <> mTr2)
