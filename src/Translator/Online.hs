@@ -7,6 +7,7 @@
 
 module Translator.Online (
   translate
+, fetchTranslations
 ) where
 
 import Type
@@ -25,32 +26,40 @@ import GHC.Exts
 import Debug.Trace
 import Control.Exception
 import Network.HTTP.Client (HttpException(HttpExceptionRequest))
+import Data.Either
 
 data Def =
-  Def { text :: Text
-      , pos :: Tag
-      , tr :: [Tr]
+  Def { defText :: Text
+      , defPos :: Tag
+      , defTr :: [Tr]
       } deriving (Show, Generic)
 
-data Tr = Tr Text deriving (Show)
+data Tr =
+  Tr { trText :: Text
+     , trPos :: Tag
+     } deriving (Show)
 
-getText :: Tr -> Text
-getText (Tr text) = text
+instance FromJSON Def where
+  parseJSON = withObject "def" $ \o -> do
+    defText <- o .: "text"
+    defPos  <- o .: "pos"
+    defTr  <- o .: "tr"
+    return Def{..}
 
-instance FromJSON Def
 instance FromJSON Tr where
   parseJSON = withObject "tr" $ \o -> do
-    text <- o .: "text"
-    return $ Tr text
+    trText <- o .: "text"
+    trPos <- o .: "pos"
+    return $ Tr{..}
 
 shouldBeTranslated :: Tag -> Bool
 shouldBeTranslated =
   (flip elem) [Verb, Noun, Adj, Sym, Punct, Propn, Pron, Conj, Adv]
 
-translate :: WordInfos -> IO Translations
-translate wi@(word, lemma, tag, level)
+translate :: WordInfos -> (Text -> IO (Maybe (Response ByteString))) -> IO Translations
+translate wi@(word, lemma, tag, _) fetch
   | shouldBeTranslated tag = do
-      response <- fetchTranslations toTranslate :: IO (Maybe (Response ByteString))
+      response <- fetch toTranslate :: IO (Maybe (Response ByteString))
       let translations = (translationsBasedOnTag toTranslate tag) response
       res translations
   | otherwise = res []
@@ -58,6 +67,7 @@ translate wi@(word, lemma, tag, level)
     res x = return $ mkTranslations wi x
     toTranslate = case tag of
       Verb -> lemma
+      Noun -> lemma
       _ -> word
 
 fetchTranslations :: Text -> IO (Maybe (Response ByteString))
@@ -74,14 +84,28 @@ fetchTranslations toTranslate = do
 
 translationsBasedOnTag :: Text -> Tag -> Maybe (Response ByteString) -> [Text]
 translationsBasedOnTag toTranslate tag response = do
-  let translations = toDefs response :: [Def]
-  let correctDefs = Prelude.filter (((==) tag) . pos) translations
-  Prelude.map getText $ Prelude.concat (Prelude.map tr correctDefs)
+  let trs = toTrs response :: [Tr]
+  let correctTrs = Prelude.filter (\x -> tag == trPos x) trs
+  Prelude.map trText correctTrs
 
-toDefs :: Maybe (Response ByteString) -> [Def]
-toDefs response =
+toTrs :: Maybe (Response ByteString) -> [Tr]
+toTrs response =
   case response of
-    Just r -> Prelude.concat $ fromJSON $ parsed r
+    Just r -> case (trs $ defs r) of
+      t@(x:xs) -> t
+      _ -> []
     Nothing -> []
   where
-    parsed r = (r ^.. responseBody . key "def") !! 0
+    trs :: [Def] -> [Tr]
+    trs defs = Prelude.concat $ Prelude.map defTr defs
+    rDefs :: Response ByteString -> Result [Def]
+    rDefs r = (fromJSON $ toValue r)
+    defs :: Response ByteString -> [Def]
+    defs r = trace (show $ rDefs r) (successes $ rDefs r)
+    toValue r = (r ^.. responseBody . key "def") !! 0 :: Value
+
+successes :: Result [a] -> [a]
+successes r =
+  case r of
+    Success e -> e
+    Error _ -> []

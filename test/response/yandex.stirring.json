@@ -1,0 +1,31 @@
+{
+  "head":{},
+  "def":[
+    {
+      "text":"stirring",
+      "pos":"noun",
+      "ts":"ˈstɜːrɪŋ",
+      "tr":[
+        {
+          "text":"remuer",
+          "pos":"verb",
+          "mean":[
+            {
+              "text":"stir"
+            }
+          ]
+        },
+        {
+          "text":"agitation",
+          "pos":"noun",
+          "gen":"f",
+          "mean":[
+            {
+              "text":"stir"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

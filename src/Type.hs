@@ -76,7 +76,7 @@ data Level = Unknown
            | Normal
            | Hard deriving (Show, Eq, Ord)
 
-newtype Translations = Translations (WordInfos, [Text])
+newtype Translations = Translations (WordInfos, [Text]) deriving (Eq, Show)
 
 mkTranslations :: WordInfos -> [Text] -> Translations
 mkTranslations wi translations = Translations (wi, translations)

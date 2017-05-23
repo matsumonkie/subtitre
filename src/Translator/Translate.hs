@@ -20,4 +20,4 @@ offline :: WordInfos -> IO Translations
 offline = Offline.translate
 
 online :: WordInfos -> IO Translations
-online = Online.translate
+online = \wi -> Online.translate wi Online.fetchTranslations
