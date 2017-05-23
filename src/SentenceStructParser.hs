@@ -10,27 +10,33 @@ module SentenceStructParser (
 
 import Type
 import Data.Text
+import LevelSet
 import Data.Functor
 import Text.Parsec
+import Prelude hiding (Word)
+import Data.HashSet
 
-parseSentenceStructure :: Text -> Either ParseError SentenceInfos
-parseSentenceStructure = parse sentence "game of thrones"
+parseSentenceStructure :: LevelSets -> Text -> Either ParseError SentenceInfos
+parseSentenceStructure levelSets = parse (sentence levelSets) "game of thrones"
 
-sentence :: Parsec Text () SentenceInfos
-sentence = do
-  words <- many1 (wordCtx <* optional endOfLine)
+sentence :: LevelSets -> Parsec Text () SentenceInfos
+sentence levelSets = do
+  words <- many1 ((wordCtx levelSets) <* optional endOfLine)
   eof
   return words
 
-wordCtx :: Parsec Text () WordInfos
-wordCtx = do
+wordCtx :: LevelSets -> Parsec Text () WordInfos
+wordCtx levelSets = do
   orig <- word
   space
   lemma <- word
   space
   tag <- tagParser
-  let translation = Nothing
-  return (orig, lemma, tag)
+  return (orig, lemma, tag, whichLevel (whatWord (orig, lemma, tag)) levelSets)
+  where
+    whatWord (orig, lemma, tag) = toLower $ case tag of
+      Verb -> lemma
+      _ -> orig
 
 tagParser :: Parsec Text () Tag
 tagParser = do

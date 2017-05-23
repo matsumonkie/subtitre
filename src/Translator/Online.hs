@@ -23,6 +23,8 @@ import Data.ByteString.Lazy hiding (elem)
 import Text.Pretty.Simple (pPrint, pString)
 import GHC.Exts
 import Debug.Trace
+import Control.Exception
+import Network.HTTP.Client (HttpException(HttpExceptionRequest))
 
 data Def =
   Def { text :: Text
@@ -43,38 +45,43 @@ instance FromJSON Tr where
 
 shouldBeTranslated :: Tag -> Bool
 shouldBeTranslated =
-  (flip elem) [Adj, Adv, Conj, Noun, Pron, Punct, Sym, Verb]
+  (flip elem) [Verb, Noun, Adj, Sym, Punct, Propn, Pron, Conj, Adv]
 
-translate :: WordInfos -> IO [Text]
-translate wi@(word, lemma, tag)
+translate :: WordInfos -> IO Translations
+translate wi@(word, lemma, tag, level)
   | shouldBeTranslated tag = do
-      response <- fetchTranslations toTranslate :: IO (Response ByteString)
+      response <- fetchTranslations toTranslate :: IO (Maybe (Response ByteString))
       let translations = (translationsBasedOnTag toTranslate tag) response
-      return translations
-  | otherwise = return []
+      res translations
+  | otherwise = res []
   where
+    res x = return $ mkTranslations wi x
     toTranslate = case tag of
       Verb -> lemma
       _ -> word
 
-fetchTranslations :: Text -> IO (Response ByteString)
+fetchTranslations :: Text -> IO (Maybe (Response ByteString))
 fetchTranslations toTranslate = do
-  getWith opts url
+  catch (Just <$> (getWith opts url)) handler
   where
+    handler :: HttpException -> IO (Maybe (Response ByteString))
+    handler ex = return Nothing
     url = "https://dictionary.yandex.net/api/v1/dicservice.json/lookup"
     apiKey = "dict.1.1.20170504T075234Z.863de6041969620d.502a3098d4cdae0ffe21f5ee040349b524dc3807"
     opts = defaults & param "key"  .~ [apiKey]
                     & param "text" .~ [toTranslate]
                     & param "lang" .~ ["en-fr"]
 
-translationsBasedOnTag :: Text -> Tag -> Response ByteString -> [Text]
+translationsBasedOnTag :: Text -> Tag -> Maybe (Response ByteString) -> [Text]
 translationsBasedOnTag toTranslate tag response = do
   let translations = toDefs response :: [Def]
   let correctDefs = Prelude.filter (((==) tag) . pos) translations
   Prelude.map getText $ Prelude.concat (Prelude.map tr correctDefs)
 
-toDefs :: Response ByteString -> [Def]
+toDefs :: Maybe (Response ByteString) -> [Def]
 toDefs response =
-  Prelude.concat $ fromJSON parsed
+  case response of
+    Just r -> Prelude.concat $ fromJSON $ parsed r
+    Nothing -> []
   where
-    parsed = (response ^.. responseBody . key "def") !! 0
+    parsed r = (r ^.. responseBody . key "def") !! 0

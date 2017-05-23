@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Composer.RichSubCtx (
   compose
@@ -6,21 +7,22 @@ module Composer.RichSubCtx (
 ) where
 
 import Type
-import Prelude hiding (concat, length, words)
+import Prelude hiding (concat, words)
 import Data.Text hiding (map)
 import Data.Maybe
 import Translator.Translate
 import Data.Monoid
-import Control.Lens
+import Control.Lens hiding (Level)
+import Control.Concurrent.Async
 import Debug.Trace
 
-compose :: [RichSubCtx] -> IO Text
-compose subCtxs =
-  intercalate "\n\n" <$> mapM composeSub subCtxs
+compose :: Level -> [RichSubCtx] -> IO Text
+compose level subCtxs =
+  intercalate "\n\n" <$> mapM (composeSub level) subCtxs
 
-composeSub :: RichSubCtx -> IO Text
-composeSub (SubCtx sequence timingCtx sentences) = do
-  composedSentences <- composeSentence sentences
+composeSub :: Level -> RichSubCtx -> IO Text
+composeSub level (SubCtx sequence timingCtx sentences) = do
+  composedSentences <- composeSentence level sentences
   return $ intercalate "\n" [seq, composedTimingCtx, composedSentences]
   where
     seq = pack $ show sequence
@@ -31,45 +33,73 @@ composeTimingCtx (TimingCtx btiming etiming) =
   composedTimingCtx
   where
     composedTimingCtx = intercalate " --> " [(composeTiming btiming), (composeTiming etiming)]
-    composeTiming (Timing h m s ms) = intercalate ":" [(intToText h), (intToText m), (intToText s), (intToText ms)]
+    composeTiming (Timing h m s ms) =
+      (intercalate ":" [(intToText h), (intToText m), (intToText s)]) <> "," <> (intToText ms)
 
 intToText :: Int -> Text
-intToText i = pack $ show i
+intToText i =
+  pack $ if Prelude.length text < 2 then
+           '0' : text
+         else
+           text
+  where
+    text = show i
 
-composeSentence :: [(Sentence, SentenceInfos)] -> IO Text
-composeSentence sentencesInfos = do
-  sentences <- mapM translateSentence sentencesInfos
+composeSentence :: Level -> [(Sentence, SentenceInfos)] -> IO Text
+composeSentence level sentencesInfos = do
+  sentences <- mapM (translateSentence level) sentencesInfos
   return $ intercalate "\n" sentences
 
-translateSentence :: (Sentence, SentenceInfos) -> IO Text
-translateSentence (sentence, sentenceInfos) = do
+translateSentence :: Level -> (Sentence, SentenceInfos) -> IO Text
+translateSentence level (sentence, sentenceInfos) = do
   intercalate " " <$> reorganized
   where
-    reorganized = reorganizeSentence sentence translations :: IO [Text]
-    translations = map zipWithWI sentenceInfos :: [(WordInfos, IO [Text])]
-    zipWithWI :: WordInfos -> (WordInfos, IO [Text])
-    zipWithWI wi = (wi, translate wi)
+    reorganized = reorganizeSentence level sentence translations :: IO [Text]
+    translations = map (handleTranslation level) sentenceInfos :: [Asyncable Translations]
 
-reorganizeSentence :: Sentence -> [(WordInfos, IO[Text])] -> IO [Text]
-reorganizeSentence sentence translations = do
-  translations' <- mapM getTranslations translations :: IO [(WordInfos, [Text])]
-  let a = map formatWithTranslation translations' :: [Text]
-  return $ setCorrectSpacing (words sentence) a []
+shouldTranslate :: Level -> WordInfos -> Bool
+shouldTranslate levelToShow (_, _, _, level) =
+  levelToShow < level
+
+handleTranslation :: Level -> WordInfos -> Asyncable Translations
+handleTranslation levelToShow wi@(word, lemma, tag, level) =
+  if shouldTranslate levelToShow wi then
+    RealAsync $ (async . translate) wi
+  else
+    FakeAsync $ Translations (wi, [])
+
+data Asyncable e = RealAsync (IO (Async e))
+                 | FakeAsync e
+
+instance Functor Asyncable where
+  fmap f (RealAsync a) = RealAsync $ fmap (fmap f) a
+  fmap f (FakeAsync a) = FakeAsync $ f a
+
+holdOn :: Asyncable e -> IO e
+holdOn (RealAsync m) = m >>= wait
+holdOn (FakeAsync m) = return m
+
+reorganizeSentence :: Level -> Sentence -> [Asyncable Translations] -> IO [Text]
+reorganizeSentence level sentence translations = do
+  let waitingTranslations = map (fmap $ formatWithTranslation level) translations :: [Asyncable Text]
+  allTranslations <- mapM holdOn waitingTranslations :: IO [Text]
+  return $ setCorrectSpacing (words sentence) allTranslations []
+
+formatWithTranslation :: Level -> Translations -> Text
+formatWithTranslation levelToShow (Translations ((word, _, _, level), translations)) =
+  if levelToShow < level then
+    format $ translations ^? element 0
+  else
+    word
   where
-    getTranslations :: (WordInfos, IO[Text]) -> IO (WordInfos, [Text])
-    getTranslations (wi, iTranslations) = do
-      translations <- iTranslations
-      return (wi, translations)
-
-formatWithTranslation :: (WordInfos, [Text]) -> Text
-formatWithTranslation ((word, _, _), translations) =
-  case (translations ^? element 0) of
-    Just translation -> word <> " (" <> translation <> ")"
-    Nothing -> word
+    format :: Maybe Text -> Text
+    format translation = case translation of
+      Just translation -> word <> " (" <> translation <> ")"
+      Nothing -> word
 
 setCorrectSpacing :: [Text] -> [Text] -> [Text] -> [Text]
 setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =
-  if (length a1 > length b1) then
+  if (Data.Text.length a1 > Data.Text.length b1) then
     setCorrectSpacing a ((b1 <> b2) : bs) acc
   else
     setCorrectSpacing as (b2:bs) (acc ++ [b1])

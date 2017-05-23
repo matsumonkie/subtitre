@@ -21,12 +21,16 @@ module Type (
 , WordInfos(..)
 , RichSubCtx(..)
 , Tag(..)
-, Translation
+, Word
+, Translations(..)
+, mkTranslations
 , Lemma
+, or
+, Level(..)
 ) where
 
-import Data.Text
-import Prelude hiding (Word)
+import Data.Text hiding (length)
+import Prelude hiding (Word, or)
 import Data.Aeson
 import GHC.Generics
 import GHC.Exts hiding (Word)
@@ -51,7 +55,7 @@ type RawSubCtx  = SubCtx [Sentence]
 type RichSubCtx = SubCtx [(Sentence, SentenceInfos)]
 
 type SentenceInfos = [WordInfos]
-type WordInfos = (Word, Lemma, Tag)
+type WordInfos = (Word, Lemma, Tag, Level)
 type Word = Text
 type Lemma = Text
 data Tag = Adj
@@ -67,12 +71,24 @@ data Tag = Adj
          | Else
          deriving (Show, Eq)
 
-type Translation = (WordInfos, Maybe Text)
+data Level = Unknown
+           | Easy
+           | Normal
+           | Hard deriving (Show, Eq, Ord)
+
+newtype Translations = Translations (WordInfos, [Text])
+
+mkTranslations :: WordInfos -> [Text] -> Translations
+mkTranslations wi translations = Translations (wi, translations)
+
+or :: Translations -> Translations -> Translations
+or t1@(Translations(_, a)) t2 =
+  if (length a > 0) then t1 else t2
 
 p :: SentenceInfos
-p = [ ("the", "", Else)
-    , ("butler", "", Else)
-    , ("looks up", "", Verb)
-    , ("his", "", Else)
-    , ("higness", "", Else)
+p = [ ("the", "", Else, Unknown)
+    , ("butler", "", Else, Unknown)
+    , ("looks up", "", Verb, Unknown)
+    , ("his", "", Else, Unknown)
+    , ("higness", "", Else, Unknown)
     ]

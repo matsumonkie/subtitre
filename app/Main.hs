@@ -19,33 +19,32 @@ import qualified Data.ByteString.Lazy as LByteString (ByteString, toStrict)
 import Data.Text.Encoding (decodeUtf8)
 import qualified Data.Text.Lazy.IO as LTextIO (putStrLn)
 import Control.Monad.IO.Class
+import Data.Either
+import Data.Monoid
+import LevelSet
 
 subtitleFile = "mini-sample.srt"
 subtitleStructFile = "struct.srt"
 
+saveToFile :: FilePath -> Text -> IO ()
+saveToFile file content =
+  TextIO.writeFile file content
+
 main :: IO ()
 main = do
-  res <- parseSubtitlesOfFile subtitleFile
+  let subSrt = "6.srt"
+  levelSets <- getLevelSets :: IO LevelSets
+  res <- parseSubtitlesOfFile $ "/home/iori/temp/" <> subSrt
   case res of
     Right subCtxts -> do
-      e <- createRichSubCtx subCtxts :: IO [Either [ParseError] RichSubCtx]
-      let e' = e !! 0
-      case e' of
-        Left error ->
-          pPrint "test"
-        Right richSub ->
-          pPrint "test"
-    Left error ->
-      pPrint error
---      let e = createRichSubCtx (subCtxts !! 0) :: ExceptT ParseError IO RichSubCtx
-{-      let es = mapM createRichSubCtx subCtxts :: ExceptT ParseError IO [RichSubCtx]
-      es' <- runExceptT es :: IO (Either ParseError [RichSubCtx])
-      case (fmap compose es') of
-        Left _ -> pPrint "nope"
-        Right e -> do
-          e' <- e
-          pPrint e'
--}
+      richSubCtxs <- createRichSubCtx levelSets subCtxts :: IO [Either [ParseError] RichSubCtx]
+      let foo = rights richSubCtxs :: [RichSubCtx]
+      text <- compose Normal foo
+      let output = "/home/iori/temp/t" <> subSrt :: FilePath
+      saveToFile output text
+      pPrint text
+    Left e ->
+      pPrint e
 
 putLazyByteStringLn :: LByteString.ByteString -> IO ()
 putLazyByteStringLn = TextIO.putStrLn . lazyByteStringToText

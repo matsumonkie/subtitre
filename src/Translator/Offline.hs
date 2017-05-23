@@ -27,9 +27,9 @@ adjs :: Dictionary
 adjs =
   fromList [("his", "sa/son")]
 
-translate :: WordInfos -> IO [Text]
-translate wi@(word, lemma, tag) =
-  return $ case tag of
+translate :: WordInfos -> IO Translations
+translate wi@(word, lemma, tag, level) =
+  return $ mkTranslations wi $ case tag of
     Else -> []
     _    -> maybe [] (\x -> [x]) translation
   where

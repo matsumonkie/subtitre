@@ -11,14 +11,13 @@ import Data.Text
 import qualified Translator.Online as Online
 import qualified Translator.Offline as Offline
 import Control.Applicative
-import Control.Concurrent.Async
 
-translate :: WordInfos -> IO [Text]
+translate :: WordInfos -> IO Translations
 translate wi =
-  liftA2 (<|>) (offline wi) (online wi)
+  liftA2 Type.or (offline wi) (online wi)
 
-offline :: WordInfos -> IO [Text]
+offline :: WordInfos -> IO Translations
 offline = Offline.translate
 
-online :: WordInfos -> IO [Text]
+online :: WordInfos -> IO Translations
 online = Online.translate

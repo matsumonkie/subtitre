@@ -27,15 +27,16 @@ import Data.Aeson
 import Data.ByteString.Lazy.Internal
 import Control.Monad.IO.Class
 import Data.Monoid
+import LevelSet
 
 sentenceSeparator = " <$> " :: Text
 subSeparator      = " <*> " :: Text
 
-createRichSubCtx :: [RawSubCtx] -> IO [Either [ParseError] RichSubCtx]
-createRichSubCtx allRawSubCtx = do
+createRichSubCtx :: LevelSets -> [RawSubCtx] -> IO [Either [ParseError] RichSubCtx]
+createRichSubCtx levelSets allRawSubCtx = do
   content <- runSpacy $ mergeSubs allRawSubCtx
   let unmerged    = unmergeSubs content
-  let parsed      = map parse unmerged
+  let parsed      = map (parse levelSets) unmerged
   let richSubCtxs = map toRichSubCtx (zip allRawSubCtx parsed)
   return richSubCtxs
 
@@ -46,19 +47,24 @@ mergeSubs allRawSubCtx =
     getSentence :: RawSubCtx -> Text
     getSentence (SubCtx _ _ sentences) = intercalate sentenceSeparator sentences
 
+{-
+input = "hello\n <$> \nworld!\n <*> \nit's me"
+output = [["hello", "world!"], ["it's me"]]
+-}
 unmergeSubs :: Text -> [[Text]]
 unmergeSubs allSubs =
   map (splitOn ("\n" <> sentenceSeparator <> "\n")) (splitOn ("\n" <> subSeparator <> "\n") allSubs)
 
-parse :: [Text] -> Either [ParseError] [SentenceInfos]
-parse twoSentences =
+parse :: LevelSets -> [Text] -> Either [ParseError] [SentenceInfos]
+parse levelSets sentence =
   case lefts parsed of
     [] -> Right $ rights parsed
     errors -> Left errors
   where
-    parsed = map parseSentenceStructure twoSentences :: [Either ParseError SentenceInfos]
+    parsed = map (parseSentenceStructure levelSets) sentence :: [Either ParseError SentenceInfos]
 
-toRichSubCtx :: (RawSubCtx, Either [ParseError] [SentenceInfos]) -> Either [ParseError] RichSubCtx
+toRichSubCtx :: (RawSubCtx, Either [ParseError] [SentenceInfos])
+             -> Either [ParseError] RichSubCtx
 toRichSubCtx ((SubCtx sequence timingCtx sentences), parsed) =
   case parsed of
     Left errors -> Left errors

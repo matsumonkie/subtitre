@@ -35,11 +35,20 @@ instance ToJSON Tag where
       Adj  -> "Adj"
       Else -> "Else"
 
+instance ToJSON Level where
+  toJSON tag =
+    case tag of
+      Easy -> "Easy"
+      Normal  -> "Normal"
+      Hard -> "Hard"
+      Unknown -> "Unknown"
+
 instance ToJSON WordInfos where
-  toJSON (word, lemma, tag) =
+  toJSON (word, lemma, tag, level) =
     object [ "word"  .= word
            , "lemma" .= lemma
            , "tag"   .= tag
+           , "level" .= level
            ]
 
 instance ToJSON TimingCtx where
@@ -72,11 +81,11 @@ mapInd :: (a -> Int -> b) -> [a] -> [b]
 mapInd f l = zipWith f l [0..]
 
 wordInfos :: WordInfos -> Int -> Value
-wordInfos wordInfo@(word, lemma, tag) idx =
+wordInfos wordInfo@(word, lemma, tag, level) idx =
   object [(pack $ show idx) .= wordInfo]
 
 preprocess :: WordInfos -> Int -> Text
-preprocess (word, lemma, tag) idx =
+preprocess (word, lemma, tag, level) idx =
   if tag == Else then
     " " <> word
   else

@@ -20,6 +20,7 @@ import qualified System.IO as SIO
 import qualified System.IO.Error as SIE
 import qualified Control.Exception as Ex
 import GHC.IO.Exception
+import LevelSet
 
 parseSubtitlesOfFile :: FilePath -> IO (Either ParseError [RawSubCtx])
 parseSubtitlesOfFile file = do
