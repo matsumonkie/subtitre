@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module OnlineSpec (main, spec) where
+module Translator.OnlineSpec (main, spec) where
 
 import Type
 import Data.Monoid
@@ -21,10 +21,10 @@ spec :: Spec
 spec = do
   describe "Translator/Online" $ do
     describe "parse" $ do
-    it "end with newline" $ do
-      let wi = ("stirrings", "stirring", Noun, Normal)
-      Translations(_, translations) <- translate wi $ fetch "yandex.stirring.json"
-      translations `shouldBe` ["agitation"]
+      it "end with newline" $ do
+        let wi = ("stirrings", "stirring", Noun, Normal)
+        Translations(_, translations) <- translate wi $ fetch "yandex.stirring.json"
+        translations `shouldBe` ["agitation"]
 
 fakeResponse :: ByteString -> Response ByteString
 fakeResponse body =

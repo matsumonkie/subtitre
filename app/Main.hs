@@ -32,7 +32,7 @@ saveToFile file content =
 
 main :: IO ()
 main = do
-  let subSrt = "7.srt"
+  let subSrt = "8.srt"
   levelSets <- getLevelSets :: IO LevelSets
   res <- parseSubtitlesOfFile $ "/home/iori/temp/" <> subSrt
   case res of

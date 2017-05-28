@@ -2,7 +2,7 @@
 
 module LevelSet (
   LevelSet
-, LevelSets
+, LevelSets(..)
 , whichLevel
 , getLevelSets
 ) where

@@ -12,6 +12,8 @@ import SentenceStructParser
 import RawSubParser
 import Control.Monad.Trans.Except
 import RichSubCtx
+import LevelSet
+import Data.HashMap.Strict hiding (map)
 
 main :: IO ()
 main = hspec spec
@@ -22,14 +24,14 @@ spec = do
     describe "parse" $ do
       context "simple sample" $ do
         it "simple line" $ do
-          parseSentenceStructure "I -PRON- PRON" `shouldBe` (Right [("I", "-PRON-", Pron, Easy)] :: Either Text.Parsec.ParseError SentenceInfos)
+          parseSentenceStructure levelSets "I -PRON- PRON" `shouldBe` (Right [("I", "-PRON-", Pron, Unknown)] :: Either Text.Parsec.ParseError SentenceInfos)
         it "new line at end of file" $ do
-          parseSentenceStructure "I -PRON- PRON\n" `shouldBe` (Right [("I", "-PRON-", Pron, Easy)] :: Either Text.Parsec.ParseError [WordInfos])
+          parseSentenceStructure levelSets "I -PRON- PRON\n" `shouldBe` (Right [("I", "-PRON-", Pron, Unknown)] :: Either Text.Parsec.ParseError [WordInfos])
         it "multiple argument" $ do
-          length <$> parseSentenceStructure multipleArg `shouldBe` Right 4
+          length <$> parseSentenceStructure levelSets multipleArg `shouldBe` Right 4
         it "different level" $ do
-          parseSentenceStructure "worthless worthless ADJ" `shouldBe` (Right [("worthless", "worthless", Adj, Unknown)] :: Either Text.Parsec.ParseError [WordInfos])
-          parseSentenceStructure "mighty mighty ADV" `shouldBe` (Right [("mighty", "mighty", Adv, Hard)] :: Either Text.Parsec.ParseError [WordInfos])
+          parseSentenceStructure levelSets "worthless worthless ADJ" `shouldBe` (Right [("worthless", "worthless", Adj, Unknown)] :: Either Text.Parsec.ParseError [WordInfos])
+          parseSentenceStructure levelSets "mighty mighty ADV" `shouldBe` (Right [("mighty", "mighty", Adv, Unknown)] :: Either Text.Parsec.ParseError [WordInfos])
 
       context "real subtitles" $ do
         it "works" $ do
@@ -38,11 +40,15 @@ spec = do
           parsingDoesntFail gameOfThrones
           parsingDoesntFail friends
 
+
+levelSets :: LevelSets
+levelSets = LevelSets (fromList [], fromList [], fromList [])
+
 parsingDoesntFail :: FilePath -> Expectation
 parsingDoesntFail file = do
   rawParsed <- parseFile file :: IO (Either ParseError [RawSubCtx])
   let subs = either (const []) (id) rawParsed :: [RawSubCtx]
-  richSubs <- createRichSubCtx subs
+  richSubs <- createRichSubCtx levelSets subs
   case (richSubs) of
     Right (SubCtx _ _  ((s, si):ss)   ):r -> putStrLn $ show si
 
