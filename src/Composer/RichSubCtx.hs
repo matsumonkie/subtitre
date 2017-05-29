@@ -15,16 +15,19 @@ import Data.Monoid
 import Control.Lens hiding (Level)
 import Control.Concurrent.Async
 import Debug.Trace
+import Control.Monad.Reader
 
-composeSubs :: Level -> [RichSubCtx] -> IO Text
-composeSubs level subCtxs =
-  intercalate "\n\n" <$> mapM (composeSub level) subCtxs
+composeSubs :: Level -> [RichSubCtx] -> RTranslator Text
+composeSubs level subCtxs = do
+  e <- mapM (composeSub level) subCtxs :: RTranslator [Text]
+  return $ intercalate "\n\n" e
 
-composeSub :: Level -> RichSubCtx -> IO Text
+composeSub :: Level -> RichSubCtx -> RTranslator Text
 composeSub level (SubCtx sequence timingCtx sentences) = do
-  composedSentences <- composeSentence level sentences
+  composedSentences <- composeSentence level sentences :: RTranslator Text
   return $ intercalate "\n" $ subAsArray composedSentences
   where
+    subAsArray :: Text -> [Text]
     subAsArray composedSentences = [ seq
                                    , composeTimingCtx timingCtx
                                    , composedSentences
@@ -38,49 +41,40 @@ composeTimingCtx (TimingCtx btiming etiming) =
     composedTimingCtx = intercalate " --> " [(composeTiming btiming), (composeTiming etiming)]
     composeTiming (Timing h m s ms) =
       (intercalate ":" [(intToText h), (intToText m), (intToText s)]) <> "," <> (intToText ms)
+    intToText :: Int -> Text
+    intToText i =
+      pack $ if Prelude.length text < 2 then
+               '0' : text
+             else
+               text
+      where
+        text = show i
 
-intToText :: Int -> Text
-intToText i =
-  pack $ if Prelude.length text < 2 then
-           '0' : text
-         else
-           text
-  where
-    text = show i
-
-composeSentence :: Level -> [(Sentence, SentenceInfos)] -> IO Text
+composeSentence :: Level -> [(Sentence, SentenceInfos)] -> RTranslator Text
 composeSentence level sentencesInfos = do
-  sentences <- mapM (translateSentence level) sentencesInfos
+  sentences <- mapM (translateSentence level) sentencesInfos :: RTranslator [Text]
   return $ intercalate "\n" sentences
 
-translateSentence :: Level -> (Sentence, SentenceInfos) -> IO Text
+translateSentence :: Level -> (Sentence, SentenceInfos) -> RTranslator Text
 translateSentence level (sentence, sentenceInfos) = do
-  intercalate " " <$> reorganized
+  text <- reorganized :: RTranslator [Text]
+  return $ intercalate " " text
   where
-    reorganized = reorganizeSentence level sentence translations :: IO [Text]
-    translations = map (handleTranslation level) sentenceInfos :: [Asyncable Translations]
+    translations = mapM (handleTranslation level) sentenceInfos :: RTranslator [(Asyncable Translations)]
+    reorganized :: RTranslator [Text]
+    reorganized = do
+      tr' <- translations
+      lift $ reorganizeSentence level sentence tr' :: RTranslator [Text]
 
-shouldTranslate :: Level -> WordInfos -> Bool
-shouldTranslate levelToShow (_, _, _, level) =
-  levelToShow < level
-
-handleTranslation :: Level -> WordInfos -> Asyncable Translations
-handleTranslation levelToShow wi@(word, lemma, tag, level) =
-  if shouldTranslate levelToShow wi then
-    RealAsync $ (async . translate) wi
+handleTranslation :: Level -> WordInfos -> RTranslator (Asyncable Translations)
+handleTranslation levelToShow wi@(word, lemma, tag, level) = do
+  translator <- ask
+  return $ if shouldTranslate levelToShow level then
+    RealAsync $ (async . translator) wi
   else
     FakeAsync $ Translations (wi, [])
-
-data Asyncable e = RealAsync (IO (Async e))
-                 | FakeAsync e
-
-instance Functor Asyncable where
-  fmap f (RealAsync a) = RealAsync $ fmap (fmap f) a
-  fmap f (FakeAsync a) = FakeAsync $ f a
-
-holdOn :: Asyncable e -> IO e
-holdOn (RealAsync m) = m >>= wait
-holdOn (FakeAsync m) = return m
+  where
+    shouldTranslate levelToShow level = levelToShow < level
 
 reorganizeSentence :: Level -> Sentence -> [Asyncable Translations] -> IO [Text]
 reorganizeSentence level sentence translations = do
@@ -109,3 +103,14 @@ setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =
 setCorrectSpacing (a:as) (b:bs) acc = setCorrectSpacing as bs (acc ++ [b])
 setCorrectSpacing [] (b:bs) acc = setCorrectSpacing [] bs (acc ++ [b])
 setCorrectSpacing _ _ acc = acc
+
+data Asyncable e = RealAsync (IO (Async e))
+                 | FakeAsync e
+
+instance Functor Asyncable where
+  fmap f (RealAsync a) = RealAsync $ fmap (fmap f) a
+  fmap f (FakeAsync a) = FakeAsync $ f a
+
+holdOn :: Asyncable e -> IO e
+holdOn (RealAsync m) = m >>= wait
+holdOn (FakeAsync m) = return m

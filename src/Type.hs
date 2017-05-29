@@ -27,6 +27,7 @@ module Type (
 , Lemma
 , or
 , Level(..)
+, RTranslator
 ) where
 
 import Data.Text hiding (length)
@@ -77,6 +78,9 @@ data Level = Unknown
            | Hard deriving (Show, Eq, Ord)
 
 newtype Translations = Translations (WordInfos, [Text]) deriving (Eq, Show)
+
+type Translator = WordInfos -> IO Translations
+type RTranslator a = ReaderT Translator IO a
 
 mkTranslations :: WordInfos -> [Text] -> Translations
 mkTranslations wi translations = Translations (wi, translations)

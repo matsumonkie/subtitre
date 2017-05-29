@@ -15,7 +15,6 @@ import Control.Monad.State
 import Control.Monad.Writer
 import Control.Monad.Reader
 
-
 foo :: ExceptT String (WriterT String (StateT String (ReaderT String IO))) String
 foo = do
   ask
@@ -24,3 +23,21 @@ foo = do
   tell ""
   throwE ""
   return ""
+
+addTest :: Reader String String
+addTest = do
+  str' <- ask
+  return $ str' ++ ":test"
+
+baz :: Reader String (IO String)
+baz = do
+  b <- addTest :: Reader String String
+  return $ bee b
+
+bee :: String -> IO String
+bee b = return $ b ++ ":io"
+
+main = do
+--  putStrLn $ show $ runReader addTest "someEnv"
+  e <- runReader baz "someEnv2"
+  putStrLn $ show $ e

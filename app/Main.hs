@@ -22,6 +22,8 @@ import Control.Monad.IO.Class
 import Data.Either
 import Data.Monoid
 import LevelSet
+import Translator.Translate
+import Control.Monad.Reader
 
 subtitleFile = "mini-sample.srt"
 subtitleStructFile = "struct.srt"
@@ -39,7 +41,7 @@ main = do
     Right subCtxts -> do
       richSubCtxs <- createRichSubCtx levelSets subCtxts :: IO [Either [ParseError] RichSubCtx]
       let foo = rights richSubCtxs :: [RichSubCtx]
-      text <- composeSubs Normal foo
+      text <- runReaderT (composeSubs Normal foo) translate :: IO Text
       let output = "/home/iori/temp/t" <> subSrt :: FilePath
       saveToFile output text
       pPrint text
