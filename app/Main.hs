@@ -39,7 +39,7 @@ main = do
     Right subCtxts -> do
       richSubCtxs <- createRichSubCtx levelSets subCtxts :: IO [Either [ParseError] RichSubCtx]
       let foo = rights richSubCtxs :: [RichSubCtx]
-      text <- compose Normal foo
+      text <- composeSubs Normal foo
       let output = "/home/iori/temp/t" <> subSrt :: FilePath
       saveToFile output text
       pPrint text

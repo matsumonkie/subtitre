@@ -2,7 +2,7 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Composer.RichSubCtx (
-  compose
+  composeSubs
 , composeSentence
 ) where
 
@@ -16,17 +16,20 @@ import Control.Lens hiding (Level)
 import Control.Concurrent.Async
 import Debug.Trace
 
-compose :: Level -> [RichSubCtx] -> IO Text
-compose level subCtxs =
+composeSubs :: Level -> [RichSubCtx] -> IO Text
+composeSubs level subCtxs =
   intercalate "\n\n" <$> mapM (composeSub level) subCtxs
 
 composeSub :: Level -> RichSubCtx -> IO Text
 composeSub level (SubCtx sequence timingCtx sentences) = do
   composedSentences <- composeSentence level sentences
-  return $ intercalate "\n" [seq, composedTimingCtx, composedSentences]
+  return $ intercalate "\n" $ subAsArray composedSentences
   where
+    subAsArray composedSentences = [ seq
+                                   , composeTimingCtx timingCtx
+                                   , composedSentences
+                                   ]
     seq = pack $ show sequence
-    composedTimingCtx = composeTimingCtx timingCtx
 
 composeTimingCtx :: TimingCtx -> Text
 composeTimingCtx (TimingCtx btiming etiming) =
