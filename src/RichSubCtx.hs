@@ -36,10 +36,10 @@ subSeparator      = " <*> " :: Text
 
 createRichSubCtx :: [RawSubCtx] -> App [RichSubCtx]
 createRichSubCtx allRawSubCtx = do
-  env <- ask
+  conf <- ask
   content <- liftIO $ runSpacy $ mergeSubs allRawSubCtx
   let unmerged    = unmergeSubs content
-  let parsed      = map (parse (levelSets env)) unmerged
+  let parsed      = map (parse (levelSets conf)) unmerged
   let richSubCtxs = mapM toRichSubCtx (zip allRawSubCtx parsed) :: Either [ParseError] [RichSubCtx]
   case richSubCtxs of
     Left pes -> lift $ throwE $ map AppError pes

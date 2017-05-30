@@ -40,10 +40,8 @@ main = do
                                 , settings = HM.fromList []
                                 , levelSets = levelSets
                                 , levelToShow = Normal
-                                , dir = "/home/iori/temp/"
+                                , dir = "/home/iori/temp"
                                 , file = "8.srt"
-                                , inputFile = (dir runtimeConf) <> (file runtimeConf)
-                                , outputFile = (dir runtimeConf) <> (file runtimeConf)
                                 }
   runExceptT (runReaderT main' runtimeConf)
   return ()
@@ -51,7 +49,7 @@ main = do
 main' :: App ()
 main' = do
   conf <- ask
-  parsed <- (parseSubtitlesOfFile $ inputFile conf)
+  parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text <- composeSubs riched
   liftIO $ saveToFile (outputFile conf) text

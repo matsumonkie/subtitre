@@ -33,6 +33,8 @@ module Type (
 , LevelSet
 , LevelSets(..)
 , AppError(..)
+, inputFile
+, outputFile
 ) where
 
 import Data.Text hiding (length)
@@ -102,9 +104,13 @@ data RuntimeConf =
               , levelToShow :: Level
               , dir :: FilePath
               , file :: FilePath
-              , inputFile :: FilePath
-              , outputFile :: FilePath
               }
+
+inputFile :: RuntimeConf -> FilePath
+inputFile conf = (dir conf) <> "/" <> (file conf)
+
+outputFile :: RuntimeConf -> FilePath
+outputFile conf = (dir conf) <> "/t" <> (file conf)
 
 mkTranslations :: WordInfos -> [Text] -> Translations
 mkTranslations wi translations = Translations (wi, translations)
