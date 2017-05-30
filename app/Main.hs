@@ -24,6 +24,7 @@ import Data.Monoid
 import LevelSet
 import Translator.Translate
 import Control.Monad.Reader
+import qualified Data.HashMap.Strict as HM
 
 subtitleFile = "mini-sample.srt"
 subtitleStructFile = "struct.srt"
@@ -34,25 +35,29 @@ saveToFile file content =
 
 main :: IO ()
 main = do
-  let subSrt = "8.srt"
   levelSets <- getLevelSets :: IO LevelSets
-  res <- parseSubtitlesOfFile $ "/home/iori/temp/" <> subSrt
+  runReaderT main' (runtimeConf levelSets)
+  where
+    runtimeConf levelSets =
+      RuntimeConf { translator = translate
+                  , settings = HM.fromList []
+                  , levelSets = levelSets
+                  , levelToShow = Normal
+                  , dir = "/home/iori/temp/"
+                  , subFile = "8.srt"
+                  }
+
+main' = do
+  conf <- ask
+  res <- parseSubtitlesOfFile $ input conf
   case res of
     Right subCtxts -> do
-      richSubCtxs <- createRichSubCtx levelSets subCtxts :: IO [Either [ParseError] RichSubCtx]
-      let foo = rights richSubCtxs :: [RichSubCtx]
-      text <- runReaderT (composeSubs Normal foo) translate :: IO Text
-      let output = "/home/iori/temp/t" <> subSrt :: FilePath
-      saveToFile output text
+      richSubCtxs <- createRichSubCtx subCtxts
+      text <- composeSubs $ rights richSubCtxs
+      liftIO $ saveToFile (output conf) text
       pPrint text
     Left e ->
       pPrint e
-
-putLazyByteStringLn :: LByteString.ByteString -> IO ()
-putLazyByteStringLn = TextIO.putStrLn . lazyByteStringToText
-
-lazyByteStringToString :: LByteString.ByteString -> String
-lazyByteStringToString = unpack . lazyByteStringToText
-
-lazyByteStringToText :: LByteString.ByteString -> Text
-lazyByteStringToText = decodeUtf8 . LByteString.toStrict
+  where
+    input conf = (dir conf) <> (subFile conf)
+    output conf = (dir conf) <> "t" <> (subFile conf) :: FilePath

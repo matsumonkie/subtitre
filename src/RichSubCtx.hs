@@ -27,15 +27,18 @@ import Data.ByteString.Lazy.Internal
 import Control.Monad.IO.Class
 import Data.Monoid
 import LevelSet
+import Control.Monad.Reader (ReaderT, runReaderT)
+import Control.Monad.Reader
 
 sentenceSeparator = " <$> " :: Text
 subSeparator      = " <*> " :: Text
 
-createRichSubCtx :: LevelSets -> [RawSubCtx] -> IO [Either [ParseError] RichSubCtx]
-createRichSubCtx levelSets allRawSubCtx = do
-  content <- runSpacy $ mergeSubs allRawSubCtx
+createRichSubCtx :: [RawSubCtx] -> App [Either [ParseError] RichSubCtx]
+createRichSubCtx allRawSubCtx = do
+  env <- ask
+  content <- liftIO $ runSpacy $ mergeSubs allRawSubCtx
   let unmerged    = unmergeSubs content
-  let parsed      = map (parse levelSets) unmerged
+  let parsed      = map (parse (levelSets env)) unmerged
   let richSubCtxs = map toRichSubCtx (zip allRawSubCtx parsed)
   return richSubCtxs
 

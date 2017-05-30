@@ -17,14 +17,14 @@ import Control.Concurrent.Async
 import Debug.Trace
 import Control.Monad.Reader
 
-composeSubs :: Level -> [RichSubCtx] -> RTranslator Text
-composeSubs level subCtxs = do
-  e <- mapM (composeSub level) subCtxs :: RTranslator [Text]
+composeSubs :: [RichSubCtx] -> App Text
+composeSubs subCtxs = do
+  e <- mapM composeSub subCtxs :: App [Text]
   return $ intercalate "\n\n" e
 
-composeSub :: Level -> RichSubCtx -> RTranslator Text
-composeSub level (SubCtx sequence timingCtx sentences) = do
-  composedSentences <- composeSentence level sentences :: RTranslator Text
+composeSub :: RichSubCtx -> App Text
+composeSub (SubCtx sequence timingCtx sentences) = do
+  composedSentences <- composeSentence sentences :: App Text
   return $ intercalate "\n" $ subAsArray composedSentences
   where
     subAsArray :: Text -> [Text]
@@ -50,40 +50,41 @@ composeTimingCtx (TimingCtx btiming etiming) =
       where
         text = show i
 
-composeSentence :: Level -> [(Sentence, SentenceInfos)] -> RTranslator Text
-composeSentence level sentencesInfos = do
-  sentences <- mapM (translateSentence level) sentencesInfos :: RTranslator [Text]
+composeSentence :: [(Sentence, SentenceInfos)] -> App Text
+composeSentence sentencesInfos = do
+  sentences <- mapM translateSentence sentencesInfos :: App [Text]
   return $ intercalate "\n" sentences
 
-translateSentence :: Level -> (Sentence, SentenceInfos) -> RTranslator Text
-translateSentence level (sentence, sentenceInfos) = do
-  text <- reorganized :: RTranslator [Text]
+translateSentence :: (Sentence, SentenceInfos) -> App Text
+translateSentence (sentence, sentenceInfos) = do
+  text <- reorganized :: App [Text]
   return $ intercalate " " text
   where
-    translations = mapM (handleTranslation level) sentenceInfos :: RTranslator [(Asyncable Translations)]
-    reorganized :: RTranslator [Text]
+    translations = mapM (handleTranslation) sentenceInfos :: App [(Asyncable Translations)]
+    reorganized :: App [Text]
     reorganized = do
       tr' <- translations
-      lift $ reorganizeSentence level sentence tr' :: RTranslator [Text]
+      reorganizeSentence sentence tr' :: App [Text]
 
-handleTranslation :: Level -> WordInfos -> RTranslator (Asyncable Translations)
-handleTranslation levelToShow wi@(word, lemma, tag, level) = do
-  translator <- ask
-  return $ if shouldTranslate levelToShow level then
-    RealAsync $ (async . translator) wi
+handleTranslation :: WordInfos -> App (Asyncable Translations)
+handleTranslation wi@(word, lemma, tag, level) = do
+  conf <- ask
+  return $ if shouldTranslate (levelToShow conf) level then
+    RealAsync $ (async . (translator conf)) wi
   else
     FakeAsync $ Translations (wi, [])
   where
     shouldTranslate levelToShow level = levelToShow < level
 
-reorganizeSentence :: Level -> Sentence -> [Asyncable Translations] -> IO [Text]
-reorganizeSentence level sentence translations = do
-  let waitingTranslations = map (fmap $ formatWithTranslation level) translations :: [Asyncable Text]
-  allTranslations <- mapM holdOn waitingTranslations :: IO [Text]
+reorganizeSentence :: Sentence -> [Asyncable Translations] -> App [Text]
+reorganizeSentence sentence translations = do
+  conf <- ask
+  let waitingTranslations = map (fmap $ formatWithTranslation (levelToShow conf)) translations :: [Asyncable Text]
+  allTranslations <- liftIO $ mapM holdOn waitingTranslations
   return $ setCorrectSpacing (words sentence) allTranslations []
 
 formatWithTranslation :: Level -> Translations -> Text
-formatWithTranslation levelToShow (Translations ((word, _, _, level), translations)) =
+formatWithTranslation levelToShow (Translations ((word, _, _, level), translations)) = do
   if levelToShow < level then
     format $ translations ^? element 0
   else
