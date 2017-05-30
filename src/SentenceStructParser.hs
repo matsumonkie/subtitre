@@ -2,6 +2,16 @@
 
 {-
   Take a structured sentence and deserialize it
+  i: I -PRON- PRON\n
+     wanted want VERB\n
+     ice ice NOUN\n
+     creams cream NOUN
+  o: Right [
+       ("I", "-PRON-", Pron, Easy)
+     , ("wanted", "want", Verb, Easy)
+     , ("ice", "ice", Noun, Easy)
+     , ("creams", "cream", Noun, Easy)
+     ]
 -}
 
 module SentenceStructParser (

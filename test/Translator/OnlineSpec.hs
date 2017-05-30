@@ -13,6 +13,7 @@ import Network.Wreq
 import qualified Network.HTTP.Client.Internal as HTTP
 import Network.HTTP.Types.Status
 import Network.HTTP.Types.Version
+import TestUtil
 
 main :: IO ()
 main = hspec spec
@@ -26,20 +27,10 @@ spec = do
         Translations(_, translations) <- translate wi $ fetch "yandex.stirring.json"
         translations `shouldBe` ["agitation"]
 
-fakeResponse :: ByteString -> Response ByteString
-fakeResponse body =
-  HTTP.Response { HTTP.responseStatus    = status200
-                , HTTP.responseVersion   = http11
-                , HTTP.responseHeaders   = []
-                , HTTP.responseBody      = body
-                , HTTP.responseCookieJar = HTTP.createCookieJar []
-                , HTTP.responseClose'    = HTTP.ResponseClose { HTTP.runResponseClose = return () }
-                }
-
 fetch :: String -> Text -> IO (Maybe (Response ByteString))
 fetch file _ = do
   body' <- body
-  return $ Just (fakeResponse body')
+  return $ Just (fakeHttpResponse body')
   where
     body :: IO ByteString
     body = readFile path

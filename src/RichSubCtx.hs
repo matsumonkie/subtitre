@@ -3,7 +3,6 @@
 module RichSubCtx (
   createRichSubCtx
 , serializeRichSubCtx
-, serializeRichSubCtx'
 ) where
 
 import Type
@@ -40,6 +39,10 @@ createRichSubCtx levelSets allRawSubCtx = do
   let richSubCtxs = map toRichSubCtx (zip allRawSubCtx parsed)
   return richSubCtxs
 
+{-
+i: ["hello \nworld", "it's me"]
+o: "hello <$>world<*>it's me"
+-}
 mergeSubs :: [RawSubCtx] -> Text
 mergeSubs allRawSubCtx =
   intercalate subSeparator $ map getSentence allRawSubCtx
@@ -48,8 +51,8 @@ mergeSubs allRawSubCtx =
     getSentence (SubCtx _ _ sentences) = intercalate sentenceSeparator sentences
 
 {-
-input = "hello\n <$> \nworld!\n <*> \nit's me"
-output = [["hello", "world!"], ["it's me"]]
+i: "hello\n <$> \nworld!\n <*> \nit's me"
+o: [["hello", "world!"], ["it's me"]]
 -}
 unmergeSubs :: Text -> [[Text]]
 unmergeSubs allSubs =
@@ -82,7 +85,3 @@ runSpacy sentence = do
 serializeRichSubCtx :: RichSubCtx -> Text
 serializeRichSubCtx richSubCtx =
   toStrict $ decodeUtf8 $ encode richSubCtx
-
-serializeRichSubCtx' :: RichSubCtx -> ByteString
-serializeRichSubCtx' richSubCtx =
-  encode richSubCtx
