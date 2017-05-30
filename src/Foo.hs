@@ -25,22 +25,30 @@ foo = do
   throwE ""
   return ""
 
-data UserError = Stupid | Mistake
+data Bug = Bug
+data Mistake = Mistake
+data Error = Error Bug | Error2 Mistake
 
-add1 :: ReaderT Int (ExceptT UserError IO) Int
+add1 :: ReaderT Int (ExceptT Error IO) Int
 add1 = do
   initial <- ask
   return $ initial + 1
 
 -- this compile
-add2 :: Int -> ReaderT Int (ExceptT UserError IO) Int
+add2 :: Int -> ReaderT Int (ExceptT Error IO) Int
 add2 e = do
   initial <- ask
   return $ e + 2 + initial
 
-bar :: ReaderT Int (ExceptT UserError IO) Int
+add3 :: Int -> ReaderT Int (ExceptT Error IO) Int
+add3 e = do
+  initial <- ask
+  lift $ throwE (Error Bug)
+
+bar :: ReaderT Int (ExceptT Error IO) Int
 bar = do
-  add1 >>= add2
+--  let c = add1 >>= add2
+  undefined
 
 main = do
   e <- runExceptT (runReaderT bar 4)

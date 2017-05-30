@@ -29,18 +29,21 @@ import Data.Monoid
 import LevelSet
 import Control.Monad.Reader (ReaderT, runReaderT)
 import Control.Monad.Reader
+import Control.Monad.Trans.Except
 
 sentenceSeparator = " <$> " :: Text
 subSeparator      = " <*> " :: Text
 
-createRichSubCtx :: [RawSubCtx] -> App [Either [ParseError] RichSubCtx]
+createRichSubCtx :: [RawSubCtx] -> App [RichSubCtx]
 createRichSubCtx allRawSubCtx = do
   env <- ask
   content <- liftIO $ runSpacy $ mergeSubs allRawSubCtx
   let unmerged    = unmergeSubs content
   let parsed      = map (parse (levelSets env)) unmerged
-  let richSubCtxs = map toRichSubCtx (zip allRawSubCtx parsed)
-  return richSubCtxs
+  let richSubCtxs = mapM toRichSubCtx (zip allRawSubCtx parsed) :: Either [ParseError] [RichSubCtx]
+  case richSubCtxs of
+    Left pes -> lift $ throwE $ map AppError pes
+    Right rs -> return rs
 
 {-
 i: ["hello \nworld", "it's me"]

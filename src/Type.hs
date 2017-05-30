@@ -32,6 +32,7 @@ module Type (
 , App
 , LevelSet
 , LevelSets(..)
+, AppError(..)
 ) where
 
 import Data.Text hiding (length)
@@ -46,6 +47,8 @@ import Control.Monad.IO.Class
 import Control.Monad.Trans.Class
 import Control.Monad.Reader (ReaderT, runReaderT)
 import Data.HashMap.Strict
+import Control.Monad.Trans.Except
+import Text.Parsec
 
 type Sequence = Int
 type Sentence = Text
@@ -90,16 +93,18 @@ type RTranslator a = ReaderT Translator IO a
 type LevelSet = HashMap Text ()
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
 
-type App a = ReaderT RuntimeConf IO a
+data AppError = AppError ParseError
+type App a = ReaderT RuntimeConf (ExceptT [AppError] IO) a
 data RuntimeConf =
   RuntimeConf { translator :: Translator
               , settings :: HashMap Text Text
               , levelSets :: LevelSets
               , levelToShow :: Level
-              , subFile :: FilePath
               , dir :: FilePath
+              , file :: FilePath
+              , inputFile :: FilePath
+              , outputFile :: FilePath
               }
-
 
 mkTranslations :: WordInfos -> [Text] -> Translations
 mkTranslations wi translations = Translations (wi, translations)

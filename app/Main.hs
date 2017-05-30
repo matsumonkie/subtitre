@@ -36,28 +36,23 @@ saveToFile file content =
 main :: IO ()
 main = do
   levelSets <- getLevelSets :: IO LevelSets
-  runReaderT main' (runtimeConf levelSets)
-  where
-    runtimeConf levelSets =
-      RuntimeConf { translator = translate
-                  , settings = HM.fromList []
-                  , levelSets = levelSets
-                  , levelToShow = Normal
-                  , dir = "/home/iori/temp/"
-                  , subFile = "8.srt"
-                  }
+  let runtimeConf = RuntimeConf { translator = translate
+                                , settings = HM.fromList []
+                                , levelSets = levelSets
+                                , levelToShow = Normal
+                                , dir = "/home/iori/temp/"
+                                , file = "8.srt"
+                                , inputFile = (dir runtimeConf) <> (file runtimeConf)
+                                , outputFile = (dir runtimeConf) <> (file runtimeConf)
+                                }
+  runExceptT (runReaderT main' runtimeConf)
+  return ()
 
+main' :: App ()
 main' = do
   conf <- ask
-  res <- parseSubtitlesOfFile $ input conf
-  case res of
-    Right subCtxts -> do
-      richSubCtxs <- createRichSubCtx subCtxts
-      text <- composeSubs $ rights richSubCtxs
-      liftIO $ saveToFile (output conf) text
-      pPrint text
-    Left e ->
-      pPrint e
-  where
-    input conf = (dir conf) <> (subFile conf)
-    output conf = (dir conf) <> "t" <> (subFile conf) :: FilePath
+  parsed <- (parseSubtitlesOfFile $ inputFile conf)
+  riched <- createRichSubCtx parsed
+  text <- composeSubs riched
+  liftIO $ saveToFile (outputFile conf) text
+  pPrint text
