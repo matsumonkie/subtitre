@@ -1,0 +1,44 @@
+{
+  "term0" : {
+    "PrincipalTranslations" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "absorb, replace: absorb sth", "POS" : "vtr", "sense" : "soak up liquid", "usage" : ""},
+	"FirstTranslation" : {"term" : "absorber", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "absorb, replace: absorb sth", "POS" : "vtr", "sense" : "sound: take in without echo", "usage" : ""},
+	"FirstTranslation" : {"term" : "absorber, étouffer", "POS" : "vtr", "sense" : "le son"}, "Note" : ""},
+      "2" :{
+	"OriginalTerm" : { "term" : "absorb, replace: absorb sth", "POS" : "vtr", "sense" : "impact: soften", "usage" : ""},
+	"FirstTranslation" : {"term" : "amortir", "POS" : "vtr", "sense" : "un choc, un impact"}, "Note" : ""},
+      "3" :{
+	"OriginalTerm" : { "term" : "absorb, replace: absorb sth", "POS" : "vtr", "sense" : "take on ideas", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "assimiler", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+      "4" :{
+	"OriginalTerm" : { "term" : "absorb, replace: absorb sth\/sb", "POS" : "vtr", "sense" : "assimilate", "usage" : "figurative, often passive"},
+	"FirstTranslation" : {"term" : "absorber, avaler", "POS" : "vtr", "sense" : "figuré"}, "Note" : ""},
+      "5" :{
+	"OriginalTerm" : { "term" : "absorb, replace: absorb sth", "POS" : "vtr", "sense" : "consume", "usage" : "figurative, often passive"},
+	"FirstTranslation" : {"term" : "absorber", "POS" : "vtr", "sense" : "figuré"}, "Note" : ""},
+      "6" :{
+	"OriginalTerm" : { "term" : "absorb, replace: absorb sth", "POS" : "vtr", "sense" : "information, experience: take in", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "assimiler", "POS" : "vtr", "sense" : "des informations"}, "Note" : ""}},
+    "AdditionalTranslations" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "absorb, replace: absorb sth", "POS" : "vtr", "sense" : "pay for", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "absorber", "POS" : "vtr", "sense" : "figuré : des coûts"}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "absorb, replace: absorb sb", "POS" : "vtr", "sense" : "interest", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "captiver", "POS" : "vtr", "sense" : ""}, "Note" : ""}}},
+  "original" : {
+    "Compounds" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "absorb the shock", "POS" : "v expr", "sense" : "soften a physical impact", "usage" : ""},
+	"FirstTranslation" : {"term" : "amortir le choc", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "absorb the shock", "POS" : "v expr", "sense" : "take in bad news", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "encaisser le coup", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+      "2" :{
+	"OriginalTerm" : { "term" : "absorb the shock", "POS" : "v expr", "sense" : "lessen a financial burden", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "amortir les chocs", "POS" : "loc v", "sense" : "figuré"}, "Note" : ""}}},
+  "Lines" : "End Reached", "END" : true
+}
