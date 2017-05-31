@@ -95,7 +95,7 @@ type RTranslator a = ReaderT Translator IO a
 type LevelSet = HashMap Text ()
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
 
-data AppError = AppError ParseError
+data AppError = AppError ParseError deriving (Show, Eq)
 type App a = ReaderT RuntimeConf (ExceptT [AppError] IO) a
 data RuntimeConf =
   RuntimeConf { translator :: Translator

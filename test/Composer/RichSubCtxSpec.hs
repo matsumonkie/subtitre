@@ -25,16 +25,24 @@ spec :: Spec
 spec = do
   describe "composeSentence" $ do
     it "without any sentences" $ do
-      composeSentence' Easy [a] `shouldReturn` "world (monde)"
+      composeSentence' Easy [a] `shouldReturn` Right "world (monde)"
     it "level to show is higher" $ do
-      composeSentence' Hard [a] `shouldReturn` "world"
+      composeSentence' Hard [a] `shouldReturn` Right "world"
     it "shows punctuation correctly" $ do
-      composeSentence' Easy [b] `shouldReturn` "Hello world (monde) !"
+      composeSentence' Easy [b] `shouldReturn` Right "Hello world (monde) !"
     it "" $ do
-      composeSentence' Normal [c] `shouldReturn` "Dark Army told (dire) me stage (\233tape) two is (\234tre) ready."
+      composeSentence' Normal [c] `shouldReturn` Right "Dark Army told (dire) me stage (\233tape) two is (\234tre) ready."
 
-composeSentence' :: Level -> [(Sentence, SentenceInfos)] -> IO Text
-composeSentence' level wis = runReaderT (composeSentence level wis) translate
+composeSentence' :: Level -> [(Sentence, SentenceInfos)] -> IO (Either [AppError] Text)
+composeSentence' level wis =
+    let runtimeConf = RuntimeConf { translator = translate
+                                , settings = undefined
+                                , levelSets = undefined
+                                , levelToShow = level
+                                , dir = "test/assets"
+                                , file = undefined
+                                }
+  in runExceptT (runReaderT (composeSentence wis) runtimeConf) :: IO (Either [AppError] Text)
 
 translate :: WordInfos -> IO Translations
 translate wi@(word, _, tag, _) =

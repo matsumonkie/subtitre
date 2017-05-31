@@ -16,6 +16,7 @@ import Control.Lens hiding (Level)
 import Control.Concurrent.Async
 import Debug.Trace
 import Control.Monad.Reader
+import Control.Monad.Trans.Except
 
 composeSubs :: [RichSubCtx] -> App Text
 composeSubs subCtxs = do
