@@ -1,9 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module LevelSet (
-  LevelSet
-, LevelSets(..)
-, whichLevel
+  whichLevel
 , getLevelSets
 ) where
 
@@ -15,9 +13,6 @@ import Data.Text.IO
 import GHC.IO.Handle hiding (hGetLine)
 import System.IO hiding (readFile, hGetLine)
 import Type
-
-type LevelSet = HashMap Text ()
-data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
 
 assetAsHash :: FilePath -> IO LevelSet
 assetAsHash file =

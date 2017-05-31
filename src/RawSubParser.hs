@@ -21,16 +21,24 @@ import qualified System.IO.Error as SIE
 import qualified Control.Exception as Ex
 import GHC.IO.Exception
 import LevelSet
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Except
+import Control.Monad.IO.Class
+import Control.Monad.Trans.Reader
+import Control.Monad.Trans.Class
 
-parseSubtitlesOfFile :: FilePath -> IO (Either ParseError [RawSubCtx])
-parseSubtitlesOfFile file = do
-  result <- Ex.tryJust invalidArgument (readWith SIO.utf8) :: IO (Either () Text)
-  content <- either (const $ readWith SIO.latin1) return result :: IO Text
-  return $ parseSubtitles content
+parseSubtitlesOfFile :: App [RawSubCtx]
+parseSubtitlesOfFile = do
+  conf <- ask
+  result <- liftIO $ Ex.tryJust invalidArgument (readWith conf SIO.utf8) :: App (Either () Text)
+  content <- liftIO $ either (const $ readWith conf SIO.latin1) return result :: App Text
+  case (parseSubtitles content :: Either ParseError [RawSubCtx]) of
+    Left pe -> lift $ throwE [AppError pe]
+    Right rs -> return rs
   where
-    readWith :: SIO.TextEncoding -> IO Text
-    readWith encoding = do
-      handle <- SIO.openFile file SIO.ReadMode
+    readWith :: RuntimeConf -> SIO.TextEncoding -> IO Text
+    readWith conf encoding = do
+      handle <- SIO.openFile (inputFile conf) SIO.ReadMode
       SIO.hSetEncoding handle encoding
       hGetContents handle
     invalidArgument :: IOException -> Maybe ()

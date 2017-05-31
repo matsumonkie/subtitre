@@ -14,6 +14,7 @@ import qualified Data.Text.IO as TIO
 import Control.Monad.State
 import Control.Monad.Writer
 import Control.Monad.Reader
+import Control.Monad.Trans.Maybe
 
 foo :: ExceptT String (WriterT String (StateT String (ReaderT String IO))) String
 foo = do
@@ -24,20 +25,33 @@ foo = do
   throwE ""
   return ""
 
-addTest :: Reader String String
-addTest = do
-  str' <- ask
-  return $ str' ++ ":test"
+data Bug = Bug
+data Mistake = Mistake
+data Error = Error Bug | Error2 Mistake
 
-baz :: Reader String (IO String)
-baz = do
-  b <- addTest :: Reader String String
-  return $ bee b
+add1 :: ReaderT Int (ExceptT Error IO) Int
+add1 = do
+  initial <- ask
+  return $ initial + 1
 
-bee :: String -> IO String
-bee b = return $ b ++ ":io"
+-- this compile
+add2 :: Int -> ReaderT Int (ExceptT Error IO) Int
+add2 e = do
+  initial <- ask
+  return $ e + 2 + initial
+
+add3 :: Int -> ReaderT Int (ExceptT Error IO) Int
+add3 e = do
+  initial <- ask
+  lift $ throwE (Error Bug)
+
+bar :: ReaderT Int (ExceptT Error IO) Int
+bar = do
+--  let c = add1 >>= add2
+  undefined
 
 main = do
---  putStrLn $ show $ runReader addTest "someEnv"
-  e <- runReader baz "someEnv2"
-  putStrLn $ show $ e
+  e <- runExceptT (runReaderT bar 4)
+  case e of
+    Right e' -> putStrLn $ show e'
+    Left _ -> putStrLn "nope"

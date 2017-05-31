@@ -28,6 +28,13 @@ module Type (
 , or
 , Level(..)
 , RTranslator
+, RuntimeConf(..)
+, App
+, LevelSet
+, LevelSets(..)
+, AppError(..)
+, inputFile
+, outputFile
 ) where
 
 import Data.Text hiding (length)
@@ -41,6 +48,9 @@ import Data.Functor.Identity
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Class
 import Control.Monad.Reader (ReaderT, runReaderT)
+import Data.HashMap.Strict
+import Control.Monad.Trans.Except
+import Text.Parsec
 
 type Sequence = Int
 type Sentence = Text
@@ -81,6 +91,26 @@ newtype Translations = Translations (WordInfos, [Text]) deriving (Eq, Show)
 
 type Translator = WordInfos -> IO Translations
 type RTranslator a = ReaderT Translator IO a
+
+type LevelSet = HashMap Text ()
+data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
+
+data AppError = AppError ParseError deriving (Show, Eq)
+type App a = ReaderT RuntimeConf (ExceptT [AppError] IO) a
+data RuntimeConf =
+  RuntimeConf { translator :: Translator
+              , settings :: HashMap Text Text
+              , levelSets :: LevelSets
+              , levelToShow :: Level
+              , dir :: FilePath
+              , file :: FilePath
+              }
+
+inputFile :: RuntimeConf -> FilePath
+inputFile conf = (dir conf) <> "/" <> (file conf)
+
+outputFile :: RuntimeConf -> FilePath
+outputFile conf = (dir conf) <> "/t" <> (file conf)
 
 mkTranslations :: WordInfos -> [Text] -> Translations
 mkTranslations wi translations = Translations (wi, translations)
