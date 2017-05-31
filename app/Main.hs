@@ -51,6 +51,6 @@ main' = do
   conf <- ask
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
-  text <- composeSubs riched
+  text   <- composeSubs riched
   liftIO $ saveToFile (outputFile conf) text
   pPrint text
