@@ -30,19 +30,21 @@ import qualified Data.HashMap.Strict as HM
 import Data.ByteString.Lazy hiding (elem)
 import Data.Traversable
 
+data Yandex
+
 data YDef =
   YDef { yEntries :: [YEntry]
        } deriving (Show)
 
 data YEntry =
   YEntry { yEntryText :: Text
-         , yEntryPos :: Tag
+         , yEntryPos :: Tag Yandex
          , yEntryTr :: [YTr]
          } deriving (Show, Generic)
 
 data YTr =
   YTr { yTrText :: Text
-      , yTrPos :: Tag
+      , yTrPos :: Tag Yandex
       } deriving (Show)
 
 instance FromJSON YDef where
@@ -63,26 +65,18 @@ instance FromJSON YTr where
     yTrPos <- o .: "pos"
     return $ YTr{..}
 
-{-
-toTrs :: Maybe (Response ByteString) -> [YTr]
-toTrs response =
-  case response of
-    Just r -> case (trs $ defs r) of
-      t@(x:xs) -> t
-      _ -> []
-    Nothing -> []
-  where
-    trs :: [YDef] -> [YTr]
-    trs defs = Prelude.concat $ Prelude.map defTr defs
-    rDefs :: Response ByteString -> Result [YDef]
-    rDefs r = (fromJSON $ toValue r)
-    defs :: Response ByteString -> [YDef]
-    defs r = trace (show $ rDefs r) (successes $ rDefs r)
-    toValue r = (r ^.. responseBody . key "def") !! 0 :: Value
-
-successes :: Result [a] -> [a]
-successes r =
-  case r of
-    Success e -> e
-    Error _ -> []
--}
+instance FromJSON (Tag Yandex) where
+  parseJSON =
+    withText "String" parse
+    where
+      parse x =
+        return $ case x of
+          "adj"   -> Adj
+          "adv"   -> Adv
+          "conj"  -> Conj
+          "noun"  -> Noun
+          "pron"  -> Pron
+          "punct" -> Punct
+          "sym"   -> Sym
+          "verb"  -> Verb
+          _       -> Else

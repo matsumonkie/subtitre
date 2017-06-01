@@ -18,6 +18,13 @@ import Data.Maybe
 data StaticConf =
   StaticConf { workingDir :: FilePath
              , outputFileName :: Text
+             -- yandex
+             , yandexApiKey :: Text
+             , yandexApiUrl :: Text
+             -- word reference
+             , wordReferenceApiUrlPrefix :: Text
+             , wordReferenceApiUrlSuffix :: Text
+             , wordReferenceApiKey :: Text
              } deriving Show
 
 instance FromJSON StaticConf where
@@ -25,6 +32,11 @@ instance FromJSON StaticConf where
     config <- v .: "development"
     workingDir <- config .: "workingDir"
     outputFileName <- config .: "outputFileName"
+    yandexApiKey <- config .: "yandexApiKey"
+    yandexApiUrl <- config .: "yandexApiUrl"
+    wordReferenceApiUrlPrefix <- config .: "wordReferenceApiUrlPrefix"
+    wordReferenceApiUrlSuffix <- config .: "wordReferenceApiUrlSuffix"
+    wordReferenceApiKey <- config .: "wordReferenceApiKey"
     return StaticConf {..}
 
 getStaticConf :: IO StaticConf

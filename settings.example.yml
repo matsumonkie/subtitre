@@ -1,6 +1,11 @@
 development:
-  workingDir: /home/iori/temp
+  workingDir:
   outputFileName:
+  yandexApiKey:
+  yandexApiUrl:
+  wordReferenceApiKey:
+  wordReferenceApiUrlPrefix:
+  wordreferenceApiUrlSuffix:
 
 staging:
 

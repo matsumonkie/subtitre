@@ -14,6 +14,7 @@ import Prelude hiding (lookup)
 import Control.Applicative
 import Data.Functor.Identity
 import Text.Pretty.Simple (pPrint, pString)
+import Config.App
 
 type Dictionary = HashMap Text Text
 
@@ -27,7 +28,7 @@ adjs :: Dictionary
 adjs =
   fromList [("his", "sa/son")]
 
-translate :: WordInfos -> IO Translations
+translate :: WordInfos -> App Translations
 translate wi@(word, lemma, tag, level) =
   return $ mkTranslations wi $ case tag of
     Else -> []

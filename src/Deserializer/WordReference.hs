@@ -29,6 +29,8 @@ import Data.Either
 import qualified Data.HashMap.Strict as HM
 import Data.Traversable
 
+data WordReference
+
 data WRResponse =
   WRResponse { terms :: [WRTerm]
              } deriving (Show, Generic)
@@ -39,10 +41,10 @@ data WRTerm =
          } deriving (Show)
 
 data WRTranslation = WRTranslation { oTerm :: Text
-                                   , oPos :: Text
+                                   , oPos :: Tag
                                    , oSense :: Text
                                    , tTerm :: Text
-                                   , tPos :: Text
+                                   , tPos :: Tag
                                    , tSense :: Text
                                    } deriving (Show)
 
@@ -76,9 +78,22 @@ instance FromJSON WRTranslation where
     originalTerm <- o .: "OriginalTerm"
     firstTranslation <- o .: "FirstTranslation"
     oTerm  <- originalTerm .: "term"
-    oPos   <- originalTerm .: "POS"
+    oPos <- originalTerm .: "POS" >>= wrTagParser
     oSense <- originalTerm .: "sense"
     tTerm  <- firstTranslation .: "term"
-    tPos   <- firstTranslation .: "POS"
+    tPos <- firstTranslation .: "POS" >>= wrTagParser
     tSense <- firstTranslation .: "sense"
     return WRTranslation {..}
+
+wrTagParser :: Value -> Parser Tag
+wrTagParser =
+  withText "word reference Tag" $ \t -> return $ case t of
+    "adj"   -> Adj
+    "adv"   -> Adv
+    "conj"  -> Conj
+    "noun"  -> Noun
+    "pron"  -> Pron
+    "punct" -> Punct
+    "sym"   -> Sym
+    "verb"  -> Verb
+    _       -> Else

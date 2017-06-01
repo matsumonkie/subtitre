@@ -12,7 +12,7 @@ import Prelude hiding (Word, concat)
 import Data.Aeson
 import Data.Monoid
 
-instance FromJSON Tag where
+instance FromJSON (Tag) where
   parseJSON =
     withText "String" parse
     where
@@ -28,7 +28,7 @@ instance FromJSON Tag where
           "verb"  -> Verb
           _       -> Else
 
-instance ToJSON Tag where
+instance ToJSON (Tag) where
   toJSON tag =
     case tag of
       Verb -> "verb"

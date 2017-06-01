@@ -8,6 +8,7 @@ module Config.App (
 , Config.RuntimeConf.RuntimeConf(..)
 , Config.RuntimeConf.inputFile
 , Config.RuntimeConf.outputFile
+, Config.StaticConf.StaticConf(..)
 ) where
 
 import Type

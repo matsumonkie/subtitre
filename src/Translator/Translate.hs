@@ -11,13 +11,14 @@ import Data.Text
 import qualified Translator.Offline as Offline
 import Control.Applicative
 import qualified Translator.Strategy.Yandex as Yandex
+import Config.App
 
-translate :: WordInfos -> IO Translations
+translate :: WordInfos -> App Translations
 translate wi =
   liftA2 Type.or (offline wi) (online wi)
 
-offline :: WordInfos -> IO Translations
+offline :: WordInfos -> App Translations
 offline = Offline.translate
 
-online :: WordInfos -> IO Translations
+online :: WordInfos -> App Translations
 online = Yandex.translate Yandex.fetchTranslations

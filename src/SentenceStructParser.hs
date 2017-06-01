@@ -48,7 +48,7 @@ wordCtx levelSets = do
       Verb -> lemma
       _ -> orig
 
-tagParser :: Parsec Text () Tag
+tagParser :: Parsec Text () (Tag ())
 tagParser = do
   mkTag <$> word
   where
