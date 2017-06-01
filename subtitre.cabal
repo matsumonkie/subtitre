@@ -23,12 +23,13 @@ library
                      , Config.RuntimeConf
                      , Config.StaticConf
                      , Deserializer.WordReference
+                     , Deserializer.Yandex
                      , LevelSet
                      , RawSubParser
                      , RichSubCtx
                      , SentenceStructParser
                      , Serializer
-                     , Translator.Online
+                     , Translator.Strategy.Yandex
                      , Translator.Offline
                      , Translator.Translate
                      , Type

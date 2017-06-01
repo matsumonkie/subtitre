@@ -1,5 +1,5 @@
 development:
-  workingDir:
+  workingDir: /home/iori/temp
   outputFileName:
 
 staging:

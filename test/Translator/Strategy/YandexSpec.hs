@@ -1,18 +1,18 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Translator.OnlineSpec (main, spec) where
+module Translator.Strategy.YandexSpec (main, spec) where
 
 import Type
 import Data.Monoid
 import Data.Text hiding (map)
 import Prelude hiding (readFile)
 import Test.Hspec
-import Translator.Online
 import Data.ByteString.Lazy hiding (elem)
 import Network.Wreq
 import qualified Network.HTTP.Client.Internal as HTTP
 import Network.HTTP.Types.Status
 import Network.HTTP.Types.Version
+import Translator.Strategy.Yandex
 --import TestUtil
 
 main :: IO ()
@@ -20,11 +20,11 @@ main = hspec spec
 
 spec :: Spec
 spec = do
-  describe "Translator/Online" $ do
-    describe "parse" $ do
-      it "end with newline" $ do
+  describe "Translator/Strategy/Yandex" $ do
+    describe "reads and parse responses correctly" $ do
+      it "translate correctly" $ do
         let wi = ("stirrings", "stirring", Noun, Normal)
-        Translations(_, translations) <- translate wi $ fetch "yandex.stirring.json"
+        Translations(_, translations) <- translate (fetch "yandex.stirring.json") wi
         translations `shouldBe` ["agitation"]
 
 fetch :: String -> Text -> IO (Maybe (Response ByteString))

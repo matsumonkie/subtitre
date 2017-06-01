@@ -8,9 +8,9 @@ module Translator.Translate (
 
 import Type
 import Data.Text
-import qualified Translator.Online as Online
 import qualified Translator.Offline as Offline
 import Control.Applicative
+import qualified Translator.Strategy.Yandex as Yandex
 
 translate :: WordInfos -> IO Translations
 translate wi =
@@ -20,4 +20,4 @@ offline :: WordInfos -> IO Translations
 offline = Offline.translate
 
 online :: WordInfos -> IO Translations
-online = \wi -> Online.translate wi Online.fetchTranslations
+online = Yandex.translate Yandex.fetchTranslations

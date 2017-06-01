@@ -4,6 +4,7 @@ module Config.App (
 , AppError(..)
 , Config(..)
 , askR
+, askS
 ) where
 
 import Type
@@ -17,6 +18,8 @@ data Config = Config (RuntimeConf, StaticConf)
 
 data AppError = AppError ParseError deriving (Show, Eq)
 type App a = ReaderT Config (ExceptT [AppError] IO) a
+
+
 
 askR :: (Monad m) => (RuntimeConf -> a) -> ReaderT Config m a
 askR f = do

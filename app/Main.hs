@@ -40,7 +40,7 @@ main :: IO ()
 main = do
   levelSets <- getLevelSets :: IO LevelSets
   staticConf <- getStaticConf
-  let runtimeConf = RuntimeConf { translator = translate
+  let runtimeConf = RuntimeConf { translator = Translator.Translate.translate
                                 , levelSets = levelSets
                                 , levelToShow = Normal
                                 , dir = "/home/iori/temp"
