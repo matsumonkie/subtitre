@@ -25,6 +25,9 @@ import LevelSet
 import Translator.Translate
 import Control.Monad.Reader
 import qualified Data.HashMap.Strict as HM
+import Config.App
+import Config.RuntimeConf
+import Config.StaticConf
 
 subtitleFile = "mini-sample.srt"
 subtitleStructFile = "struct.srt"
@@ -36,21 +39,22 @@ saveToFile file content =
 main :: IO ()
 main = do
   levelSets <- getLevelSets :: IO LevelSets
+  staticConf <- getStaticConf
   let runtimeConf = RuntimeConf { translator = translate
-                                , settings = HM.fromList []
                                 , levelSets = levelSets
                                 , levelToShow = Normal
                                 , dir = "/home/iori/temp"
                                 , file = "8.srt"
                                 }
-  runExceptT (runReaderT main' runtimeConf)
+  let config = Config(runtimeConf, staticConf)
+  runExceptT (runReaderT main' config)
   return ()
 
 main' :: App ()
 main' = do
-  conf <- ask
+  outputFile <- askR outputFile
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched
-  liftIO $ saveToFile (outputFile conf) text
+  liftIO $ saveToFile outputFile text
   pPrint text

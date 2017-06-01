@@ -2,6 +2,7 @@
 
 module Deserializer.WordReferenceSpec (main, spec) where
 
+
 import Text.Parsec
 import Test.Hspec
 import Data.Functor

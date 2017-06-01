@@ -17,6 +17,8 @@ import Control.Concurrent.Async
 import Debug.Trace
 import Control.Monad.Reader
 import Control.Monad.Trans.Except
+import Config.App
+import Config.RuntimeConf
 
 composeSubs :: [RichSubCtx] -> App Text
 composeSubs subCtxs = do
@@ -69,9 +71,10 @@ translateSentence (sentence, sentenceInfos) = do
 
 handleTranslation :: WordInfos -> App (Asyncable Translations)
 handleTranslation wi@(word, lemma, tag, level) = do
-  conf <- ask
-  return $ if shouldTranslate (levelToShow conf) level then
-    RealAsync $ (async . (translator conf)) wi
+  levelToShow <- askR levelToShow
+  translator <- askR translator
+  return $ if shouldTranslate levelToShow level then
+    RealAsync $ (async . translator) wi
   else
     FakeAsync $ Translations (wi, [])
   where
@@ -79,8 +82,8 @@ handleTranslation wi@(word, lemma, tag, level) = do
 
 reorganizeSentence :: Sentence -> [Asyncable Translations] -> App [Text]
 reorganizeSentence sentence translations = do
-  conf <- ask
-  let waitingTranslations = map (fmap $ formatWithTranslation (levelToShow conf)) translations :: [Asyncable Text]
+  levelToShow <- askR levelToShow
+  let waitingTranslations = map (fmap $ formatWithTranslation levelToShow) translations :: [Asyncable Text]
   allTranslations <- liftIO $ mapM holdOn waitingTranslations
   return $ setCorrectSpacing (words sentence) allTranslations []
 

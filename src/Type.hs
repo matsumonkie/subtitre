@@ -28,13 +28,9 @@ module Type (
 , or
 , Level(..)
 , RTranslator
-, RuntimeConf(..)
-, App
 , LevelSet
 , LevelSets(..)
-, AppError(..)
-, inputFile
-, outputFile
+, Translator
 ) where
 
 import Data.Text hiding (length)
@@ -66,7 +62,6 @@ type RawSubCtx  = SubCtx [Sentence]
 type RichSubCtx = SubCtx [(Sentence, SentenceInfos)]
 
 type SentenceInfos = [WordInfos]
-type WordInfos = (Word, Lemma, Tag, Level)
 type Word = Text
 type Lemma = Text
 data Tag = Adj
@@ -82,35 +77,20 @@ data Tag = Adj
          | Else
          deriving (Show, Eq)
 
+newtype Translations = Translations (WordInfos, [Text]) deriving (Eq, Show)
+
+type WordInfos = (Word, Lemma, Tag, Level)
+type Translator = WordInfos -> IO Translations
+
 data Level = Unknown
            | Easy
            | Normal
            | Hard deriving (Show, Eq, Ord)
 
-newtype Translations = Translations (WordInfos, [Text]) deriving (Eq, Show)
-
-type Translator = WordInfos -> IO Translations
-type RTranslator a = ReaderT Translator IO a
-
 type LevelSet = HashMap Text ()
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
 
-data AppError = AppError ParseError deriving (Show, Eq)
-type App a = ReaderT RuntimeConf (ExceptT [AppError] IO) a
-data RuntimeConf =
-  RuntimeConf { translator :: Translator
-              , settings :: HashMap Text Text
-              , levelSets :: LevelSets
-              , levelToShow :: Level
-              , dir :: FilePath
-              , file :: FilePath
-              }
-
-inputFile :: RuntimeConf -> FilePath
-inputFile conf = (dir conf) <> "/" <> (file conf)
-
-outputFile :: RuntimeConf -> FilePath
-outputFile conf = (dir conf) <> "/t" <> (file conf)
+type RTranslator a = ReaderT Translator IO a
 
 mkTranslations :: WordInfos -> [Text] -> Translations
 mkTranslations wi translations = Translations (wi, translations)
