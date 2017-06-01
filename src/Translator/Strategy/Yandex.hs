@@ -35,11 +35,13 @@ translate fetch wi@(word, lemma, tag, _)
       response <- fetch toTranslate :: IO (Maybe (Response ByteString))
       let translations = (translationsBasedOnTag toTranslate tag) response
       res translations
-  | otherwise = res []
+  | otherwise = res Nothing
   where
     shouldBeTranslated :: Tag -> Bool
     shouldBeTranslated = (flip elem) [Verb, Noun, Adj, Sym, Punct, Propn, Pron, Conj, Adv]
-    res x = return $ mkTranslations wi x
+    res x = case x of
+      Just y -> return $ mkTranslations wi y
+      Nothing -> return $ mkTranslations wi []
     toTranslate = case tag of
       Verb -> lemma
       Noun -> lemma
@@ -57,8 +59,16 @@ fetchTranslations toTranslate = do
                     & param "text" .~ [toTranslate]
                     & param "lang" .~ ["en-fr"]
 
-translationsBasedOnTag :: Text -> Tag -> Maybe (Response ByteString) -> [Text]
+translationsBasedOnTag :: Text -> Tag -> Maybe (Response ByteString) -> Maybe [Text]
 translationsBasedOnTag toTranslate tag response = do
-  let trs = toTrs response :: [YTr]
-  let correctTrs = Prelude.filter (\x -> tag == trPos x) trs
-  Prelude.map trText correctTrs
+  yDef <- body response >>= decode :: Maybe YDef
+  let correctTrs = Prelude.filter (\x -> tag == yTrPos x) $ trs yDef
+  return $ Prelude.map yTrText correctTrs
+  where
+    trs :: YDef -> [YTr]
+    trs yDef = Prelude.concat $ Prelude.map yEntryTr (yEntries yDef)
+
+body :: Maybe (Response ByteString) -> Maybe ByteString
+body response = do
+  r <- response
+  return $ r ^. responseBody

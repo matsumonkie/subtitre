@@ -5,6 +5,9 @@ module Config.App (
 , Config(..)
 , askR
 , askS
+, Config.RuntimeConf.RuntimeConf(..)
+, Config.RuntimeConf.inputFile
+, Config.RuntimeConf.outputFile
 ) where
 
 import Type

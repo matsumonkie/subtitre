@@ -12,6 +12,7 @@ import Data.Text hiding (map)
 import Data.Either
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Except
+import Config.App
 
 main :: IO ()
 main = hspec spec
@@ -51,15 +52,15 @@ gameOfThrones = "game of thrones.srt"
 
 parseFile :: FilePath -> IO (Either [AppError] [RawSubCtx])
 parseFile file =
-  let runtimeConf = RuntimeConf { translator = undefined
-                                , settings = undefined
-                                , levelSets = undefined
-                                , levelToShow = undefined
-                                , dir = "test/assets"
-                                , file = file
-                                }
-
-  in runExceptT (runReaderT parseSubtitlesOfFile runtimeConf) :: IO (Either [AppError] [RawSubCtx])
+  let
+    runtimeConf = RuntimeConf { translator = undefined
+                              , levelSets = undefined
+                              , levelToShow = undefined
+                              , dir = "test/assets"
+                              , file = file
+                              }
+    config = Config(runtimeConf, undefined)
+  in runExceptT (runReaderT parseSubtitlesOfFile config) :: IO (Either [AppError] [RawSubCtx])
 
 arg = "1\n\
       \00:00:26,722 --> 00:00:29,023\n\

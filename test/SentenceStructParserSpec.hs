@@ -15,6 +15,7 @@ import Control.Monad.Trans.Reader
 import RichSubCtx
 import LevelSet
 import Data.HashMap.Strict hiding (map)
+import Config.App
 
 main :: IO ()
 main = hspec spec
@@ -47,16 +48,17 @@ lSets = LevelSets (fromList [], fromList [], fromList [])
 parsingDoesntFail :: FilePath -> Expectation
 parsingDoesntFail file = do
   let runtimeConf = RuntimeConf { translator = undefined
-                                , settings = undefined
-                                , levelSets = lSets
-                                , levelToShow = undefined
-                                , dir = "test/assets"
-                                , file = file
-                                }
-  rawParsed <- runExceptT (runReaderT parseSubtitlesOfFile runtimeConf) :: IO (Either [AppError] [RawSubCtx])
+                              , levelSets = lSets
+                              , levelToShow = undefined
+                              , dir = "test/assets"
+                              , file = file
+                              }
+  let config = Config(runtimeConf, undefined)
+
+  rawParsed <- runExceptT (runReaderT parseSubtitlesOfFile config) :: IO (Either [AppError] [RawSubCtx])
   let subs = either (const []) (id) rawParsed :: [RawSubCtx]
   let richSubs = createRichSubCtx subs :: App [RichSubCtx]
-  richSubs <- runExceptT (runReaderT richSubs runtimeConf)
+  richSubs <- runExceptT (runReaderT richSubs config)
   isRight richSubs `shouldBe` True
 
 multipleArg = "I -PRON- PRON\n\

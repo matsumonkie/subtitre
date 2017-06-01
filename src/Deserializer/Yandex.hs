@@ -5,8 +5,8 @@
 
 module Deserializer.Yandex (
   YDef(..)
+, YEntry(..)
 , YTr(..)
-, toTrs
 ) where
 
 import Type
@@ -31,29 +31,39 @@ import Data.ByteString.Lazy hiding (elem)
 import Data.Traversable
 
 data YDef =
-  YDef { defText :: Text
-      , defPos :: Tag
-      , defTr :: [YTr]
-      } deriving (Show, Generic)
+  YDef { yEntries :: [YEntry]
+       } deriving (Show)
+
+data YEntry =
+  YEntry { yEntryText :: Text
+         , yEntryPos :: Tag
+         , yEntryTr :: [YTr]
+         } deriving (Show, Generic)
 
 data YTr =
-  YTr { trText :: Text
-     , trPos :: Tag
-     } deriving (Show)
+  YTr { yTrText :: Text
+      , yTrPos :: Tag
+      } deriving (Show)
 
 instance FromJSON YDef where
   parseJSON = withObject "def" $ \o -> do
-    defText <- o .: "text"
-    defPos  <- o .: "pos"
-    defTr  <- o .: "tr"
+    yEntries <- o .: "def"
     return YDef{..}
+
+instance FromJSON YEntry where
+  parseJSON = withObject "entry" $ \o -> do
+    yEntryText <- o .: "text"
+    yEntryPos  <- o .: "pos"
+    yEntryTr  <- o .: "tr"
+    return YEntry{..}
 
 instance FromJSON YTr where
   parseJSON = withObject "tr" $ \o -> do
-    trText <- o .: "text"
-    trPos <- o .: "pos"
+    yTrText <- o .: "text"
+    yTrPos <- o .: "pos"
     return $ YTr{..}
 
+{-
 toTrs :: Maybe (Response ByteString) -> [YTr]
 toTrs response =
   case response of
@@ -75,3 +85,4 @@ successes r =
   case r of
     Success e -> e
     Error _ -> []
+-}

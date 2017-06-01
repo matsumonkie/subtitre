@@ -2,7 +2,6 @@
 
 module Deserializer.WordReferenceSpec (main, spec) where
 
-
 import Text.Parsec
 import Test.Hspec
 import Data.Functor
@@ -26,14 +25,12 @@ spec :: Spec
 spec = do
   describe "WordReferenceSpec" $ do
     describe "from json" $ do
-      it "" $ do
+      it "works" $ do
         response <- decodeWR "wr.absorb.json"
         response `shouldSatisfy` isJust
 
 decodeWR :: FilePath -> IO (Maybe WRResponse)
-decodeWR file = do
-  content <- readAsset file
-  return $ decode content
+decodeWR file = decode <$> readAsset file
 
 readAsset :: FilePath -> IO (ByteString)
 readAsset file = do
