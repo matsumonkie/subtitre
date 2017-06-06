@@ -13,10 +13,11 @@ import Control.Applicative
 import qualified Translator.Strategy.Yandex as Yandex
 import qualified Translator.Strategy.WordReference as WordReference
 import Config.App
+import Data.Monoid
 
 translate :: WordInfos -> App Translations
 translate wi =
-  liftA2 Type.or (offline wi) (online wi)
+  liftA2 (<>) (offline wi) (online wi)
 
 offline :: WordInfos -> App Translations
 offline = Offline.translate

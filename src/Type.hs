@@ -23,9 +23,9 @@ module Type (
 , Tag(..)
 , Word
 , Translations(..)
+, Translations'(..)
 , mkTranslations
 , Lemma
-, or
 , Level(..)
 , LevelSet
 , LevelSets(..)
@@ -75,7 +75,15 @@ data Tag = Adj
          | Else
          deriving (Show, Eq)
 
-newtype Translations = Translations (WordInfos, [Text]) deriving (Eq, Show)
+newtype Translations' a =
+  Translations' (WordInfos, [a]) deriving (Eq, Show, Functor)
+
+instance Monoid (Translations' a) where
+  mempty = Translations' (("", "", Else, Unknown), [])
+  t1@(Translations' (_, a1)) `mappend` t2@(Translations' (_, a2)) =
+    if (not . Prelude.null) a1 then t1 else t2
+
+type Translations = Translations' Text
 
 type WordInfos = (Word, Lemma, Tag, Level)
 
@@ -88,11 +96,7 @@ type LevelSet = HashMap Text ()
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
 
 mkTranslations :: WordInfos -> [Text] -> Translations
-mkTranslations wi translations = Translations (wi, translations)
-
-or :: Translations -> Translations -> Translations
-or t1@(Translations(_, a)) t2 =
-  if (length a > 0) then t1 else t2
+mkTranslations wi translations = Translations' (wi, translations)
 
 p :: SentenceInfos
 p = [ ("the", "", Else, Unknown)

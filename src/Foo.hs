@@ -17,58 +17,27 @@ import Control.Monad.Reader
 import Control.Monad.Trans.Maybe
 import Control.Concurrent.Async
 
-
-foo :: ExceptT String (WriterT String (StateT String (ReaderT String IO))) String
-foo = do
-  ask
-  get
-  put ""
-  tell ""
-  throwE ""
-  return ""
-
 data Bug = Bug
 data Mistake = Mistake
 data Error = Error Bug | Error2 Mistake
 
-add1 :: ReaderT Int (ExceptT Error IO) Int
-add1 = do
-  initial <- ask
-  return $ initial + 1
+type App a = ReaderT [Int] IO a
 
--- this compile
-add2 :: Int -> ReaderT Int (ExceptT Error IO) Int
-add2 e = do
-  initial <- ask
-  liftIO $ putStrLn "test"
-  return $ e + 2 + initial
+add' :: Int -> Int -> IO (Async Int)
+add' = do
+  \x y -> async $ add x y
 
-data Asyncable e = RealAsync (Async e)
-                 | FakeAsync e
+add :: Int -> Int -> IO Int
+add y x = do
+  return $ y + x
 
-add5 :: Int -> ReaderT Int (ExceptT Error IO) (Asyncable Int)
-add5 e = do
-  liftIO $ putStrLn "test"
-  if True then do
-    liftIO $ putStrLn "test"
-    return $ FakeAsync 2
-  else do
-    liftIO $ putStrLn "test"
-    return $ FakeAsync 2
-
-
-add3 :: Int -> ReaderT Int (ExceptT Error IO) Int
-add3 e = do
-  initial <- ask
-  lift $ throwE (Error Bug)
-
-bar :: ReaderT Int (ExceptT Error IO) Int
-bar = do
---  let c = add1 >>= add2
-  undefined
+main' :: App ([Async Int])
+main' = do
+  env <- ask
+  let a = mapM (add' 1) env :: IO ([Async Int])
+  liftIO a
 
 main = do
-  e <- runExceptT (runReaderT bar 4)
-  case e of
-    Right e' -> putStrLn $ show e'
-    Left _ -> putStrLn "nope"
+  e <- runReaderT main' [1,2,3,4]
+  c <- mapM wait e
+  putStrLn $ show c

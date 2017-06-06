@@ -75,7 +75,7 @@ handleTranslation wi@(word, lemma, tag, level) = do
   return $ if shouldTranslate levelToShow level then
     RealAsync $ undefined -- (async . translator) wi
   else
-    FakeAsync $ Translations (wi, [])
+    FakeAsync $ mkTranslations wi []
   where
     shouldTranslate levelToShow level = levelToShow < level
 
@@ -87,7 +87,7 @@ reorganizeSentence sentence translations = do
   return $ setCorrectSpacing (words sentence) allTranslations []
 
 formatWithTranslation :: Level -> Translations -> Text
-formatWithTranslation levelToShow (Translations ((word, _, _, level), translations)) = do
+formatWithTranslation levelToShow (Translations' ((word, _, _, level), translations)) = do
   if levelToShow < level then
     format $ translations ^? element 0
   else
