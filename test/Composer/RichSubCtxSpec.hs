@@ -46,8 +46,8 @@ composeSentence' level wis =
     config = Config(runtimeConf, undefined)
   in runExceptT (runReaderT (composeSentence wis) config) :: IO (Either [AppError] Text)
 
-translate :: WordInfos -> IO Translations
-translate wi@(word, _, tag, _) =
+translate :: StaticConf -> WordInfos -> IO Translations
+translate _ wi@(word, _, tag, _) =
   return $ if shouldBeTranslated tag then
              mkTranslations wi $ dictionary ! (toLower word)
            else

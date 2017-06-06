@@ -24,7 +24,7 @@ spec = do
     describe "reads and parse responses correctly" $ do
       it "translate correctly" $ do
         let wi = ("stirrings", "stirring", Noun, Normal)
-        Translations(_, translations) <- translate (fetch "yandex.stirring.json") wi
+        Translations'(_, translations) <- translate (fetch "yandex.stirring.json") wi
         translations `shouldBe` ["agitation"]
 
 fetch :: String -> Text -> IO (Maybe (Response ByteString))
