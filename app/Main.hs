@@ -50,7 +50,7 @@ main = do
 
 main' :: App ()
 main' = do
-  outputFile <- askR outputFile
+  outputFile <- asksR outputFile
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched

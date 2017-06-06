@@ -31,7 +31,7 @@ import Deserializer.Yandex
 import Config.App
 import Control.Monad.IO.Class
 
-translate :: (Text -> App (Maybe (Response ByteString))) -> WordInfos -> App Translations
+translate :: (Text -> IO (Maybe (Response ByteString))) -> WordInfos -> IO Translations
 translate fetch wi@(word, lemma, tag, _)
   | shouldBeTranslated tag = do
       response <- fetch toTranslate
@@ -49,10 +49,10 @@ translate fetch wi@(word, lemma, tag, _)
       Noun -> lemma
       _ -> word
 
-fetchTranslations :: Text -> App (Maybe (Response ByteString))
-fetchTranslations toTranslate = do
-  key <- askS yandexApiKey
-  url <- unpack <$> askS yandexApiUrl
+fetchTranslations :: StaticConf -> Text -> IO (Maybe (Response ByteString))
+fetchTranslations sc toTranslate = do
+  let key = yandexApiKey sc
+  let url = unpack $ yandexApiUrl sc
   liftIO $ catch (Just <$> (getWith (opts key) url)) handler
   where
     handler :: HttpException -> IO (Maybe (Response ByteString))

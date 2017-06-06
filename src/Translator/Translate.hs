@@ -15,13 +15,13 @@ import qualified Translator.Strategy.WordReference as WordReference
 import Config.App
 import Data.Monoid
 
-translate :: WordInfos -> App Translations
-translate wi =
-  liftA2 (<>) (offline wi) (online wi)
+translate :: StaticConf -> WordInfos -> IO Translations
+translate sc wi =
+  liftA2 (<>) (offline sc wi) (online sc wi)
 
-offline :: WordInfos -> App Translations
+offline :: StaticConf -> WordInfos -> IO Translations
 offline = Offline.translate
 
-online :: WordInfos -> App Translations
-online = Yandex.translate Yandex.fetchTranslations
+online :: StaticConf -> WordInfos -> IO Translations
+online sc = (Yandex.translate) (Yandex.fetchTranslations sc)
 --online = WordReference.translate WordReference.fetchTranslations

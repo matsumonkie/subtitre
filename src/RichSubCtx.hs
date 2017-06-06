@@ -37,7 +37,7 @@ subSeparator      = " <*> " :: Text
 
 createRichSubCtx :: [RawSubCtx] -> App [RichSubCtx]
 createRichSubCtx allRawSubCtx = do
-  levelSets <- askR levelSets
+  levelSets <- asksR levelSets
   content <- liftIO $ runSpacy $ mergeSubs allRawSubCtx
   let unmerged    = unmergeSubs content
   let parsed      = map (parse levelSets) unmerged

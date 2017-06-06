@@ -6,7 +6,8 @@ module Config.App (
   App
 , AppError(..)
 , Config(..)
-, askR
+, asksR
+, asksS
 , askS
 , RuntimeConf(..)
 , inputFile
@@ -43,7 +44,7 @@ data RuntimeConf =
           , file :: FilePath
           }
 
-type Translator = WordInfos -> App Translations
+type Translator = StaticConf -> WordInfos -> IO Translations
 
 inputFile :: RuntimeConf -> FilePath
 inputFile conf = (dir conf) <> "/" <> (file conf)
@@ -95,12 +96,17 @@ data Config = Config (RuntimeConf, StaticConf)
 data AppError = AppError ParseError deriving (Show, Eq)
 type App a = ReaderT Config (ExceptT [AppError] IO) a
 
-askR :: (Monad m) => (RuntimeConf -> a) -> ReaderT Config m a
-askR f = do
+asksR :: (Monad m) => (RuntimeConf -> a) -> ReaderT Config m a
+asksR f = do
   (Config(config, _)) <- ask
   return $ f config
 
-askS :: (Monad m) => (StaticConf -> a) -> ReaderT Config m a
-askS f = do
+asksS :: (Monad m) => (StaticConf -> a) -> ReaderT Config m a
+asksS f = do
   (Config(_, config)) <- ask
   return $ f config
+
+askS :: (Monad m) => ReaderT Config m StaticConf
+askS = do
+  (Config(_, config)) <- ask
+  return config

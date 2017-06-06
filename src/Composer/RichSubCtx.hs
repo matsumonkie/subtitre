@@ -70,10 +70,11 @@ translateSentence (sentence, sentenceInfos) = do
 
 handleTranslation :: WordInfos -> App (Asyncable Translations)
 handleTranslation wi@(word, lemma, tag, level) = do
-  levelToShow <- askR levelToShow
-  translator <- askR translator
+  levelToShow <- asksR levelToShow
+  translator <- asksR translator
+  sc <- askS
   return $ if shouldTranslate levelToShow level then
-    RealAsync $ undefined -- (async . translator) wi
+    RealAsync $ (async . (translator sc)) wi
   else
     FakeAsync $ mkTranslations wi []
   where
@@ -81,7 +82,7 @@ handleTranslation wi@(word, lemma, tag, level) = do
 
 reorganizeSentence :: Sentence -> [Asyncable Translations] -> App [Text]
 reorganizeSentence sentence translations = do
-  levelToShow <- askR levelToShow
+  levelToShow <- asksR levelToShow
   let waitingTranslations = map (fmap $ formatWithTranslation levelToShow) translations :: [Asyncable Text]
   allTranslations <- liftIO $ mapM holdOn waitingTranslations
   return $ setCorrectSpacing (words sentence) allTranslations []

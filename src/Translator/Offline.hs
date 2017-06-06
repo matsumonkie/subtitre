@@ -28,8 +28,8 @@ adjs :: Dictionary
 adjs =
   fromList [("his", "sa/son")]
 
-translate :: WordInfos -> App Translations
-translate wi@(word, lemma, tag, level) =
+translate :: StaticConf -> WordInfos -> IO Translations
+translate sc wi@(word, lemma, tag, level) =
   return $ mkTranslations wi $ case tag of
     Else -> []
     _    -> maybe [] (\x -> [x]) translation

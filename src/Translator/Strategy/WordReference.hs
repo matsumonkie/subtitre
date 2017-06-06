@@ -53,9 +53,9 @@ translate fetch wi@(word, lemma, tag, _)
 
 fetchTranslations :: Text -> App (Maybe (Response ByteString))
 fetchTranslations toTranslate = do
-  key <- askS wordReferenceApiKey
-  urlPrefix <- askS wordReferenceApiUrlPrefix
-  urlSuffix <- askS wordReferenceApiUrlSuffix
+  key <- asksS wordReferenceApiKey
+  urlPrefix <- asksS wordReferenceApiUrlPrefix
+  urlSuffix <- asksS wordReferenceApiUrlSuffix
   let url = urlPrefix <> key <> urlSuffix <> toTranslate
   liftIO $ catch (Just <$> (getWith defaults (unpack url))) handler
   where
