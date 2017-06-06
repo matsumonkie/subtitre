@@ -26,8 +26,6 @@ import Translator.Translate
 import Control.Monad.Reader
 import qualified Data.HashMap.Strict as HM
 import Config.App
-import Config.RuntimeConf
-import Config.StaticConf
 
 subtitleFile = "mini-sample.srt"
 subtitleStructFile = "struct.srt"

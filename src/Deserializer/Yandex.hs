@@ -38,13 +38,13 @@ data YDef =
 
 data YEntry =
   YEntry { yEntryText :: Text
-         , yEntryPos :: Tag Yandex
+         , yEntryPos :: Tag
          , yEntryTr :: [YTr]
          } deriving (Show, Generic)
 
 data YTr =
   YTr { yTrText :: Text
-      , yTrPos :: Tag Yandex
+      , yTrPos :: Tag
       } deriving (Show)
 
 instance FromJSON YDef where
@@ -64,8 +64,8 @@ instance FromJSON YTr where
     yTrText <- o .: "text"
     yTrPos <- o .: "pos"
     return $ YTr{..}
-
-instance FromJSON (Tag Yandex) where
+{-
+instance FromJSON Tag where
   parseJSON =
     withText "String" parse
     where
@@ -80,3 +80,4 @@ instance FromJSON (Tag Yandex) where
           "sym"   -> Sym
           "verb"  -> Verb
           _       -> Else
+-}

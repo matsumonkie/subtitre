@@ -27,10 +27,8 @@ module Type (
 , Lemma
 , or
 , Level(..)
-, RTranslator
 , LevelSet
 , LevelSets(..)
-, Translator
 ) where
 
 import Data.Text hiding (length)
@@ -80,7 +78,6 @@ data Tag = Adj
 newtype Translations = Translations (WordInfos, [Text]) deriving (Eq, Show)
 
 type WordInfos = (Word, Lemma, Tag, Level)
-type Translator = WordInfos -> IO Translations
 
 data Level = Unknown
            | Easy
@@ -89,8 +86,6 @@ data Level = Unknown
 
 type LevelSet = HashMap Text ()
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
-
-type RTranslator a = ReaderT Translator IO a
 
 mkTranslations :: WordInfos -> [Text] -> Translations
 mkTranslations wi translations = Translations (wi, translations)

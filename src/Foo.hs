@@ -15,6 +15,8 @@ import Control.Monad.State
 import Control.Monad.Writer
 import Control.Monad.Reader
 import Control.Monad.Trans.Maybe
+import Control.Concurrent.Async
+
 
 foo :: ExceptT String (WriterT String (StateT String (ReaderT String IO))) String
 foo = do
@@ -38,7 +40,22 @@ add1 = do
 add2 :: Int -> ReaderT Int (ExceptT Error IO) Int
 add2 e = do
   initial <- ask
+  liftIO $ putStrLn "test"
   return $ e + 2 + initial
+
+data Asyncable e = RealAsync (Async e)
+                 | FakeAsync e
+
+add5 :: Int -> ReaderT Int (ExceptT Error IO) (Asyncable Int)
+add5 e = do
+  liftIO $ putStrLn "test"
+  if True then do
+    liftIO $ putStrLn "test"
+    return $ FakeAsync 2
+  else do
+    liftIO $ putStrLn "test"
+    return $ FakeAsync 2
+
 
 add3 :: Int -> ReaderT Int (ExceptT Error IO) Int
 add3 e = do

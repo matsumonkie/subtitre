@@ -33,10 +33,10 @@ import Data.Monoid
 import Control.Monad.IO.Class
 import Deserializer.WordReference
 
-translate :: (Text -> IO (Maybe (Response ByteString))) -> WordInfos -> IO Translations
+translate :: (Text -> App (Maybe (Response ByteString))) -> WordInfos -> App Translations
 translate fetch wi@(word, lemma, tag, _)
   | shouldBeTranslated tag = do
-      response <- fetch toTranslate :: IO (Maybe (Response ByteString))
+      response <- fetch toTranslate
       let translations = (translationsBasedOnTag toTranslate tag) response
       res translations
   | otherwise = res Nothing
@@ -70,7 +70,7 @@ translationsBasedOnTag toTranslate tag response = do
 
 allWrTranslationsTerms :: WRResponse -> [WRTranslation]
 allWrTranslationsTerms wrResponse =
-  Prelude.concat $ Prelude.map principalTranslations $ terms wrResponse
+  terms wrResponse >>= principalTranslations
 
 body :: Maybe (Response ByteString) -> Maybe ByteString
 body response = do

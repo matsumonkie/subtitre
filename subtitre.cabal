@@ -20,8 +20,6 @@ library
                      , Composer.RawSubCtx
                      , Composer.RichSubCtx
                      , Config.App
-                     , Config.RuntimeConf
-                     , Config.StaticConf
                      , Deserializer.WordReference
                      , Deserializer.Yandex
                      , LevelSet

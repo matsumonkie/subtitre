@@ -18,7 +18,6 @@ import Debug.Trace
 import Control.Monad.Reader
 import Control.Monad.Trans.Except
 import Config.App
-import Config.RuntimeConf
 
 composeSubs :: [RichSubCtx] -> App Text
 composeSubs subCtxs = do
@@ -74,7 +73,7 @@ handleTranslation wi@(word, lemma, tag, level) = do
   levelToShow <- askR levelToShow
   translator <- askR translator
   return $ if shouldTranslate levelToShow level then
-    RealAsync $ (async . translator) wi
+    RealAsync $ undefined -- (async . translator) wi
   else
     FakeAsync $ Translations (wi, [])
   where

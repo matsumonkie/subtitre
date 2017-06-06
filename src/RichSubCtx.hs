@@ -31,7 +31,6 @@ import Control.Monad.Reader (ReaderT, runReaderT)
 import Control.Monad.Reader
 import Control.Monad.Trans.Except
 import Config.App
-import Config.RuntimeConf
 
 sentenceSeparator = " <$> " :: Text
 subSeparator      = " <*> " :: Text

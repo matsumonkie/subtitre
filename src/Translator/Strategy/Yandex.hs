@@ -31,15 +31,15 @@ import Deserializer.Yandex
 import Config.App
 import Control.Monad.IO.Class
 
-translate :: (Text -> IO (Maybe (Response ByteString))) -> WordInfos -> App Translations
+translate :: (Text -> App (Maybe (Response ByteString))) -> WordInfos -> App Translations
 translate fetch wi@(word, lemma, tag, _)
   | shouldBeTranslated tag = do
-      response <- liftIO $ fetch toTranslate
+      response <- fetch toTranslate
       let translations = (translationsBasedOnTag toTranslate tag) response
       res translations
   | otherwise = res Nothing
   where
-    shouldBeTranslated :: RealTag -> Bool
+    shouldBeTranslated :: Tag -> Bool
     shouldBeTranslated = (flip elem) [Verb, Noun, Adj, Sym, Punct, Propn, Pron, Conj, Adv]
     res x = case x of
       Just y -> return $ mkTranslations wi y
@@ -61,14 +61,14 @@ fetchTranslations toTranslate = do
                         & param "text" .~ [toTranslate]
                         & param "lang" .~ ["en-fr"]
 
-translationsBasedOnTag :: Text -> RealTag -> Maybe (Response ByteString) -> Maybe [Text]
+translationsBasedOnTag :: Text -> Tag -> Maybe (Response ByteString) -> Maybe [Text]
 translationsBasedOnTag toTranslate tag response = do
   yDef <- body response >>= decode :: Maybe YDef
   let correctTrs = Prelude.filter (\x -> tag == yTrPos x) $ trs yDef
   return $ Prelude.map yTrText correctTrs
   where
     trs :: YDef -> [YTr]
-    trs yDef = Prelude.concat $ Prelude.map yEntryTr (yEntries yDef)
+    trs yDef = yEntries yDef >>= yEntryTr
 
 body :: Maybe (Response ByteString) -> Maybe ByteString
 body response = do

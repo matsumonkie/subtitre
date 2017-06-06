@@ -27,7 +27,6 @@ import Control.Monad.IO.Class
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Class
 import Config.App
-import Config.RuntimeConf
 
 parseSubtitlesOfFile :: App [RawSubCtx]
 parseSubtitlesOfFile = do
