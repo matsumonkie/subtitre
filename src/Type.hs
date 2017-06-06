@@ -45,6 +45,7 @@ import Control.Monad.Reader (ReaderT, runReaderT)
 import Data.HashMap.Strict
 import Control.Monad.Trans.Except
 import Text.Parsec
+import Data.HashSet
 
 type Sequence = Int
 type Sentence = Text
@@ -92,7 +93,7 @@ data Level = Unknown
            | Normal
            | Hard deriving (Show, Eq, Ord)
 
-type LevelSet = HashMap Text ()
+type LevelSet = HashSet Text
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
 
 mkTranslations :: WordInfos -> [Text] -> Translations

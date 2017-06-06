@@ -23,5 +23,5 @@ offline :: StaticConf -> WordInfos -> IO Translations
 offline = Offline.translate
 
 online :: StaticConf -> WordInfos -> IO Translations
-online sc = (Yandex.translate) (Yandex.fetchTranslations sc)
---online = WordReference.translate WordReference.fetchTranslations
+--online sc = Yandex.translate (Yandex.fetchTranslations sc)
+online sc = WordReference.translate (WordReference.fetchTranslations sc)

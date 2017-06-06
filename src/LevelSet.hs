@@ -8,25 +8,22 @@ module LevelSet (
 import Data.Text hiding (map)
 import Prelude hiding (readFile, lines)
 import Data.Monoid
-import Data.HashMap.Strict hiding (map)
+import Data.HashSet
 import Data.Text.IO
 import GHC.IO.Handle hiding (hGetLine)
 import System.IO hiding (readFile, hGetLine)
 import Type
 
-assetAsHash :: FilePath -> IO LevelSet
-assetAsHash file =
-  fromList <$> toPair <$> readAsset file
+assetAsSet :: FilePath -> IO LevelSet
+assetAsSet file =
+  fromList <$> lines <$> readAsset file
   where
     readAsset :: FilePath -> IO Text
     readAsset file =
       readFile $ "assets/" <> file
-    toPair :: Text -> [(Text, ())]
-    toPair text =
-      map (\x -> (x, ())) $ lines text
 
-easyWords   = assetAsHash "3000"
-normalWords = assetAsHash "10000"
+easyWords   = assetAsSet "3000"
+normalWords = assetAsSet "10000"
 hardWords   = return $ fromList [] :: IO LevelSet
 
 getLevelSets :: IO LevelSets

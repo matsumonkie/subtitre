@@ -2,11 +2,9 @@
 
 module RichSubCtx (
   createRichSubCtx
-, serializeRichSubCtx
 ) where
 
 import Type
-import Serializer
 import Text.Parsec.Combinator
 import Data.Text hiding (map, zip)
 import Data.Text.Lazy (toStrict)
@@ -88,7 +86,3 @@ runSpacy sentence = do
   where
     spacy :: IO String
     spacy = readProcess "./spacy/client.py" ["-s", unpack sentence] []
-
-serializeRichSubCtx :: RichSubCtx -> Text
-serializeRichSubCtx richSubCtx =
-  toStrict $ decodeUtf8 $ encode richSubCtx

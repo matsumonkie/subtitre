@@ -33,7 +33,7 @@ import Data.Monoid
 import Control.Monad.IO.Class
 import Deserializer.WordReference
 
-translate :: (Text -> App (Maybe (Response ByteString))) -> WordInfos -> App Translations
+translate :: (Text -> IO (Maybe (Response ByteString))) -> WordInfos -> IO Translations
 translate fetch wi@(word, lemma, tag, _)
   | shouldBeTranslated tag = do
       response <- fetch toTranslate
@@ -42,7 +42,7 @@ translate fetch wi@(word, lemma, tag, _)
   | otherwise = res Nothing
   where
     shouldBeTranslated :: Tag -> Bool
-    shouldBeTranslated = (flip elem) [Verb, Noun, Adj, Sym, Punct, Propn, Pron, Conj, Adv]
+    shouldBeTranslated = (flip elem) [Verb, Noun, Adj]
     res x = case x of
       Just y -> return $ mkTranslations wi y
       Nothing -> return $ mkTranslations wi []
@@ -51,13 +51,15 @@ translate fetch wi@(word, lemma, tag, _)
       Noun -> lemma
       _ -> word
 
-fetchTranslations :: Text -> App (Maybe (Response ByteString))
-fetchTranslations toTranslate = do
-  key <- asksS wordReferenceApiKey
-  urlPrefix <- asksS wordReferenceApiUrlPrefix
-  urlSuffix <- asksS wordReferenceApiUrlSuffix
-  let url = urlPrefix <> key <> urlSuffix <> toTranslate
-  liftIO $ catch (Just <$> (getWith defaults (unpack url))) handler
+fetchTranslations :: StaticConf -> Text -> IO (Maybe (Response ByteString))
+fetchTranslations sc toTranslate =
+  let
+    key = wordReferenceApiKey sc
+    urlPrefix = wordReferenceApiUrlPrefix sc
+    urlSuffix = wordReferenceApiUrlSuffix sc
+    url = urlPrefix <> key <> urlSuffix <> toTranslate
+  in
+    catch (Just <$> (getWith defaults (unpack url))) handler
   where
     handler :: HttpException -> IO (Maybe (Response ByteString))
     handler ex = return Nothing

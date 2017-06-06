@@ -88,12 +88,15 @@ instance FromJSON WRTranslation where
 wrTagParser :: Value -> Parser Tag
 wrTagParser =
   withText "word reference Tag" $ \t -> return $ case t of
-    "adj"   -> Adj
-    "adv"   -> Adv
-    "conj"  -> Conj
-    "noun"  -> Noun
-    "pron"  -> Pron
-    "punct" -> Punct
-    "sym"   -> Sym
-    "verb"  -> Verb
-    _       -> Else
+    "adj"      -> Adj
+    "loc adj"  -> Adj
+    "n as adj" -> Adj
+    "adj inv"  -> Adj
+    "n"        -> Noun
+    "n inv"    -> Noun
+    "nf"       -> Noun
+    "nm"       -> Noun
+    "vtr"      -> Verb
+    "v expr"   -> Verb
+    "loc v"    -> Verb
+    _          -> Else
