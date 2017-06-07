@@ -34,18 +34,12 @@ import Control.Monad.IO.Class
 import Deserializer.WordReference
 
 translate :: (Text -> IO (Maybe (Response ByteString))) -> WordInfos -> IO Translations
-translate fetch wi@(word, lemma, tag, _)
-  | shouldBeTranslated tag = do
-      response <- fetch toTranslate
-      let translations = (translationsBasedOnTag toTranslate tag) response
-      res translations
-  | otherwise = res Nothing
+translate fetch wi@(word, lemma, tag, _) = do
+    response <- fetch toTranslate
+    let translations = (translationsBasedOnTag toTranslate tag) response
+    let mkTranslations' = mkTranslations wi
+    return $ maybe (mkTranslations' []) (mkTranslations') translations
   where
-    shouldBeTranslated :: Tag -> Bool
-    shouldBeTranslated = (flip elem) [Verb, Noun, Adj]
-    res x = case x of
-      Just y -> return $ mkTranslations wi y
-      Nothing -> return $ mkTranslations wi []
     toTranslate = case tag of
       Verb -> lemma
       Noun -> lemma
@@ -54,7 +48,7 @@ translate fetch wi@(word, lemma, tag, _)
 fetchTranslations :: StaticConf -> Text -> IO (Maybe (Response ByteString))
 fetchTranslations sc toTranslate =
   let
-    key = wordReferenceApiKey sc
+    key = (wordReferenceApiKeys sc) !! 0
     urlPrefix = wordReferenceApiUrlPrefix sc
     urlSuffix = wordReferenceApiUrlSuffix sc
     url = urlPrefix <> key <> urlSuffix <> toTranslate
@@ -68,7 +62,7 @@ translationsBasedOnTag :: Text -> Tag -> Maybe (Response ByteString) -> Maybe [T
 translationsBasedOnTag toTranslate tag response = do
   wrResponse <- body response >>= decode :: Maybe WRResponse
   let correctTrs = Prelude.filter (\x -> tag == tPos x) $ allWrTranslationsTerms wrResponse
-  return $ Prelude.map tTerm correctTrs
+  Just $ Prelude.map tTerm correctTrs
 
 allWrTranslationsTerms :: WRResponse -> [WRTranslation]
 allWrTranslationsTerms wrResponse =

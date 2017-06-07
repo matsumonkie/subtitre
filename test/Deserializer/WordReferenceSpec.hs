@@ -17,6 +17,7 @@ import Prelude hiding (readFile)
 import Data.Aeson
 import Deserializer.WordReference
 import Data.Maybe
+import Debug.Trace
 
 main :: IO ()
 main = hspec spec

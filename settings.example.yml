@@ -3,9 +3,9 @@ development:
   outputFileName:
   yandexApiKey:
   yandexApiUrl:
-  wordReferenceApiKey:
+  wordReferenceApiKeys:
   wordReferenceApiUrlPrefix:
-  wordreferenceApiUrlSuffix:
+  wordReferenceApiUrlSuffix:
 
 staging:
 

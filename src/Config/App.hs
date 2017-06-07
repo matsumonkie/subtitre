@@ -31,7 +31,7 @@ import Data.ByteString hiding (putStrLn)
 import Prelude hiding (readFile)
 import Data.Monoid
 import Data.Maybe
-
+import Debug.Trace
 
 {- RUNTIME CONF -}
 
@@ -57,15 +57,15 @@ outputFile conf = (dir conf) <> "/t" <> (file conf)
 
 
 data StaticConf =
-  StaticConf { workingDir :: FilePath
-             , outputFileName :: Text
+  StaticConf { workingDir :: !FilePath
+             , outputFileName :: !Text
              -- yandex
-             , yandexApiKey :: Text
-             , yandexApiUrl :: Text
+             , yandexApiKey :: !Text
+             , yandexApiUrl :: !Text
              -- word reference
-             , wordReferenceApiUrlPrefix :: Text
-             , wordReferenceApiUrlSuffix :: Text
-             , wordReferenceApiKey :: Text
+             , wordReferenceApiUrlPrefix :: !Text
+             , wordReferenceApiUrlSuffix :: !Text
+             , wordReferenceApiKeys :: ![Text]
              } deriving Show
 
 instance FromJSON StaticConf where
@@ -77,12 +77,13 @@ instance FromJSON StaticConf where
     yandexApiUrl <- config .: "yandexApiUrl"
     wordReferenceApiUrlPrefix <- config .: "wordReferenceApiUrlPrefix"
     wordReferenceApiUrlSuffix <- config .: "wordReferenceApiUrlSuffix"
-    wordReferenceApiKey <- config .: "wordReferenceApiKey"
+    wordReferenceApiKeys <- config .: "wordReferenceApiKeys"
     return StaticConf {..}
+  parseJSON _ = fail "Expected Object for Config value"
 
 getStaticConf :: IO StaticConf
 getStaticConf =
-  fromJust <$> Y.decode <$> readStatic "settings.yml"
+  fromJust <$> Y.decode <$> readStatic "./settings.yml"
   where
     readStatic :: FilePath -> IO ByteString
     readStatic file = readFile file

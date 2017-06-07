@@ -46,6 +46,7 @@ wordCtx levelSets = do
   where
     whatWord (orig, lemma, tag) = toLower $ case tag of
       Verb -> lemma
+      Noun -> lemma
       _ -> orig
 
 tagParser :: Parsec Text () Tag

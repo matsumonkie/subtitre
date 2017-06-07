@@ -13,6 +13,7 @@ import Data.Text.IO
 import GHC.IO.Handle hiding (hGetLine)
 import System.IO hiding (readFile, hGetLine)
 import Type
+import Control.Applicative
 
 assetAsSet :: FilePath -> IO LevelSet
 assetAsSet file =

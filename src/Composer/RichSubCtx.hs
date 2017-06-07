@@ -73,12 +73,18 @@ handleTranslation wi@(word, lemma, tag, level) = do
   levelToShow <- asksR levelToShow
   translator <- asksR translator
   sc <- askS
-  return $ if shouldTranslate levelToShow level then
-    RealAsync $ (async . (translator sc)) wi
+  needTranslation <- shouldTranslate wi
+  return $ if needTranslation then
+    RealAsync $ async $ translator sc wi
   else
     FakeAsync $ mkTranslations wi []
-  where
-    shouldTranslate levelToShow level = levelToShow < level
+
+shouldTranslate :: WordInfos -> App Bool
+shouldTranslate wi@(word, lemma, tag, level) = do
+  levelToShow <- asksR levelToShow
+  return $
+    level > levelToShow &&
+    tag `elem` [Verb, Noun, Adj, Propn]
 
 reorganizeSentence :: Sentence -> [Asyncable Translations] -> App [Text]
 reorganizeSentence sentence translations = do

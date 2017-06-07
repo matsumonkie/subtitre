@@ -40,7 +40,7 @@ main = do
   staticConf <- getStaticConf
   let runtimeConf = RuntimeConf { translator = Translator.Translate.translate
                                 , levelSets = levelSets
-                                , levelToShow = Normal
+                                , levelToShow = Easy
                                 , dir = "/home/iori/temp"
                                 , file = "got.srt"
                                 }
@@ -50,53 +50,10 @@ main = do
 
 main' :: App ()
 main' = do
+  sc <- askS
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched
   outputFile <- asksR outputFile
   liftIO $ saveToFile outputFile text
-  pPrint text
-
-
-{-
-parseSubtitles
-  i: "1
-      00:00:09,538 --> 00:00:12,373
-      <i>( Gate rumbling,</i>
-      <i>chains rattling )</i>"
-  o: "seq 1
-      timing 00:00:09,538 timing 00:00:12,373
-      lines: ["<i>( Gate rumbling,</i>",
-              "<i>chains rattling )</i>"]
--}
-
-{-
-createRichSubCtx
-  i: "seq 1
-      timing 00:00:09,538 timing 00:00:12,373
-      lines: ["<i>( Gate rumbling,</i>",
-              "<i>chains rattling )</i>"]
-  o: "seq 1
-      timing 00:00:09,538 timing 00:00:12,373
-      lines: [(Gate, _, Noun, Easy), (rumbling,...)]
--}
-
-{-
-translate
-  i: "seq 1
-      timing 00:00:09,538 timing 00:00:12,373
-      lines: [(Gate, _, Noun, Easy), (rumbling,...)]
-  o: "seq 1
-      timing 00:00:09,538 timing 00:00:12,373
-      lines: [((Gate, _, Noun, Easy, ["porte"]), (rumbling,...)]
--}
-
-{-
-composeSubs
-  i: "seq 1
-      timing 00:00:09,538 timing 00:00:12,373
-      lines: [((Gate, _, Noun, Easy, ["porte"]), (rumbling,...)]
-  o: "seq 1
-      00:00:09,538 -> 00:00:12,373
-      Gate (porte), rumbling...
--}
+  pPrint $ text
