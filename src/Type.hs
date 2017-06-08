@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
@@ -46,6 +47,8 @@ import Data.HashMap.Strict
 import Control.Monad.Trans.Except
 import Text.Parsec
 import Data.HashSet
+import Control.DeepSeq
+import GHC.Generics (Generic)
 
 type Sequence = Int
 type Sentence = Text
@@ -91,18 +94,10 @@ type WordInfos = (Word, Lemma, Tag, Level)
 data Level = Unknown
            | Easy
            | Normal
-           | Hard deriving (Show, Eq, Ord)
+           | Hard deriving (Show, Eq, Ord, Generic, NFData)
 
 type LevelSet = HashSet Text
-data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
+data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFData)
 
 mkTranslations :: WordInfos -> [Text] -> Translations
 mkTranslations wi translations = Translations' (wi, translations)
-
-p :: SentenceInfos
-p = [ ("the", "", Else, Unknown)
-    , ("butler", "", Else, Unknown)
-    , ("looks up", "", Verb, Unknown)
-    , ("his", "", Else, Unknown)
-    , ("higness", "", Else, Unknown)
-    ]

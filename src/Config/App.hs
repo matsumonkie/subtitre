@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass #-}
 
 module Config.App (
   App
@@ -32,6 +33,8 @@ import Prelude hiding (readFile)
 import Data.Monoid
 import Data.Maybe
 import Debug.Trace
+import Control.DeepSeq
+import GHC.Generics (Generic)
 
 {- RUNTIME CONF -}
 
@@ -42,7 +45,7 @@ data RuntimeConf =
           , levelToShow :: Level
           , dir :: FilePath
           , file :: FilePath
-          }
+          } deriving (Generic, NFData)
 
 type Translator = StaticConf -> WordInfos -> IO Translations
 
@@ -66,7 +69,7 @@ data StaticConf =
              , wordReferenceApiUrlPrefix :: !Text
              , wordReferenceApiUrlSuffix :: !Text
              , wordReferenceApiKeys :: ![Text]
-             } deriving Show
+             } deriving (Show, Generic, NFData)
 
 instance FromJSON StaticConf where
   parseJSON (Y.Object v) = do
@@ -92,7 +95,7 @@ getStaticConf =
 {- APP CONF -}
 
 
-data Config = Config (RuntimeConf, StaticConf)
+data Config = Config (RuntimeConf, StaticConf) deriving (Generic, NFData)
 
 data AppError = AppError ParseError deriving (Show, Eq)
 type App a = ReaderT Config (ExceptT [AppError] IO) a

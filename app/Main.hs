@@ -26,6 +26,7 @@ import Translator.Translate
 import Control.Monad.Reader
 import qualified Data.HashMap.Strict as HM
 import Config.App
+import Control.DeepSeq
 
 subtitleFile = "mini-sample.srt"
 subtitleStructFile = "struct.srt"
@@ -51,6 +52,8 @@ main = do
 main' :: App ()
 main' = do
   sc <- askS
+  s <- ask
+  pPrint $ s `deepseq` "Config is fine"
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched

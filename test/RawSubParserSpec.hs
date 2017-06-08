@@ -13,6 +13,7 @@ import Data.Either
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Except
 import Config.App
+import qualified Text.HTML.TagSoup as TS
 
 main :: IO ()
 main = hspec spec
@@ -35,6 +36,7 @@ spec = do
         it "parses real subtitles" $ do
           parseFile sherlock >>= satisfyIsRight
           parseFile mrRobot >>= satisfyIsRight
+
         it "with bom" $ do
           parseFile house >>= satisfyIsRight
         it "with ascii & CRLF" $ do
@@ -79,7 +81,7 @@ res text =
   where
     t1 = Timing 0 0 26 722
     t2 = Timing 0 0 29 23
-    sentences = text
+    sentences = map TS.parseTags text
 
 satisfyIsRight :: Either [AppError] [RawSubCtx] -> Expectation
 satisfyIsRight parsed =
