@@ -25,9 +25,9 @@ import Data.ByteString.Lazy.Internal
 import Control.Monad.IO.Class
 import Data.Monoid
 import LevelSet
-import Control.Monad.Reader (ReaderT, runReaderT)
+import Control.Monad.Except
 import Control.Monad.Reader
-import Control.Monad.Trans.Except
+import Control.Monad.Writer
 import Config.App
 
 sentenceSeparator = " <$> " :: Text
@@ -41,7 +41,7 @@ createRichSubCtx allRawSubCtx = do
   let parsed      = map (parse levelSets) unmerged
   let richSubCtxs = mapM toRichSubCtx (zip allRawSubCtx parsed) :: Either [ParseError] [RichSubCtx]
   case richSubCtxs of
-    Left pes -> lift $ throwE $ map AppError pes
+    Left pes -> throwError $ map AppError pes
     Right rs -> return rs
 
 {-

@@ -15,9 +15,11 @@ import Data.Monoid
 import Control.Lens hiding (Level)
 import Control.Concurrent.Async
 import Debug.Trace
+import Control.Monad.Except
 import Control.Monad.Reader
-import Control.Monad.Trans.Except
+import Control.Monad.Writer
 import Config.App
+import Text.Pretty.Simple (pPrint, pString)
 
 composeSubs :: [RichSubCtx] -> App Text
 composeSubs subCtxs = do
@@ -74,10 +76,10 @@ handleTranslation wi@(word, lemma, tag, level) = do
   translator <- asksR translator
   sc <- askS
   needTranslation <- shouldTranslate wi
-  return $ if needTranslation then
-    RealAsync $ async $ translator sc wi
+  if needTranslation then do
+    return $ RealAsync $ async $ translator sc wi
   else
-    FakeAsync $ mkTranslations wi []
+    return $ FakeAsync $ mkTranslations wi []
 
 shouldTranslate :: WordInfos -> App Bool
 shouldTranslate wi@(word, lemma, tag, level) = do
@@ -90,6 +92,7 @@ reorganizeSentence :: Sentence -> [Asyncable Translations] -> App [Text]
 reorganizeSentence sentence translations = do
   levelToShow <- asksR levelToShow
   let waitingTranslations = map (fmap $ formatWithTranslation levelToShow) translations :: [Asyncable Text]
+
   allTranslations <- liftIO $ mapM holdOn waitingTranslations
   return $ setCorrectSpacing (words sentence) allTranslations []
 

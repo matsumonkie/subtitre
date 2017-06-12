@@ -22,7 +22,7 @@ import qualified Control.Exception as Ex
 import GHC.IO.Exception
 import LevelSet
 import Control.Monad.IO.Class
-import Control.Monad.Trans.Except
+import Control.Monad.Except
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Class
@@ -36,7 +36,7 @@ parseSubtitlesOfFile = do
   result <- liftIO $ Ex.tryJust invalidArgument (readWith inputFile SIO.utf8) :: App (Either () Text)
   content <- liftIO $ either (const $ readWith inputFile SIO.latin1) return result :: App Text
   case (parseSubtitles content :: Either ParseError [RawSubCtx]) of
-    Left pe -> lift $ throwE [AppError pe]
+    Left pe -> throwError [AppError pe]
     Right rs -> return rs
   where
     readWith :: FilePath -> SIO.TextEncoding -> IO Text

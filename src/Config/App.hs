@@ -21,6 +21,7 @@ import Type
 import Text.Parsec
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Except
+import Control.Monad.Trans.Writer
 import qualified Data.HashMap.Strict as HM
 import Data.Monoid
 import Type
@@ -35,9 +36,12 @@ import Data.Maybe
 import Debug.Trace
 import Control.DeepSeq
 import GHC.Generics (Generic)
+import System.Log.Logger
 
 {- RUNTIME CONF -}
 
+instance NFData Priority where
+  rnf x = ()
 
 data RuntimeConf =
   RuntimeConf { translator :: Translator
@@ -45,6 +49,8 @@ data RuntimeConf =
           , levelToShow :: Level
           , dir :: FilePath
           , file :: FilePath
+          , logLevel :: Priority
+          , logFormatter :: String
           } deriving (Generic, NFData)
 
 type Translator = StaticConf -> WordInfos -> IO Translations

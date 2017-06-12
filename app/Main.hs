@@ -3,30 +3,33 @@
 
 module Main where
 
-import Lib
-import Type
-import RawSubParser
-import RichSubCtx
 import Composer.RichSubCtx
-import Text.Pretty.Simple (pPrint, pString)
-import Data.Text.IO
-import Data.Text hiding (map)
-import Prelude hiding (readFile)
-import Control.Monad.Trans.Except
-import Text.Parsec
-import qualified Data.Text.IO as TextIO
-import qualified Data.ByteString.Lazy as LByteString (ByteString, toStrict)
-import Data.Text.Encoding (decodeUtf8)
-import qualified Data.Text.Lazy.IO as LTextIO (putStrLn)
-import Control.Monad.IO.Class
-import Data.Either
-import Data.Monoid
-import LevelSet
-import Translator.Translate
-import Control.Monad.Reader
-import qualified Data.HashMap.Strict as HM
 import Config.App
 import Control.DeepSeq
+import Control.Monad.IO.Class
+import Control.Monad.Reader
+import Control.Monad.Trans.Except
+import Control.Monad.Trans.Writer
+import qualified Data.ByteString.Lazy as LByteString (ByteString, toStrict)
+import Data.Either
+import qualified Data.HashMap.Strict as HM
+import Data.Monoid
+import Data.Text hiding (map)
+import Data.Text.Encoding (decodeUtf8)
+import Data.Text.IO
+import qualified Data.Text.IO as TextIO
+import qualified Data.Text.Lazy.IO as LTextIO (putStrLn)
+import LevelSet
+import Lib
+import qualified Logger as L
+import Prelude hiding (readFile)
+import RawSubParser
+import RichSubCtx
+import qualified System.Log.Logger as HSLogger
+import Text.Parsec
+import Text.Pretty.Simple (pPrint, pString)
+import Translator.Translate
+import Type
 
 subtitleFile = "mini-sample.srt"
 subtitleStructFile = "struct.srt"
@@ -44,6 +47,8 @@ main = do
                                 , levelToShow = Easy
                                 , dir = "/home/iori/temp"
                                 , file = "got.srt"
+                                , logLevel = HSLogger.INFO
+                                , logFormatter = "[$time $loggername $prio] $msg"
                                 }
   let config = Config(runtimeConf, staticConf)
   runExceptT (runReaderT main' config)
@@ -51,9 +56,10 @@ main = do
 
 main' :: App ()
 main' = do
+  L.setLogger
   sc <- askS
   s <- ask
-  pPrint $ s `deepseq` "Config is fine"
+  liftIO $ L.infoM $ s `deepseq` "Config is fine"
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched

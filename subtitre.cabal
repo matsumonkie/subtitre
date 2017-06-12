@@ -23,6 +23,7 @@ library
                      , Deserializer.WordReference
                      , Deserializer.Yandex
                      , LevelSet
+                     , Logger
                      , RawSubParser
                      , RichSubCtx
                      , SentenceStructParser
@@ -38,6 +39,7 @@ library
                      , bytestring >= 0.10.8.1
                      , containers >= 0.5.7.1
                      , deepseq
+                     , hslogger
                      , hspec
                      , http-client >= 0.5.6.1
                      , http-types >= 0.9.1
@@ -63,6 +65,8 @@ executable subtitre-exe
   build-depends:       aeson
                      , base
                      , bytestring >= 0.10.8.1
+                     , deepseq
+                     , hslogger
                      , mtl
                      , parsec
                      , pretty-simple
