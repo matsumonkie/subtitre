@@ -15,11 +15,10 @@ module Logger (
 
 import Config.App
 import qualified System.Log.Logger as HSLog
-import System.Log.Handler.Syslog
 import System.Log.Handler.Simple
 import System.Log.Handler (setFormatter)
 import System.Log.Formatter
-import System.IO (stderr, Handle)
+import System.IO (stderr, stdout, Handle)
 import Control.Monad.IO.Class
 
 loggerName = "SubT"
@@ -38,7 +37,6 @@ setLogger :: App ()
 setLogger = do
   logLevel <- asksR logLevel
   logFormatter <- asksR logFormatter
-  myStreamHandler <- liftIO $ streamHandler stderr logLevel
+  myStreamHandler <- liftIO $ streamHandler stdout logLevel
   let myStreamHandler' = setFormatter myStreamHandler $ simpleLogFormatter logFormatter
-  let log = HSLog.rootLoggerName
-  liftIO $ HSLog.updateGlobalLogger log (HSLog.setHandlers [myStreamHandler'])
+  liftIO $ HSLog.updateGlobalLogger HSLog.rootLoggerName $ HSLog.setLevel logLevel . HSLog.setHandlers [myStreamHandler']

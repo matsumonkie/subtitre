@@ -65,4 +65,4 @@ main' = do
   text   <- composeSubs riched
   outputFile <- asksR outputFile
   liftIO $ saveToFile outputFile text
-  pPrint $ text
+  liftIO $ L.infoM $ show text
