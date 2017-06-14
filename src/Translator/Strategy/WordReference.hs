@@ -12,7 +12,7 @@ module Translator.Strategy.WordReference (
 
 import Type
 import Serializer
-import Data.Text
+import Data.Text hiding (filter, map)
 import Data.Maybe
 import Network.Wreq
 import Control.Lens
@@ -20,7 +20,7 @@ import Data.Aeson.Lens
 import Data.Aeson
 import GHC.Generics
 import Data.Aeson
-import Data.ByteString.Lazy hiding (elem, unpack)
+import Data.ByteString.Lazy hiding (elem, unpack, filter, map)
 import Text.Pretty.Simple (pPrint, pString)
 import GHC.Exts
 import Debug.Trace
@@ -32,11 +32,14 @@ import Config.App
 import Data.Monoid
 import Control.Monad.IO.Class
 import Deserializer.WordReference
+import qualified Logger as L
+import Prelude as P
 
 translate :: (Text -> IO (Maybe (Response ByteString))) -> WordInfos -> IO Translations
 translate fetch wi@(word, lemma, tag, _) = do
     response <- fetch toTranslate
     let translations = (translationsBasedOnTag toTranslate tag) response
+    liftIO $ L.infoM $ "tr:[" <> show toTranslate <> "] " <> show translations
     let mkTranslations' = mkTranslations wi
     return $ maybe (mkTranslations' []) (mkTranslations') translations
   where
@@ -56,17 +59,19 @@ fetchTranslations sc toTranslate =
     catch (Just <$> (getWith defaults (unpack url))) handler
   where
     handler :: HttpException -> IO (Maybe (Response ByteString))
-    handler ex = return Nothing
+    handler ex = do
+      L.errorM $ "could not fetch online translation: " <> show ex
+      return Nothing
 
 translationsBasedOnTag :: Text -> Tag -> Maybe (Response ByteString) -> Maybe [Text]
 translationsBasedOnTag toTranslate tag response = do
   wrResponse <- body response >>= decode :: Maybe WRResponse
-  let correctTrs = Prelude.filter (\x -> tag == tPos x) $ allWrTranslationsTerms wrResponse
-  Just $ Prelude.map tTerm correctTrs
-
-allWrTranslationsTerms :: WRResponse -> [WRTranslation]
-allWrTranslationsTerms wrResponse =
-  terms wrResponse >>= principalTranslations
+  let translations = allTranslations wrResponse
+  let correctTrs = filter (\x -> tag == tPos x) translations
+  Just $ if P.null correctTrs then
+    P.map tTerm translations
+  else
+    P.map tTerm correctTrs
 
 body :: Maybe (Response ByteString) -> Maybe ByteString
 body response = do

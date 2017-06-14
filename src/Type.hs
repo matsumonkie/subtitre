@@ -91,10 +91,11 @@ type Translations = Translations' Text
 
 type WordInfos = (Word, Lemma, Tag, Level)
 
-data Level = Unknown
-           | Easy
+data Level = Easy
            | Normal
-           | Hard deriving (Show, Eq, Ord, Generic, NFData)
+           | Hard
+           | Unknown
+           deriving (Show, Eq, Ord, Generic, NFData)
 
 type LevelSet = HashSet Text
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFData)

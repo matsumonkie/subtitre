@@ -1,0 +1,27 @@
+{
+  "term0" : {
+    "PrincipalTranslations" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "snort", "POS" : "vi", "sense" : "exhale forcefully", "usage" : ""},
+	"FirstTranslation" : {"term" : "renâcler", "POS" : "vi", "sense" : ""},
+	"SecondTranslation" : {"term" : "grogner", "POS" : "vi", "sense" : "cochon"},
+	"ThirdTranslation" : {"term" : "s'ébrouer", "POS" : "v pron", "sense" : "cheval"}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "snort, replace: snort sth", "POS" : "vtr", "sense" : "drug: sniff, inhale", "usage" : "slang"},
+	"FirstTranslation" : {"term" : "sniffer", "POS" : "vtr", "sense" : "argot : de la drogue"}, "Note" : ""},
+      "2" :{
+	"OriginalTerm" : { "term" : "snort", "POS" : "n", "sense" : "forceful exhalation", "usage" : ""},
+	"FirstTranslation" : {"term" : "grognement", "POS" : "nm", "sense" : "cochon, personne"},
+	"SecondTranslation" : {"term" : "ébrouement", "POS" : "nm", "sense" : "cheval"}, "Note" : ""},
+      "3" :{
+	"OriginalTerm" : { "term" : "snort", "POS" : "n", "sense" : "laugh made through nose", "usage" : ""},
+	"FirstTranslation" : {"term" : "rire", "POS" : "nm", "sense" : "avec un petit grognement"}, "Note" : ""},
+      "4" :{
+	"OriginalTerm" : { "term" : "snort", "POS" : "vi", "sense" : "laugh through the nose", "usage" : ""},
+	"FirstTranslation" : {"term" : "grogner", "POS" : "vi", "sense" : ""}, "Note" : ""},
+      "5" :{
+	"OriginalTerm" : { "term" : "snort", "POS" : "vi", "sense" : "express contempt", "usage" : ""},
+	"FirstTranslation" : {"term" : "grogner", "POS" : "vi", "sense" : "personne"},
+	"SecondTranslation" : {"term" : "pousser un grognement", "POS" : "loc v", "sense" : ""}, "Note" : ""}}},
+  "Lines" : "End Reached", "END" : true
+}

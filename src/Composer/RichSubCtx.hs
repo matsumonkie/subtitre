@@ -20,6 +20,7 @@ import Control.Monad.Reader
 import Control.Monad.Writer
 import Config.App
 import Text.Pretty.Simple (pPrint, pString)
+import qualified Logger as L
 
 composeSubs :: [RichSubCtx] -> App Text
 composeSubs subCtxs = do
@@ -76,7 +77,9 @@ handleTranslation wi@(word, lemma, tag, level) = do
   translator <- asksR translator
   sc <- askS
   needTranslation <- shouldTranslate wi
+  liftIO $ L.infoM $ "wi:" <> show wi
   if needTranslation then do
+    liftIO $ L.infoM $ show wi
     return $ RealAsync $ async $ translator sc wi
   else
     return $ FakeAsync $ mkTranslations wi []

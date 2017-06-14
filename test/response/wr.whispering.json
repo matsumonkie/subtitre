@@ -1,0 +1,23 @@
+{
+  "term0" : {
+    "Entries" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "whispering", "POS" : "", "sense" : "sussurement, chuchotement", "usage" : ""},
+	"FirstTranslation" : {"term" : "murmure", "POS" : "nm", "sense" : "susurrement, chuchotement"}, "Note" : ""}},
+    "AdditionalTranslations" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "whispering", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "murmure", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "whispering", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "chuchotement", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "2" :{
+	"OriginalTerm" : { "term" : "whispering", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "susurrant", "POS" : "adj", "sense" : "qui susurre"}, "Note" : ""}}},
+  "original" : {
+    "Compounds" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "whispering campaign", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "campagne de diffamation", "POS" : "", "sense" : ""}, "Note" : ""}}},
+  "Lines" : "End Reached", "END" : true
+}

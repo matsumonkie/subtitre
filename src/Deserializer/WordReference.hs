@@ -1,17 +1,18 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Deserializer.WordReference (
   WRResponse(..)
 , WRTerm(..)
 , WRTranslation(..)
+, allTranslations
 ) where
 
 import Type
 import Serializer
-import Data.Text
+import Data.Text as T
 import Data.Maybe
 import Network.Wreq
 import Control.Lens
@@ -28,15 +29,21 @@ import Network.HTTP.Client (HttpException(HttpExceptionRequest))
 import Data.Either
 import qualified Data.HashMap.Strict as HM
 import Data.Traversable
+import Data.Monoid
+import Data.List
+import Prelude as P
 
-data WordReference
+allTranslations :: WRResponse -> [WRTranslation]
+allTranslations wrResponse =
+  terms wrResponse >>= \x -> entries x ++ principalTranslations x ++ additionalTranslations x
 
 data WRResponse =
   WRResponse { terms :: [WRTerm]
              } deriving (Show, Generic)
 
 data WRTerm =
-  WRTerm { principalTranslations :: [WRTranslation]
+  WRTerm { entries :: [WRTranslation]
+         , principalTranslations :: [WRTranslation]
          , additionalTranslations :: [WRTranslation]
          } deriving (Show)
 
@@ -50,38 +57,49 @@ data WRTranslation = WRTranslation { oTerm :: Text
 
 instance FromJSON WRResponse where
   parseJSON = withObject "WRResponse" $ \o -> do
-    terms <- allWRTerms (HM.toList o)
-    return $ WRResponse {..}
+    allTerms <- allWRTerms (HM.toList o)
+    let terms = P.map snd $ sortOn fst allTerms
+    return $ WRResponse { terms = terms }
     where
-      allWRTerms :: [(Text, Value)] -> Parser [WRTerm]
+      allWRTerms :: [(Text, Value)] -> Parser [(Text, WRTerm)]
       allWRTerms entries = catMaybes <$> mapM parseWRTerm entries
-      parseWRTerm :: (Text, Value) -> Parser (Maybe WRTerm)
+      parseWRTerm :: (Text, Value) -> Parser (Maybe (Text, WRTerm))
       parseWRTerm (key, value) =
-        if "term" `isPrefixOf` key then
-          Just <$> parseJSON value
+        if "term" `T.isPrefixOf` key then do
+          v <- parseJSON value
+          return $ Just (key, v)
         else
           return Nothing
 
 instance FromJSON WRTerm where
   parseJSON = withObject "WRTerm" $ \o -> do
-    principalEntries <- o .: "PrincipalTranslations"
-    additionalEntries <- o .: "AdditionalTranslations"
-    principalTranslations <- mapM parse (HM.toList principalEntries)
-    additionalTranslations <- mapM parse (HM.toList additionalEntries)
-    return WRTerm {..}
+    entries <- o .:? "Entries" .!= HM.fromList []
+    principalEntries <- o .:? "PrincipalTranslations" .!= HM.fromList []
+    additionalEntries <- o .:? "AdditionalTranslations" .!= HM.fromList []
+    entries <- mapM parse $ HM.toList entries
+    principalTranslations <- mapM parse $ HM.toList principalEntries
+    additionalTranslations <- mapM parse $ HM.toList additionalEntries
+
+    return WRTerm { entries = getSortedTr entries
+                  , principalTranslations = getSortedTr principalTranslations
+                  , additionalTranslations = getSortedTr additionalTranslations }
     where
-      parse :: (Text, Value) -> Parser WRTranslation
-      parse (_, value) = parseJSON value
+      getSortedTr x = P.map snd $ sortOn fst x
+      parse :: (Text, Value) -> Parser (Int, WRTranslation)
+      parse (index, value) = do
+        v <- parseJSON (value)
+        return (read $ unpack index, v)
 
 instance FromJSON WRTranslation where
   parseJSON = withObject "WRTranslation" $ \o -> do
     originalTerm <- o .: "OriginalTerm"
     firstTranslation <- o .: "FirstTranslation"
+
     oTerm  <- originalTerm .: "term"
-    oPos <- originalTerm .: "POS" >>= wrTagParser
+    oPos   <- originalTerm .: "POS" >>= wrTagParser
     oSense <- originalTerm .: "sense"
     tTerm  <- firstTranslation .: "term"
-    tPos <- firstTranslation .: "POS" >>= wrTagParser
+    tPos   <- firstTranslation .: "POS" >>= wrTagParser
     tSense <- firstTranslation .: "sense"
     return WRTranslation {..}
 
@@ -97,6 +115,8 @@ wrTagParser =
     "nf"       -> Noun
     "nm"       -> Noun
     "vtr"      -> Verb
+    "vi"       -> Verb
+    "v pron"   -> Verb
     "v expr"   -> Verb
     "loc v"    -> Verb
     _          -> Else

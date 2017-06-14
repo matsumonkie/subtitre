@@ -31,13 +31,6 @@ import Text.Pretty.Simple (pPrint, pString)
 import Translator.Translate
 import Type
 
-subtitleFile = "mini-sample.srt"
-subtitleStructFile = "struct.srt"
-
-saveToFile :: FilePath -> Text -> IO ()
-saveToFile file content =
-  TextIO.writeFile file content
-
 main :: IO ()
 main = do
   levelSets <- getLevelSets :: IO LevelSets
@@ -65,4 +58,8 @@ main' = do
   text   <- composeSubs riched
   outputFile <- asksR outputFile
   liftIO $ saveToFile outputFile text
-  liftIO $ L.infoM $ show text
+  pPrint text
+  where
+    saveToFile :: FilePath -> Text -> IO ()
+    saveToFile file content =
+      TextIO.writeFile file content
