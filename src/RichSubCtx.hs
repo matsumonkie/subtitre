@@ -63,15 +63,15 @@ unmergeSubs :: Text -> [[Text]]
 unmergeSubs allSubs =
   map (splitOn ("\n" <> sentenceSeparator <> "\n")) (splitOn ("\n" <> subSeparator <> "\n") allSubs)
 
-parse :: LevelSets -> [Text] -> Either [ParseError] [SentenceInfos]
+parse :: LevelSets -> [Text] -> Either [ParseError] [[WordInfos]]
 parse levelSets sentence =
   case lefts parsed of
     [] -> Right $ rights parsed
     errors -> Left errors
   where
-    parsed = map (parseSentenceStructure levelSets) sentence :: [Either ParseError SentenceInfos]
+    parsed = map (parseSentenceStructure levelSets) sentence :: [Either ParseError [WordInfos]]
 
-toRichSubCtx :: (RawSubCtx, Either [ParseError] [SentenceInfos])
+toRichSubCtx :: (RawSubCtx, Either [ParseError] [[WordInfos]])
              -> Either [ParseError] RichSubCtx
 toRichSubCtx ((SubCtx sequence timingCtx sentences), parsed) =
   case parsed of

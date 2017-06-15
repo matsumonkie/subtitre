@@ -34,12 +34,13 @@ import Control.Monad.IO.Class
 import Deserializer.WordReference
 import qualified Logger as L
 import Prelude as P
+import Control.Concurrent.Thread.Delay
 
 translate :: (Text -> IO (Maybe (Response ByteString))) -> WordInfos -> IO Translations
 translate fetch wi@(word, lemma, tag, _) = do
     response <- fetch toTranslate
     let translations = (translationsBasedOnTag toTranslate tag) response
-    liftIO $ L.infoM $ "tr:[" <> show toTranslate <> "] " <> show translations
+--    liftIO $ L.infoM $ "tr:[" <> show toTranslate <> "] " <> show translations
     let mkTranslations' = mkTranslations wi
     return $ maybe (mkTranslations' []) (mkTranslations') translations
   where
@@ -55,7 +56,7 @@ fetchTranslations sc toTranslate =
     urlPrefix = wordReferenceApiUrlPrefix sc
     urlSuffix = wordReferenceApiUrlSuffix sc
     url = urlPrefix <> key <> urlSuffix <> toTranslate
-  in
+  in do
     catch (Just <$> (getWith defaults (unpack url))) handler
   where
     handler :: HttpException -> IO (Maybe (Response ByteString))

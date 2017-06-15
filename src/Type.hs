@@ -1,11 +1,7 @@
 {-# LANGUAGE DeriveGeneric, DeriveAnyClass #-}
-{-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Type (
   Sequence
@@ -18,7 +14,6 @@ module Type (
 , Sentence
 , SubCtx(..)
 , RawSubCtx
-, SentenceInfos
 , WordInfos(..)
 , RichSubCtx(..)
 , Tag(..)
@@ -61,9 +56,8 @@ data TimingCtx = TimingCtx Timing Timing deriving (Show, Eq)
 data Timing = Timing Hour Minute Second MSecond deriving (Show, Eq)
 data SubCtx a = SubCtx Sequence TimingCtx a deriving (Show, Eq)
 type RawSubCtx  = SubCtx [Sentence]
-type RichSubCtx = SubCtx [(Sentence, SentenceInfos)]
+type RichSubCtx = SubCtx [(Sentence, [WordInfos])]
 
-type SentenceInfos = [WordInfos]
 type Word = Text
 type Lemma = Text
 data Tag = Adj

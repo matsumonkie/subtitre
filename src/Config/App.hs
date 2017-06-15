@@ -15,6 +15,7 @@ module Config.App (
 , outputFile
 , StaticConf(..)
 , getStaticConf
+, Translator
 ) where
 
 import Type
@@ -37,6 +38,7 @@ import Debug.Trace
 import Control.DeepSeq
 import GHC.Generics (Generic)
 import System.Log.Logger
+import qualified Control.Monad.Reader as Reader
 
 {- RUNTIME CONF -}
 
@@ -110,7 +112,13 @@ asksR :: (Monad m) => (RuntimeConf -> a) -> ReaderT Config m a
 asksR f = do
   (Config(config, _)) <- ask
   return $ f config
-
+{-
+asksR' :: (Monad m, Reader.MonadReader Config m) =>
+          (RuntimeConf -> a) -> m a
+asksR' f = do
+  (Config(config, _)) <- ask
+  return $ f config
+-}
 asksS :: (Monad m) => (StaticConf -> a) -> ReaderT Config m a
 asksS f = do
   (Config(_, config)) <- ask
