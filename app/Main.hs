@@ -3,54 +3,63 @@
 
 module Main where
 
+import Composer.RichSubCtx
+import Config.App
+import Control.DeepSeq
+import Control.Monad.IO.Class
+import Control.Monad.Reader
+import Control.Monad.Trans.Except
+import Control.Monad.Trans.Writer
+import qualified Data.ByteString.Lazy as LByteString (ByteString, toStrict)
+import Data.Either
+import qualified Data.HashMap.Strict as HM
+import Data.Monoid
+import Data.Text hiding (map)
+import Data.Text.Encoding (decodeUtf8)
+import Data.Text.IO
+import qualified Data.Text.IO as TextIO
+import qualified Data.Text.Lazy.IO as LTextIO (putStrLn)
+import LevelSet
 import Lib
-import Type
+import qualified Logger as L
+import Prelude hiding (readFile)
 import RawSubParser
 import RichSubCtx
-import Composer.RichSubCtx
-import Text.Pretty.Simple (pPrint, pString)
-import Data.Text.IO
-import Data.Text hiding (map)
-import Prelude hiding (readFile)
-import Control.Monad.Trans.Except
+import qualified System.Log.Logger as HSLogger
 import Text.Parsec
-import qualified Data.Text.IO as TextIO
-import qualified Data.ByteString.Lazy as LByteString (ByteString, toStrict)
-import Data.Text.Encoding (decodeUtf8)
-import qualified Data.Text.Lazy.IO as LTextIO (putStrLn)
-import Control.Monad.IO.Class
-import Data.Either
-import Data.Monoid
-import LevelSet
+import Text.Pretty.Simple (pPrint, pString)
 import Translator.Translate
-import Control.Monad.Reader
-import qualified Data.HashMap.Strict as HM
-
-subtitleFile = "mini-sample.srt"
-subtitleStructFile = "struct.srt"
-
-saveToFile :: FilePath -> Text -> IO ()
-saveToFile file content =
-  TextIO.writeFile file content
+import Type
 
 main :: IO ()
 main = do
   levelSets <- getLevelSets :: IO LevelSets
-  let runtimeConf = RuntimeConf { translator = translate
-                                , settings = HM.fromList []
+  staticConf <- getStaticConf
+  let runtimeConf = RuntimeConf { translator = Translator.Translate.translate
                                 , levelSets = levelSets
-                                , levelToShow = Normal
+                                , levelToShow = Easy
                                 , dir = "/home/iori/temp"
-                                , file = "8.srt"
+                                , file = "got.srt"
+                                , logLevel = HSLogger.INFO
+                                , logFormatter = "[$time $loggername $prio] $msg"
                                 }
-  runExceptT (runReaderT main' runtimeConf)
+  let config = Config(runtimeConf, staticConf)
+  runExceptT (runReaderT main' config)
   return ()
 
 main' :: App ()
 main' = do
-  conf <- ask
+  L.setLogger
+  sc <- askS
+  s <- ask
+  liftIO $ L.infoM $ s `deepseq` "Config is fine"
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched
-  liftIO $ saveToFile (outputFile conf) text
+  outputFile <- asksR outputFile
+  liftIO $ saveToFile outputFile text
   pPrint text
+  where
+    saveToFile :: FilePath -> Text -> IO ()
+    saveToFile file content =
+      TextIO.writeFile file content

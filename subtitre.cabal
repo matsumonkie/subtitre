@@ -17,22 +17,30 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Lib
+                     , Composer.RawSubCtx
+                     , Composer.RichSubCtx
+                     , Config.App
+                     , Deserializer.WordReference
+                     , Deserializer.Yandex
+                     , LevelSet
+                     , Logger
                      , RawSubParser
                      , RichSubCtx
                      , SentenceStructParser
-                     , Type
                      , Serializer
-                     , Translator.Online
+                     , Translator.Strategy.Yandex
+                     , Translator.Strategy.WordReference
                      , Translator.Offline
                      , Translator.Translate
-                     , Composer.RawSubCtx
-                     , Composer.RichSubCtx
-                     , LevelSet
+                     , Type
   build-depends:       aeson
                      , async
                      , base >= 4.7 && < 5
                      , bytestring >= 0.10.8.1
+                     , unbounded-delays
                      , containers >= 0.5.7.1
+                     , deepseq
+                     , hslogger
                      , hspec
                      , http-client >= 0.5.6.1
                      , http-types >= 0.9.1
@@ -42,11 +50,13 @@ library
                      , parsec
                      , pretty-simple
                      , process
+                     , tagsoup
                      , text
                      , time >= 1.6.0.1
                      , transformers >= 0.5.2.0
                      , unordered-containers >= 0.2.7.2
                      , wreq
+                     , yaml
   default-language:    Haskell2010
 
 executable subtitre-exe
@@ -56,6 +66,8 @@ executable subtitre-exe
   build-depends:       aeson
                      , base
                      , bytestring >= 0.10.8.1
+                     , deepseq
+                     , hslogger
                      , mtl
                      , parsec
                      , pretty-simple
@@ -70,6 +82,7 @@ test-suite subtitre-test
   hs-source-dirs:      test
   main-is:             Spec.hs
   build-depends:       base
+                     , aeson
                      , bytestring >= 0.10.8.1
                      , hspec
                      , http-client >= 0.5.6.1

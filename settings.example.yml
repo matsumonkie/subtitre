@@ -1,0 +1,14 @@
+development:
+  workingDir:
+  outputFileName:
+  yandexApiKey:
+  yandexApiUrl:
+  wordReferenceApiKeys:
+  wordReferenceApiUrlPrefix:
+  wordReferenceApiUrlSuffix:
+
+staging:
+
+test:
+
+production:

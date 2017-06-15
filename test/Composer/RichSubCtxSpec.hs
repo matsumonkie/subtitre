@@ -17,6 +17,7 @@ import Prelude hiding (lookup)
 import Data.HashMap.Strict hiding (map)
 import Control.Monad.Reader
 import Data.Text
+import Config.App
 
 main :: IO ()
 main = hspec spec
@@ -35,17 +36,18 @@ spec = do
 
 composeSentence' :: Level -> [(Sentence, SentenceInfos)] -> IO (Either [AppError] Text)
 composeSentence' level wis =
-    let runtimeConf = RuntimeConf { translator = translate
-                                , settings = undefined
-                                , levelSets = undefined
-                                , levelToShow = level
-                                , dir = "test/assets"
-                                , file = undefined
-                                }
-  in runExceptT (runReaderT (composeSentence wis) runtimeConf) :: IO (Either [AppError] Text)
+  let
+    runtimeConf = RuntimeConf { translator = translate
+                              , levelSets = undefined
+                              , levelToShow = level
+                              , dir = "test/assets"
+                              , file = undefined
+                              }
+    config = Config(runtimeConf, undefined)
+  in runExceptT (runReaderT (composeSentence wis) config) :: IO (Either [AppError] Text)
 
-translate :: WordInfos -> IO Translations
-translate wi@(word, _, tag, _) =
+translate :: StaticConf -> WordInfos -> IO Translations
+translate _ wi@(word, _, tag, _) =
   return $ if shouldBeTranslated tag then
              mkTranslations wi $ dictionary ! (toLower word)
            else

@@ -26,10 +26,10 @@ import Text.Parsec
 import Prelude hiding (Word)
 import Data.HashSet
 
-parseSentenceStructure :: LevelSets -> Text -> Either ParseError SentenceInfos
+parseSentenceStructure :: LevelSets -> Text -> Either ParseError [WordInfos]
 parseSentenceStructure levelSets = parse (sentence levelSets) "game of thrones"
 
-sentence :: LevelSets -> Parsec Text () SentenceInfos
+sentence :: LevelSets -> Parsec Text () [WordInfos]
 sentence levelSets = do
   words <- many1 ((wordCtx levelSets) <* optional endOfLine)
   eof
@@ -46,6 +46,7 @@ wordCtx levelSets = do
   where
     whatWord (orig, lemma, tag) = toLower $ case tag of
       Verb -> lemma
+      Noun -> lemma
       _ -> orig
 
 tagParser :: Parsec Text () Tag

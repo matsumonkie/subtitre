@@ -22,23 +22,26 @@ import qualified Control.Exception as Ex
 import GHC.IO.Exception
 import LevelSet
 import Control.Monad.IO.Class
-import Control.Monad.Trans.Except
+import Control.Monad.Except
 import Control.Monad.IO.Class
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Class
+import Config.App
+import qualified Text.HTML.TagSoup as TS
+import Data.List
 
 parseSubtitlesOfFile :: App [RawSubCtx]
 parseSubtitlesOfFile = do
-  conf <- ask
-  result <- liftIO $ Ex.tryJust invalidArgument (readWith conf SIO.utf8) :: App (Either () Text)
-  content <- liftIO $ either (const $ readWith conf SIO.latin1) return result :: App Text
+  inputFile <- asksR inputFile
+  result <- liftIO $ Ex.tryJust invalidArgument (readWith inputFile SIO.utf8) :: App (Either () Text)
+  content <- liftIO $ either (const $ readWith inputFile SIO.latin1) return result :: App Text
   case (parseSubtitles content :: Either ParseError [RawSubCtx]) of
-    Left pe -> lift $ throwE [AppError pe]
+    Left pe -> throwError [AppError pe]
     Right rs -> return rs
   where
-    readWith :: RuntimeConf -> SIO.TextEncoding -> IO Text
-    readWith conf encoding = do
-      handle <- SIO.openFile (inputFile conf) SIO.ReadMode
+    readWith :: FilePath -> SIO.TextEncoding -> IO Text
+    readWith inputFile encoding = do
+      handle <- SIO.openFile inputFile SIO.ReadMode
       SIO.hSetEncoding handle encoding
       hGetContents handle
     invalidArgument :: IOException -> Maybe ()
@@ -61,16 +64,23 @@ subtitleCtxP = do
   endOfLine
   timingCtx <- timingCtxP
   endOfLine
-  lines <- sentenceP `sepEndBy` endOfLine
+  lines <- sentenceWithoutTagsP `sepEndBy` endOfLine
   return $ SubCtx sequence timingCtx lines
 
 sequenceP :: Parsec Text () Sequence
 sequenceP =
   read <$> many1 digit <?> "RawSubParser sequence"
 
-sentenceP :: Parsec Text () Text
-sentenceP = do
-  pack <$> many1 (noneOf "\n\r") <?> "RawSubParser sentence"
+sentenceWithoutTagsP :: Parsec Text () Text
+sentenceWithoutTagsP = do
+  line <- pack <$> many1 (noneOf "\n\r") <?> "RawSubParser sentence"
+  let withTags = TS.parseTags line :: [TS.Tag Text]
+  return $
+    Data.List.foldl' (\acc x -> acc <> (renderTextWithoutTags x)) "" withTags
+
+renderTextWithoutTags :: TS.Tag Text -> Text
+renderTextWithoutTags (TS.TagText str) = str
+renderTextWithoutTags _ = ""
 
 timingCtxP :: Parsec Text () TimingCtx
 timingCtxP = do

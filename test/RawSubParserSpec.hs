@@ -12,6 +12,8 @@ import Data.Text hiding (map)
 import Data.Either
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Except
+import Config.App
+import qualified Text.HTML.TagSoup as TS
 
 main :: IO ()
 main = hspec spec
@@ -34,6 +36,7 @@ spec = do
         it "parses real subtitles" $ do
           parseFile sherlock >>= satisfyIsRight
           parseFile mrRobot >>= satisfyIsRight
+
         it "with bom" $ do
           parseFile house >>= satisfyIsRight
         it "with ascii & CRLF" $ do
@@ -51,15 +54,15 @@ gameOfThrones = "game of thrones.srt"
 
 parseFile :: FilePath -> IO (Either [AppError] [RawSubCtx])
 parseFile file =
-  let runtimeConf = RuntimeConf { translator = undefined
-                                , settings = undefined
-                                , levelSets = undefined
-                                , levelToShow = undefined
-                                , dir = "test/assets"
-                                , file = file
-                                }
-
-  in runExceptT (runReaderT parseSubtitlesOfFile runtimeConf) :: IO (Either [AppError] [RawSubCtx])
+  let
+    runtimeConf = RuntimeConf { translator = undefined
+                              , levelSets = undefined
+                              , levelToShow = undefined
+                              , dir = "test/assets"
+                              , file = file
+                              }
+    config = Config(runtimeConf, undefined)
+  in runExceptT (runReaderT parseSubtitlesOfFile config) :: IO (Either [AppError] [RawSubCtx])
 
 arg = "1\n\
       \00:00:26,722 --> 00:00:29,023\n\
@@ -78,7 +81,7 @@ res text =
   where
     t1 = Timing 0 0 26 722
     t2 = Timing 0 0 29 23
-    sentences = text
+    sentences = map TS.parseTags text
 
 satisfyIsRight :: Either [AppError] [RawSubCtx] -> Expectation
 satisfyIsRight parsed =

@@ -2,11 +2,9 @@
 
 module RichSubCtx (
   createRichSubCtx
-, serializeRichSubCtx
 ) where
 
 import Type
-import Serializer
 import Text.Parsec.Combinator
 import Data.Text hiding (map, zip)
 import Data.Text.Lazy (toStrict)
@@ -27,22 +25,23 @@ import Data.ByteString.Lazy.Internal
 import Control.Monad.IO.Class
 import Data.Monoid
 import LevelSet
-import Control.Monad.Reader (ReaderT, runReaderT)
+import Control.Monad.Except
 import Control.Monad.Reader
-import Control.Monad.Trans.Except
+import Control.Monad.Writer
+import Config.App
 
 sentenceSeparator = " <$> " :: Text
 subSeparator      = " <*> " :: Text
 
 createRichSubCtx :: [RawSubCtx] -> App [RichSubCtx]
 createRichSubCtx allRawSubCtx = do
-  conf <- ask
+  levelSets <- asksR levelSets
   content <- liftIO $ runSpacy $ mergeSubs allRawSubCtx
   let unmerged    = unmergeSubs content
-  let parsed      = map (parse (levelSets conf)) unmerged
+  let parsed      = map (parse levelSets) unmerged
   let richSubCtxs = mapM toRichSubCtx (zip allRawSubCtx parsed) :: Either [ParseError] [RichSubCtx]
   case richSubCtxs of
-    Left pes -> lift $ throwE $ map AppError pes
+    Left pes -> throwError $ map AppError pes
     Right rs -> return rs
 
 {-
@@ -64,15 +63,15 @@ unmergeSubs :: Text -> [[Text]]
 unmergeSubs allSubs =
   map (splitOn ("\n" <> sentenceSeparator <> "\n")) (splitOn ("\n" <> subSeparator <> "\n") allSubs)
 
-parse :: LevelSets -> [Text] -> Either [ParseError] [SentenceInfos]
+parse :: LevelSets -> [Text] -> Either [ParseError] [[WordInfos]]
 parse levelSets sentence =
   case lefts parsed of
     [] -> Right $ rights parsed
     errors -> Left errors
   where
-    parsed = map (parseSentenceStructure levelSets) sentence :: [Either ParseError SentenceInfos]
+    parsed = map (parseSentenceStructure levelSets) sentence :: [Either ParseError [WordInfos]]
 
-toRichSubCtx :: (RawSubCtx, Either [ParseError] [SentenceInfos])
+toRichSubCtx :: (RawSubCtx, Either [ParseError] [[WordInfos]])
              -> Either [ParseError] RichSubCtx
 toRichSubCtx ((SubCtx sequence timingCtx sentences), parsed) =
   case parsed of
@@ -87,7 +86,3 @@ runSpacy sentence = do
   where
     spacy :: IO String
     spacy = readProcess "./spacy/client.py" ["-s", unpack sentence] []
-
-serializeRichSubCtx :: RichSubCtx -> Text
-serializeRichSubCtx richSubCtx =
-  toStrict $ decodeUtf8 $ encode richSubCtx

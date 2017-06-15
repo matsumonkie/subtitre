@@ -1,0 +1,72 @@
+{
+  "term0" : {
+    "PrincipalTranslations" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "goat", "POS" : "n", "sense" : "animal", "usage" : ""},
+	"FirstTranslation" : {"term" : "chèvre", "POS" : "nf", "sense" : "animal"}, "Note" : ""}},
+    "AdditionalTranslations" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "goat", "POS" : "n", "sense" : "lecher", "usage" : "slang, figurative, pejorative"},
+	"FirstTranslation" : {"term" : "pervers", "POS" : "nm", "sense" : ""},
+	"SecondTranslation" : {"term" : "cochon", "POS" : "nm", "sense" : "familier"},
+	"ThirdTranslation" : {"term" : "vicelard", "POS" : "nm", "sense" : "familier, péjoratif"},
+	"FourthTranslation" : {"term" : "satyre", "POS" : "nm", "sense" : "soutenu"}, "Note" : ""}}},
+  "term1" : {
+    "PrincipalTranslations" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "go at, replace: go at sth", "POS" : "vtr phrasal insep", "sense" : "do energetically or enthusiastically", "usage" : "informal"},
+	"FirstTranslation" : {"term" : "s'attaquer à", "POS" : "v pron + prép", "sense" : "figuré"},
+	"SecondTranslation" : {"term" : "s'atteler à", "POS" : "v pron + prép", "sense" : ""}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "go at, replace: go at sb", "POS" : "vtr phrasal insep", "sense" : "attack: sb", "usage" : "informal"},
+	"FirstTranslation" : {"term" : "attaquer", "POS" : "vtr", "sense" : ""},
+	"SecondTranslation" : {"term" : "se jeter sur", "POS" : "v pron + prép", "sense" : ""}, "Note" : ""}}},
+  "original" : {
+    "Compounds" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "billy goat, he-goat", "POS" : "n", "sense" : "animal: male goat", "usage" : ""},
+	"FirstTranslation" : {"term" : "bouc", "POS" : "nm", "sense" : "animal"}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "get your goat, replace: get sb's goat", "POS" : "v expr", "sense" : "annoy sb", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "taper sur le sytème de qqn, taper sur les nerfs de qqn", "POS" : "loc v", "sense" : "familier : énerver"}, "Note" : ""},
+      "2" :{
+	"OriginalTerm" : { "term" : "goat cheese, UK: goat's cheese", "POS" : "n", "sense" : "dairy product made from goat's milk", "usage" : "US"},
+	"FirstTranslation" : {"term" : "fromage de chèvre", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "3" :{
+	"OriginalTerm" : { "term" : "goat herder", "POS" : "n", "sense" : "sb who tends a flock of goats", "usage" : ""},
+	"FirstTranslation" : {"term" : "chevrier", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "4" :{
+	"OriginalTerm" : { "term" : "goat meat", "POS" : "n", "sense" : "edible flesh of a goat", "usage" : ""},
+	"FirstTranslation" : {"term" : "viande de chèvre", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "5" :{
+	"OriginalTerm" : { "term" : "goat milk, UK: goat's milk", "POS" : "n", "sense" : "dairy product obtained from goats", "usage" : "US"},
+	"FirstTranslation" : {"term" : "lait de chèvre", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "6" :{
+	"OriginalTerm" : { "term" : "goat moth", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "cossus", "POS" : "nm", "sense" : "gâte-bois"}, "Note" : ""},
+      "7" :{
+	"OriginalTerm" : { "term" : "goat ranch", "POS" : "n", "sense" : "farm where goats are kept", "usage" : ""},
+	"FirstTranslation" : {"term" : "élevage de chèvres", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "8" :{
+	"OriginalTerm" : { "term" : "goat's cheese", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "crottin", "POS" : "nm", "sense" : "fromage"}, "Note" : ""},
+      "9" :{
+	"OriginalTerm" : { "term" : "he-goat", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "bouc", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "10" :{
+	"OriginalTerm" : { "term" : "mountain goat", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "chèvre chamoisée", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "11" :{
+	"OriginalTerm" : { "term" : "mountain goat", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "chèvre des Montagnes Rocheuses", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "12" :{
+	"OriginalTerm" : { "term" : "nanny goat, she-goat", "POS" : "n", "sense" : "animal: female goat", "usage" : ""},
+	"FirstTranslation" : {"term" : "chèvre", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "13" :{
+	"OriginalTerm" : { "term" : "old goat", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "vieil aigri", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "14" :{
+	"OriginalTerm" : { "term" : "the Goat", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "la chèvre", "POS" : "", "sense" : ""}, "Note" : ""}}},
+  "Lines" : "End Reached", "END" : true
+}

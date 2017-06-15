@@ -1,5 +1,4 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Composer.RichSubCtx (
   composeSubs
@@ -7,7 +6,7 @@ module Composer.RichSubCtx (
 ) where
 
 import Type
-import Prelude hiding (concat, words)
+import Prelude hiding (concat, words, Word)
 import Data.Text hiding (map)
 import Data.Maybe
 import Translator.Translate
@@ -15,17 +14,24 @@ import Data.Monoid
 import Control.Lens hiding (Level)
 import Control.Concurrent.Async
 import Debug.Trace
+import Control.Monad.Except
 import Control.Monad.Reader
-import Control.Monad.Trans.Except
+import Control.Monad.Writer
+import Config.App
+import Text.Pretty.Simple (pPrint, pString)
+import qualified Logger as L
 
 composeSubs :: [RichSubCtx] -> App Text
 composeSubs subCtxs = do
-  e <- mapM composeSub subCtxs :: App [Text]
+  levelToShow <- asksR levelToShow
+  translator <- asksR translator
+  sc <- askS
+  e <- liftIO $ mapConcurrently (composeSub levelToShow translator sc) subCtxs :: App [Text]
   return $ intercalate "\n\n" e
 
-composeSub :: RichSubCtx -> App Text
-composeSub (SubCtx sequence timingCtx sentences) = do
-  composedSentences <- composeSentence sentences :: App Text
+composeSub :: Level -> Translator -> StaticConf -> RichSubCtx -> IO Text
+composeSub levelToShow translator sc (SubCtx sequence timingCtx sentences) = do
+  composedSentences <- liftIO $ composeSentence levelToShow translator sc sentences
   return $ intercalate "\n" $ subAsArray composedSentences
   where
     subAsArray :: Text -> [Text]
@@ -51,41 +57,35 @@ composeTimingCtx (TimingCtx btiming etiming) =
       where
         text = show i
 
-composeSentence :: [(Sentence, SentenceInfos)] -> App Text
-composeSentence sentencesInfos = do
-  sentences <- mapM translateSentence sentencesInfos :: App [Text]
+composeSentence :: Level -> Translator -> StaticConf -> [(Sentence, [WordInfos])] -> IO Text
+composeSentence levelToShow translator sc sentencesInfos = do
+  sentences <- mapConcurrently (translateSentence levelToShow translator sc) sentencesInfos :: IO [Sentence]
   return $ intercalate "\n" sentences
 
-translateSentence :: (Sentence, SentenceInfos) -> App Text
-translateSentence (sentence, sentenceInfos) = do
-  text <- reorganized :: App [Text]
-  return $ intercalate " " text
+translateSentence :: Level -> Translator -> StaticConf -> (Sentence, [WordInfos]) -> IO Sentence
+translateSentence levelToShow translator sc (sentence, sentenceInfos) = do
+  translationsProcesses <- mapConcurrently (createTranslationProcess levelToShow translator sc) sentenceInfos :: IO [Translations]
+  let renderedTranslation = map (renderTranslation levelToShow) translationsProcesses
+  return $ intercalate " " $ setCorrectSpacing (words sentence) renderedTranslation []
+
+createTranslationProcess :: Level -> Translator -> StaticConf -> WordInfos -> IO (Translations)
+createTranslationProcess =
+  \levelToShow translator sc wi@(word, lemma, tag, level) ->
+    if shouldTranslate levelToShow wi then do
+      translator sc wi
+    else
+      return $ mkTranslations wi []
   where
-    translations = mapM (handleTranslation) sentenceInfos :: App [(Asyncable Translations)]
-    reorganized :: App [Text]
-    reorganized = do
-      tr' <- translations
-      reorganizeSentence sentence tr' :: App [Text]
+    shouldTranslate :: Level -> WordInfos -> Bool
+    shouldTranslate levelToShow wi@(word, lemma, tag, level) = do
+      level > levelToShow && tag `elem` [Verb, Noun, Adj, Propn]
 
-handleTranslation :: WordInfos -> App (Asyncable Translations)
-handleTranslation wi@(word, lemma, tag, level) = do
-  conf <- ask
-  return $ if shouldTranslate (levelToShow conf) level then
-    RealAsync $ (async . (translator conf)) wi
-  else
-    FakeAsync $ Translations (wi, [])
-  where
-    shouldTranslate levelToShow level = levelToShow < level
-
-reorganizeSentence :: Sentence -> [Asyncable Translations] -> App [Text]
-reorganizeSentence sentence translations = do
-  conf <- ask
-  let waitingTranslations = map (fmap $ formatWithTranslation (levelToShow conf)) translations :: [Asyncable Text]
-  allTranslations <- liftIO $ mapM holdOn waitingTranslations
-  return $ setCorrectSpacing (words sentence) allTranslations []
-
-formatWithTranslation :: Level -> Translations -> Text
-formatWithTranslation levelToShow (Translations ((word, _, _, level), translations)) = do
+{-
+  i: (("whisper", "whisper", Verb, Easy), ["murmurer"])
+  o: "whisper (murmurer)"
+-}
+renderTranslation :: Level -> Translations -> Word
+renderTranslation levelToShow (Translations' ((word, _, _, level), translations)) = do
   if levelToShow < level then
     format $ translations ^? element 0
   else
@@ -105,14 +105,3 @@ setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =
 setCorrectSpacing (a:as) (b:bs) acc = setCorrectSpacing as bs (acc ++ [b])
 setCorrectSpacing [] (b:bs) acc = setCorrectSpacing [] bs (acc ++ [b])
 setCorrectSpacing _ _ acc = acc
-
-data Asyncable e = RealAsync (IO (Async e))
-                 | FakeAsync e
-
-instance Functor Asyncable where
-  fmap f (RealAsync a) = RealAsync $ fmap (fmap f) a
-  fmap f (FakeAsync a) = FakeAsync $ f a
-
-holdOn :: Asyncable e -> IO e
-holdOn (RealAsync m) = m >>= wait
-holdOn (FakeAsync m) = return m

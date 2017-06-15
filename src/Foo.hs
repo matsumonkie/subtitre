@@ -1,3 +1,5 @@
+{-# LANGUAGE DatatypeContexts #-}
+{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NoMonomorphismRestriction #-}
@@ -5,53 +7,94 @@
 import Control.Monad.Trans.Except
 import Control.Monad.Trans.Class
 import Control.Monad.IO.Class
-import qualified Control.Monad.Writer.Class as W
-import Data.Monoid
-import qualified Data.Map.Strict as M
-import qualified Data.Text as T
-import qualified Data.Text.IO as TIO
 
 import Control.Monad.State
 import Control.Monad.Writer
 import Control.Monad.Reader
-import Control.Monad.Trans.Maybe
 
-foo :: ExceptT String (WriterT String (StateT String (ReaderT String IO))) String
-foo = do
-  ask
-  get
-  put ""
-  tell ""
-  throwE ""
-  return ""
+import Control.Concurrent.Async
+import Control.Concurrent.Thread.Delay
+import Text.Pretty.Simple (pPrint, pString)
 
-data Bug = Bug
-data Mistake = Mistake
-data Error = Error Bug | Error2 Mistake
+import Prelude hiding (Word)
 
-add1 :: ReaderT Int (ExceptT Error IO) Int
-add1 = do
-  initial <- ask
-  return $ initial + 1
 
--- this compile
-add2 :: Int -> ReaderT Int (ExceptT Error IO) Int
-add2 e = do
-  initial <- ask
-  return $ e + 2 + initial
+type Sentence = String
+type Word = String
 
-add3 :: Int -> ReaderT Int (ExceptT Error IO) Int
-add3 e = do
-  initial <- ask
-  lift $ throwE (Error Bug)
+f1 :: [[Sentence]] -> IO [[ [(Word, Word)] ]]
+f1 subs = mapConcurrently (mapConcurrently f2) subs
 
-bar :: ReaderT Int (ExceptT Error IO) Int
-bar = do
---  let c = add1 >>= add2
-  undefined
+f2 :: Sentence -> IO [(Word, Word)]
+f2 sentence =
+  mapConcurrently trProcess $ words sentence
 
+trProcess :: Word -> IO (Word, Word)
+trProcess = \word ->
+  if needTranslation word then do
+    translation <- translate word :: IO Word
+    return (word, translation)
+  else
+    return (word, word)
+
+translate :: Word -> IO Word
+translate word = do
+  putStrLn "in a thread"
+  delay 1000000
+  return $ case word of
+    "car" -> "voiture"
+    "street" -> "rue"
+    "sure" -> "sur"
+    _ -> ""
+
+needTranslation :: String -> Bool
+needTranslation word
+  | shouldBeTranslated word = True
+  | otherwise = False
+  where
+    shouldBeTranslated x = x `elem` ["car", "street", "sure"]
+
+baz :: String -> IO (String, String)
+baz =
+  \x -> do
+    putStrLn "creating threads"
+    y <- getStr x
+    return (x, y)
+
+getStr :: String -> IO String
+getStr _ = do
+  putStrLn "in a thread"
+  delay 1000000
+  return "a"
+
+--  async ::  IO a -> IO (Async a)
+--  wait :: Async a -> IO a
+main :: IO ()
 main = do
-  e <- runExceptT (runReaderT bar 4)
-  case e of
-    Right e' -> putStrLn $ show e'
-    Left _ -> putStrLn "nope"
+  let c = [["the car is in the street", "oh yeah?"], ["sure !"]]
+  e <- f1 c
+  pPrint e
+
+
+bez :: Reader String String
+bez =
+  biz
+
+biz :: (MonadReader String m) => m String
+biz = do
+  e <- ask
+  return e
+
+boum :: (MonadIO m) => m String
+boum = do
+  e <- return "test"
+  return e
+
+
+boul :: [String] -> String
+boul xs =
+--  concat $ map ibe xs
+  xs >>= ibe
+
+ibe :: String -> String
+ibe = undefined

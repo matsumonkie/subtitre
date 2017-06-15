@@ -8,16 +8,20 @@ module Translator.Translate (
 
 import Type
 import Data.Text
-import qualified Translator.Online as Online
 import qualified Translator.Offline as Offline
 import Control.Applicative
+import qualified Translator.Strategy.Yandex as Yandex
+import qualified Translator.Strategy.WordReference as WordReference
+import Config.App
+import Data.Monoid
 
-translate :: WordInfos -> IO Translations
-translate wi =
-  liftA2 Type.or (offline wi) (online wi)
+translate :: StaticConf -> WordInfos -> IO Translations
+translate sc wi =
+  liftA2 (<>) (offline sc wi) (online sc wi)
 
-offline :: WordInfos -> IO Translations
+offline :: StaticConf -> WordInfos -> IO Translations
 offline = Offline.translate
 
-online :: WordInfos -> IO Translations
-online = \wi -> Online.translate wi Online.fetchTranslations
+online :: StaticConf -> WordInfos -> IO Translations
+--online sc = Yandex.translate (Yandex.fetchTranslations sc)
+online sc = WordReference.translate (WordReference.fetchTranslations sc)

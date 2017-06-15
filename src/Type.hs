@@ -1,10 +1,7 @@
-{-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 
 module Type (
   Sequence
@@ -17,24 +14,17 @@ module Type (
 , Sentence
 , SubCtx(..)
 , RawSubCtx
-, SentenceInfos
 , WordInfos(..)
 , RichSubCtx(..)
 , Tag(..)
 , Word
 , Translations(..)
+, Translations'(..)
 , mkTranslations
 , Lemma
-, or
 , Level(..)
-, RTranslator
-, RuntimeConf(..)
-, App
 , LevelSet
 , LevelSets(..)
-, AppError(..)
-, inputFile
-, outputFile
 ) where
 
 import Data.Text hiding (length)
@@ -51,6 +41,9 @@ import Control.Monad.Reader (ReaderT, runReaderT)
 import Data.HashMap.Strict
 import Control.Monad.Trans.Except
 import Text.Parsec
+import Data.HashSet
+import Control.DeepSeq
+import GHC.Generics (Generic)
 
 type Sequence = Int
 type Sentence = Text
@@ -63,10 +56,8 @@ data TimingCtx = TimingCtx Timing Timing deriving (Show, Eq)
 data Timing = Timing Hour Minute Second MSecond deriving (Show, Eq)
 data SubCtx a = SubCtx Sequence TimingCtx a deriving (Show, Eq)
 type RawSubCtx  = SubCtx [Sentence]
-type RichSubCtx = SubCtx [(Sentence, SentenceInfos)]
+type RichSubCtx = SubCtx [(Sentence, [WordInfos])]
 
-type SentenceInfos = [WordInfos]
-type WordInfos = (Word, Lemma, Tag, Level)
 type Word = Text
 type Lemma = Text
 data Tag = Adj
@@ -82,47 +73,26 @@ data Tag = Adj
          | Else
          deriving (Show, Eq)
 
-data Level = Unknown
-           | Easy
+newtype Translations' a =
+  Translations' (WordInfos, [a]) deriving (Eq, Show, Functor)
+
+instance Monoid (Translations' a) where
+  mempty = Translations' (("", "", Else, Unknown), [])
+  t1@(Translations' (_, a1)) `mappend` t2@(Translations' (_, a2)) =
+    if (not . Prelude.null) a1 then t1 else t2
+
+type Translations = Translations' Text
+
+type WordInfos = (Word, Lemma, Tag, Level)
+
+data Level = Easy
            | Normal
-           | Hard deriving (Show, Eq, Ord)
+           | Hard
+           | Unknown
+           deriving (Show, Eq, Ord, Generic, NFData)
 
-newtype Translations = Translations (WordInfos, [Text]) deriving (Eq, Show)
-
-type Translator = WordInfos -> IO Translations
-type RTranslator a = ReaderT Translator IO a
-
-type LevelSet = HashMap Text ()
-data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet)
-
-data AppError = AppError ParseError deriving (Show, Eq)
-type App a = ReaderT RuntimeConf (ExceptT [AppError] IO) a
-data RuntimeConf =
-  RuntimeConf { translator :: Translator
-              , settings :: HashMap Text Text
-              , levelSets :: LevelSets
-              , levelToShow :: Level
-              , dir :: FilePath
-              , file :: FilePath
-              }
-
-inputFile :: RuntimeConf -> FilePath
-inputFile conf = (dir conf) <> "/" <> (file conf)
-
-outputFile :: RuntimeConf -> FilePath
-outputFile conf = (dir conf) <> "/t" <> (file conf)
+type LevelSet = HashSet Text
+data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFData)
 
 mkTranslations :: WordInfos -> [Text] -> Translations
-mkTranslations wi translations = Translations (wi, translations)
-
-or :: Translations -> Translations -> Translations
-or t1@(Translations(_, a)) t2 =
-  if (length a > 0) then t1 else t2
-
-p :: SentenceInfos
-p = [ ("the", "", Else, Unknown)
-    , ("butler", "", Else, Unknown)
-    , ("looks up", "", Verb, Unknown)
-    , ("his", "", Else, Unknown)
-    , ("higness", "", Else, Unknown)
-    ]
+mkTranslations wi translations = Translations' (wi, translations)
