@@ -39,7 +39,7 @@ main = do
                                 , levelSets = levelSets
                                 , levelToShow = Easy
                                 , dir = "/home/iori/temp"
-                                , file = "got.srt"
+                                , file = "got2.srt"
                                 , logLevel = HSLogger.INFO
                                 , logFormatter = "[$time $loggername $prio] $msg"
                                 }

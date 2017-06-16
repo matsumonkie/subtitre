@@ -23,9 +23,9 @@ assetAsSet file =
     readAsset file =
       readFile $ "assets/" <> file
 
-easyWords   = assetAsSet "3000"
-normalWords = assetAsSet "10000"
-hardWords   = return $ fromList [] :: IO LevelSet
+easyWords   = assetAsSet "500"
+normalWords = assetAsSet "3000"
+hardWords   = assetAsSet "10000"
 
 getLevelSets :: IO LevelSets
 getLevelSets = do

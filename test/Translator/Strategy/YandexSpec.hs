@@ -10,6 +10,7 @@ import Test.Hspec
 import Data.ByteString.Lazy hiding (elem)
 import Network.Wreq
 import qualified Network.HTTP.Client.Internal as HTTP
+
 import Network.HTTP.Types.Status
 import Network.HTTP.Types.Version
 import Translator.Strategy.Yandex

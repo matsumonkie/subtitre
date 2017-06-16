@@ -36,11 +36,15 @@ import qualified Logger as L
 import Prelude as P
 import Control.Concurrent.Thread.Delay
 
+import qualified Network.HTTP.Client.Internal as HTTP
+import Network.HTTP.Types.Status
+import Network.HTTP.Types.Version
+
 translate :: (Text -> IO (Maybe (Response ByteString))) -> WordInfos -> IO Translations
 translate fetch wi@(word, lemma, tag, _) = do
     response <- fetch toTranslate
     let translations = (translationsBasedOnTag toTranslate tag) response
---    liftIO $ L.infoM $ "tr:[" <> show toTranslate <> "] " <> show translations
+    liftIO $ L.infoM $ "tr:[" <> show toTranslate <> "] " <> show translations
     let mkTranslations' = mkTranslations wi
     return $ maybe (mkTranslations' []) (mkTranslations') translations
   where
@@ -63,6 +67,16 @@ fetchTranslations sc toTranslate =
     handler ex = do
       L.errorM $ "could not fetch online translation: " <> show ex
       return Nothing
+
+fakeHttpResponse :: ByteString -> Response ByteString
+fakeHttpResponse body =
+  HTTP.Response { HTTP.responseStatus    = status200
+                , HTTP.responseVersion   = http11
+                , HTTP.responseHeaders   = []
+                , HTTP.responseBody      = body
+                , HTTP.responseCookieJar = HTTP.createCookieJar []
+                , HTTP.responseClose'    = HTTP.ResponseClose { HTTP.runResponseClose = return () }
+                }
 
 translationsBasedOnTag :: Text -> Tag -> Maybe (Response ByteString) -> Maybe [Text]
 translationsBasedOnTag toTranslate tag response = do
