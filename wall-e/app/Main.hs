@@ -39,7 +39,7 @@ main = do
                                 , levelSets = levelSets
                                 , levelToShow = Easy
                                 , dir = "/home/iori/temp"
-                                , file = "got2.srt"
+                                , file = "got.srt"
                                 , logLevel = HSLogger.INFO
                                 , logFormatter = "[$time $loggername $prio] $msg"
                                 }
@@ -52,11 +52,11 @@ main' = do
   L.setLogger
   sc <- askS
   s <- ask
+  outputFile <- asksR outputFile
   liftIO $ L.infoM $ s `deepseq` "Config is fine"
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched
-  outputFile <- asksR outputFile
   liftIO $ saveToFile outputFile text
   pPrint text
   where
