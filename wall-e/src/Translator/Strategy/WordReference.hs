@@ -35,18 +35,33 @@ import Deserializer.WordReference
 import qualified Logger as L
 import Prelude as P
 import Control.Concurrent.Thread.Delay
+import Data.Int
+import Control.Monad
+import Data.Time.Clock
 
 import qualified Network.HTTP.Client.Internal as HTTP
 import Network.HTTP.Types.Status
 import Network.HTTP.Types.Version
+import Data.Int
+import Database.PostgreSQL.Simple
+import Data.Aeson.Types
 
 translate :: (Text -> IO (Maybe (Response ByteString))) -> WordInfos -> IO Translations
 translate fetch wi@(word, lemma, tag, _) = do
-    response <- fetch toTranslate
-    let translations = (translationsBasedOnTag toTranslate tag) response
-    liftIO $ L.infoM $ "tr:[" <> show toTranslate <> "] " <> show translations
-    let mkTranslations' = mkTranslations wi
-    return $ maybe (mkTranslations' []) (mkTranslations') translations
+  response <- fetch toTranslate :: IO (Maybe (Response ByteString))
+  let translations = translationsBasedOnTag toTranslate tag =<< response
+  case translations of
+    Just trs -> do
+      L.infoM $ "online :[" <> show toTranslate <> "] " <> show trs
+      let bytestring = response >>= body :: Maybe ByteString
+      let value = bytestring >>= decode :: Maybe Value
+      when (isJust value) $ do
+        L.infoM $ "saving to DB new translation for :[" <> show toTranslate <> "] "
+        saveToDB toTranslate (fromJust value)
+      return $ mkTranslations wi trs
+    Nothing -> do
+      L.infoM $ "no translations found for :[" <> show toTranslate <> "] "
+      return $ mkTranslations wi []
   where
     toTranslate = case tag of
       Verb -> lemma
@@ -68,17 +83,7 @@ fetchTranslations sc toTranslate =
       L.errorM $ "could not fetch online translation: " <> show ex
       return Nothing
 
-fakeHttpResponse :: ByteString -> Response ByteString
-fakeHttpResponse body =
-  HTTP.Response { HTTP.responseStatus    = status200
-                , HTTP.responseVersion   = http11
-                , HTTP.responseHeaders   = []
-                , HTTP.responseBody      = body
-                , HTTP.responseCookieJar = HTTP.createCookieJar []
-                , HTTP.responseClose'    = HTTP.ResponseClose { HTTP.runResponseClose = return () }
-                }
-
-translationsBasedOnTag :: Text -> Tag -> Maybe (Response ByteString) -> Maybe [Text]
+translationsBasedOnTag :: Text -> Tag -> Response ByteString -> Maybe [Text]
 translationsBasedOnTag toTranslate tag response = do
   wrResponse <- body response >>= decode :: Maybe WRResponse
   let translations = allTranslations wrResponse
@@ -88,7 +93,17 @@ translationsBasedOnTag toTranslate tag response = do
   else
     P.map tTerm correctTrs
 
-body :: Maybe (Response ByteString) -> Maybe ByteString
+body :: Response ByteString -> Maybe ByteString
 body response = do
-  r <- response
-  return $ r ^. responseBody
+  return $ response ^. responseBody
+
+saveToDB :: Text -> Value -> IO ()
+saveToDB word object = do
+  con <- connectPostgreSQL config
+  now <- getCurrentTime
+  execute con q ("en" :: Text, "fr" :: Text, word, object, now, now)
+  return ()
+  where
+    config = "dbname='subtitre_dev'"
+    q = "INSERT INTO wordreference (\"from\", \"to\", \"word\", \"response\", \"created_at\", \"updated_at\") \
+        \ values (?, ?, ?, ?, ?, ?) "

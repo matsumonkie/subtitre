@@ -48,6 +48,7 @@ library
                      , lens-aeson >= 1.0.0.5
                      , mtl
                      , parsec
+                     , postgresql-simple
                      , pretty-simple
                      , process
                      , tagsoup

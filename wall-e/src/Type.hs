@@ -44,6 +44,8 @@ import Text.Parsec
 import Data.HashSet
 import Control.DeepSeq
 import GHC.Generics (Generic)
+import Control.Applicative
+import Debug.Trace
 
 type Sequence = Int
 type Sentence = Text
@@ -75,11 +77,6 @@ data Tag = Adj
 
 newtype Translations' a =
   Translations' (WordInfos, [a]) deriving (Eq, Show, Functor)
-
-instance Monoid (Translations' a) where
-  mempty = Translations' (("", "", Else, Unknown), [])
-  t1@(Translations' (_, a1)) `mappend` t2@(Translations' (_, a2)) =
-    if (not . Prelude.null) a1 then t1 else t2
 
 type Translations = Translations' Text
 

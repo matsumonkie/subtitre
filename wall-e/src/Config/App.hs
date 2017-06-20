@@ -68,20 +68,22 @@ outputFile conf = (dir conf) <> "/t" <> (file conf)
 
 
 data StaticConf =
-  StaticConf { workingDir :: !FilePath
-             , outputFileName :: !Text
+  StaticConf { database :: Text
+             , workingDir :: FilePath
+             , outputFileName :: Text
              -- yandex
-             , yandexApiKey :: !Text
-             , yandexApiUrl :: !Text
+             , yandexApiKey :: Text
+             , yandexApiUrl :: Text
              -- word reference
-             , wordReferenceApiUrlPrefix :: !Text
-             , wordReferenceApiUrlSuffix :: !Text
-             , wordReferenceApiKeys :: ![Text]
+             , wordReferenceApiUrlPrefix :: Text
+             , wordReferenceApiUrlSuffix :: Text
+             , wordReferenceApiKeys :: [Text]
              } deriving (Show, Generic, NFData)
 
 instance FromJSON StaticConf where
   parseJSON (Y.Object v) = do
     config <- v .: "development"
+    database <- config .: "database"
     workingDir <- config .: "workingDir"
     outputFileName <- config .: "outputFileName"
     yandexApiKey <- config .: "yandexApiKey"

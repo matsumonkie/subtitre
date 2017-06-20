@@ -1,0 +1,138 @@
+{
+  "term0" : {
+    "PrincipalTranslations" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "attack", "POS" : "n", "sense" : "assault", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaque, agression", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "attack", "POS" : "n", "sense" : "military: offensive operation", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaque", "POS" : "nf", "sense" : "Militaire"},
+	"SecondTranslation" : {"term" : "assaut", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "2" :{
+	"OriginalTerm" : { "term" : "attack", "POS" : "n", "sense" : "onset: of panic, etc.", "usage" : ""},
+	"FirstTranslation" : {"term" : "crise", "POS" : "nf", "sense" : "nervosité"}, "Note" : ""},
+      "3" :{
+	"OriginalTerm" : { "term" : "attack", "POS" : "n", "sense" : "bout: of illness", "usage" : ""},
+	"FirstTranslation" : {"term" : "crise", "POS" : "nf", "sense" : "maladie"},
+	"SecondTranslation" : {"term" : "accès", "POS" : "nm", "sense" : "maladie"}, "Note" : ""},
+      "4" :{
+	"OriginalTerm" : { "term" : "attack", "POS" : "n", "sense" : "aggressive move", "usage" : ""},
+	"FirstTranslation" : {"term" : "mouvement offensif", "POS" : "nm", "sense" : "Sports"}, "Note" : ""},
+      "5" :{
+	"OriginalTerm" : { "term" : "attack, replace: attack sb", "POS" : "vtr", "sense" : "assault", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaquer, agresser", "POS" : "vtr", "sense" : "personne"},
+	"SecondTranslation" : {"term" : "assaillir", "POS" : "vtr", "sense" : "Militaire"}, "Note" : ""},
+      "6" :{
+	"OriginalTerm" : { "term" : "attack, replace: attack sb", "POS" : "vtr", "sense" : "criticize severely", "usage" : ""},
+	"FirstTranslation" : {"term" : "critiquer, attaquer", "POS" : "vtr", "sense" : "verbalement"}, "Note" : ""}},
+    "AdditionalTranslations" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "attack", "POS" : "vi", "sense" : "act with hostility", "usage" : ""},
+	"FirstTranslation" : {"term" : "agresser", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "attack, replace: attack sth", "POS" : "vtr", "sense" : "set about vigorously", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "s'attaquer à", "POS" : "v pron + prép", "sense" : "problème"}, "Note" : ""}}},
+  "original" : {
+    "Compounds" : {
+      "0" :{
+	"OriginalTerm" : { "term" : "ad hominem attack", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaque ad hominem", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "1" :{
+	"OriginalTerm" : { "term" : "air attack", "POS" : "n", "sense" : "bombing or strafing by plane", "usage" : ""},
+	"FirstTranslation" : {"term" : "bombardement aérien", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "2" :{
+	"OriginalTerm" : { "term" : "angle of attack", "POS" : "n", "sense" : "plane: wing angle", "usage" : ""},
+	"FirstTranslation" : {"term" : "angle d'attaque", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "3" :{
+	"OriginalTerm" : { "term" : "anxiety attack", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "crise d'angoisse", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "4" :{
+	"OriginalTerm" : { "term" : "asthma attack", "POS" : "n", "sense" : "sudden worsening of respiratory illness", "usage" : ""},
+	"FirstTranslation" : {"term" : "crise d'asthme", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "5" :{
+	"OriginalTerm" : { "term" : "attack time", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "heure de l'attaque", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "6" :{
+	"OriginalTerm" : { "term" : "bomb attack", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "attentat à la bombe", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "7" :{
+	"OriginalTerm" : { "term" : "collateral attack", "POS" : "n", "sense" : "law: indirect challenge in new action", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaque indirecte", "POS" : "nf", "sense" : "Droit"}, "Note" : ""},
+      "8" :{
+	"OriginalTerm" : { "term" : "counter-attack", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "contre-attaque", "POS" : "nf", "sense" : "contre-offensive"}, "Note" : ""},
+      "9" :{
+	"OriginalTerm" : { "term" : "devastating attack", "POS" : "n", "sense" : "attack causing large-scale damage", "usage" : ""},
+	"FirstTranslation" : {"term" : "frappe dévastatrice", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "10" :{
+	"OriginalTerm" : { "term" : "devastating attack", "POS" : "n", "sense" : "severe verbal criticism", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "critiques accablantes", "POS" : "nfpl", "sense" : ""}, "Note" : ""},
+      "11" :{
+	"OriginalTerm" : { "term" : "frontal attack", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaque de front", "POS" : "nf", "sense" : "de face"}, "Note" : ""},
+      "12" :{
+	"OriginalTerm" : { "term" : "gas attack", "POS" : "n", "sense" : "biological attack using poisonous gas", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaque chimique", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "13" :{
+	"OriginalTerm" : { "term" : "have a heart attack", "POS" : "v expr", "sense" : "suffer cardiac arrest", "usage" : ""},
+	"FirstTranslation" : {"term" : "faire un infarctus", "POS" : "loc v", "sense" : ""},
+	"SecondTranslation" : {"term" : "faire une crise cardiaque, avoir une crise cardiaque", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+      "14" :{
+	"OriginalTerm" : { "term" : "heart attack", "POS" : "n", "sense" : "cardiac arrest, heart failure", "usage" : ""},
+	"FirstTranslation" : {"term" : "crise cardiaque", "POS" : "nf", "sense" : ""},
+	"SecondTranslation" : {"term" : "infarctus", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "15" :{
+	"OriginalTerm" : { "term" : "launch an attack, launch an attack on sth\/sb", "POS" : "v expr", "sense" : "military: begin combat", "usage" : ""},
+	"FirstTranslation" : {"term" : "lancer une attaque (contre qqn, sur qch), donner l'assaut (contre qqn, sur qch)", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+      "16" :{
+	"OriginalTerm" : { "term" : "launch an attack, launch an attack on sth\/sb", "POS" : "v expr", "sense" : "criticize harshly", "usage" : ""},
+	"FirstTranslation" : {"term" : "monter au créneau", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+      "17" :{
+	"OriginalTerm" : { "term" : "launch an attack, launch an attack on sth\/sb", "POS" : "v expr", "sense" : "criticize harshly", "usage" : ""},
+	"FirstTranslation" : {"term" : "s'attaquer à", "POS" : "v pron + prép", "sense" : "figuré"},
+	"SecondTranslation" : {"term" : "critiquer fortement", "POS" : "vtr + adv", "sense" : ""}, "Note" : ""},
+      "18" :{
+	"OriginalTerm" : { "term" : "mass attack", "POS" : "n", "sense" : "large-scale bombardment", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaque massive", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "19" :{
+	"OriginalTerm" : { "term" : "open to attack", "POS" : "adj", "sense" : "vulnerable to being attacked", "usage" : ""},
+	"FirstTranslation" : {"term" : "exposé aux attaques", "POS" : "adj", "sense" : ""}, "Note" : ""},
+      "20" :{
+	"OriginalTerm" : { "term" : "open to attack", "POS" : "adj", "sense" : "vulnerable to being attacked", "usage" : ""},
+	"FirstTranslation" : {"term" : "à la merci d'une attaque", "POS" : "", "sense" : ""}, "Note" : ""},
+      "21" :{
+	"OriginalTerm" : { "term" : "open to attack", "POS" : "adj", "sense" : "easy to criticize", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "exposé à la critique", "POS" : "adj", "sense" : ""}, "Note" : ""},
+      "22" :{
+	"OriginalTerm" : { "term" : "open to attack", "POS" : "adj", "sense" : "easy to criticize", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "prêter le flanc à la critique", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+      "23" :{
+	"OriginalTerm" : { "term" : "panic attack", "POS" : "n", "sense" : "onset of acute anxiety", "usage" : ""},
+	"FirstTranslation" : {"term" : "crise de panique", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "24" :{
+	"OriginalTerm" : { "term" : "racist attack", "POS" : "n", "sense" : "violence motivated by racial prejudice", "usage" : ""},
+	"FirstTranslation" : {"term" : "agression raciste", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "25" :{
+	"OriginalTerm" : { "term" : "racist attack", "POS" : "n", "sense" : "violence motivated by racial prejudice", "usage" : ""},
+	"FirstTranslation" : {"term" : "ratonnade", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "26" :{
+	"OriginalTerm" : { "term" : "sneak attack", "POS" : "n", "sense" : "stealth attack", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaque surprise, attaque furtive", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "27" :{
+	"OriginalTerm" : { "term" : "surprise attack", "POS" : "", "sense" : "", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaque surprise", "POS" : "nf", "sense" : ""}, "Note" : ""},
+      "28" :{
+	"OriginalTerm" : { "term" : "terrorist attack", "POS" : "n", "sense" : "targeted act of political violence", "usage" : ""},
+	"FirstTranslation" : {"term" : "attentat terroriste", "POS" : "nm", "sense" : ""}, "Note" : ""},
+      "29" :{
+	"OriginalTerm" : { "term" : "under attack", "POS" : "adv", "sense" : "subjected to physical aggression", "usage" : ""},
+	"FirstTranslation" : {"term" : "attaqué", "POS" : "adj", "sense" : ""},
+	"SecondTranslation" : {"term" : "assailli", "POS" : "adj", "sense" : ""}, "Note" : ""},
+      "30" :{
+	"OriginalTerm" : { "term" : "under attack", "POS" : "adv", "sense" : "subjected to physical aggression", "usage" : ""},
+	"FirstTranslation" : {"term" : "soumis à l'assaut, soumis aux attaques, soumis à l'agression", "POS" : "loc adj", "sense" : ""}, "Note" : ""},
+      "31" :{
+	"OriginalTerm" : { "term" : "under attack", "POS" : "adv", "sense" : "subjected to criticism", "usage" : "figurative"},
+	"FirstTranslation" : {"term" : "en butte à la critique, en butte aux critiques", "POS" : "loc adj", "sense" : ""}, "Note" : ""}}},
+  "Lines" : "End Reached", "END" : true
+}
