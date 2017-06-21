@@ -25,6 +25,9 @@ module Type (
 , Level(..)
 , LevelSet
 , LevelSets(..)
+, TP(..)
+, Cache
+, TakenCare
 ) where
 
 import Data.Text hiding (length)
@@ -45,6 +48,7 @@ import Data.HashSet
 import Control.DeepSeq
 import GHC.Generics (Generic)
 import Control.Applicative
+import Control.Concurrent.STM
 import Debug.Trace
 
 type Sequence = Int
@@ -93,3 +97,14 @@ data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFD
 
 mkTranslations :: WordInfos -> [Text] -> Translations
 mkTranslations wi translations = Translations' (wi, translations)
+
+type Cache = HashMap Text (Maybe Value)
+type SetKey = TVar [Text]
+type TakenCare = [Text]
+
+data TP = TP { availableWordsInDB :: TVar [Text]
+             , translationsInCache :: TVar Cache
+             , onlineWordsInProgress :: TVar TakenCare
+             , offlineWordsInProgress :: TVar TakenCare
+             , responsesToSave :: TVar Cache
+             }

@@ -20,18 +20,41 @@ import Control.Monad.Writer
 import Config.App
 import Text.Pretty.Simple (pPrint, pString)
 import qualified Logger as L
+import Control.Concurrent.STM
+import qualified Data.HashMap.Strict as HM
+import qualified DB.WordReference as DB
+import Data.Aeson
 
 composeSubs :: [RichSubCtx] -> App Text
 composeSubs subCtxs = do
   levelToShow <- asksR levelToShow
   translator <- asksR translator
   sc <- askS
-  e <- liftIO $ mapConcurrently (composeSub levelToShow translator sc) subCtxs :: App [Text]
+  available <- liftIO $ DB.available sc
+  availableWordsInDB <- liftIO $ newTVarIO available
+  translationsInCache <- liftIO $ newTVarIO $ HM.fromList([])
+  offlineWordsInProgress <- liftIO $ newTVarIO []
+  onlineWordsInProgress <- liftIO $ newTVarIO []
+  responsesToSave <- liftIO $ newTVarIO $ HM.fromList([])
+  let tp = TP { availableWordsInDB     = availableWordsInDB
+              , translationsInCache    = translationsInCache
+              , offlineWordsInProgress = offlineWordsInProgress
+              , onlineWordsInProgress  = onlineWordsInProgress
+              , responsesToSave        = responsesToSave
+              }
+
+  e <- liftIO $ mapConcurrently (composeSub tp levelToShow translator sc) subCtxs :: App [Text]
+  liftIO $ saveResponses responsesToSave
   return $ intercalate "\n\n" e
 
-composeSub :: Level -> Translator -> StaticConf -> RichSubCtx -> IO Text
-composeSub levelToShow translator sc (SubCtx sequence timingCtx sentences) = do
-  composedSentences <- liftIO $ composeSentence levelToShow translator sc sentences
+saveResponses :: TVar Cache -> IO ()
+saveResponses tvCache = do
+  cache <- readTVarIO tvCache
+  DB.insert $ HM.toList cache
+
+composeSub :: TP -> Level -> Translator -> StaticConf -> RichSubCtx -> IO Text
+composeSub tp levelToShow translator sc (SubCtx sequence timingCtx sentences) = do
+  composedSentences <- liftIO $ composeSentence tp levelToShow translator sc sentences
   return $ intercalate "\n" $ subAsArray composedSentences
   where
     subAsArray :: Text -> [Text]
@@ -57,22 +80,22 @@ composeTimingCtx (TimingCtx btiming etiming) =
       where
         text = show i
 
-composeSentence :: Level -> Translator -> StaticConf -> [(Sentence, [WordInfos])] -> IO Text
-composeSentence levelToShow translator sc sentencesInfos = do
-  sentences <- mapConcurrently (translateSentence levelToShow translator sc) sentencesInfos :: IO [Sentence]
+composeSentence :: TP -> Level -> Translator -> StaticConf -> [(Sentence, [WordInfos])] -> IO Text
+composeSentence tp levelToShow translator sc sentencesInfos = do
+  sentences <- mapConcurrently (translateSentence tp levelToShow translator sc) sentencesInfos :: IO [Sentence]
   return $ intercalate "\n" sentences
 
-translateSentence :: Level -> Translator -> StaticConf -> (Sentence, [WordInfos]) -> IO Sentence
-translateSentence levelToShow translator sc (sentence, sentenceInfos) = do
-  translationsProcesses <- mapConcurrently (createTranslationProcess levelToShow translator sc) sentenceInfos :: IO [Translations]
+translateSentence :: TP -> Level -> Translator -> StaticConf -> (Sentence, [WordInfos]) -> IO Sentence
+translateSentence tp levelToShow translator sc (sentence, sentenceInfos) = do
+  translationsProcesses <- mapConcurrently (createTranslationProcess tp levelToShow translator sc) sentenceInfos :: IO [Translations]
   let renderedTranslation = map (renderTranslation levelToShow) translationsProcesses
   return $ intercalate " " $ setCorrectSpacing (words sentence) renderedTranslation []
 
-createTranslationProcess :: Level -> Translator -> StaticConf -> WordInfos -> IO (Translations)
-createTranslationProcess =
+createTranslationProcess :: TP -> Level -> Translator -> StaticConf -> WordInfos -> IO (Translations)
+createTranslationProcess tp =
   \levelToShow translator sc wi@(word, lemma, tag, level) ->
     if shouldTranslate levelToShow wi then do
-      translator sc wi
+      translator tp sc wi
     else
       return $ mkTranslations wi []
   where

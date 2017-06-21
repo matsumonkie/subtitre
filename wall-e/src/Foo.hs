@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE DatatypeContexts #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -15,86 +16,106 @@ import Control.Monad.Reader
 import Control.Concurrent.Async
 import Control.Concurrent.Thread.Delay
 import Text.Pretty.Simple (pPrint, pString)
+import Control.Concurrent.STM
+import Control.Monad
+import Data.HashMap.Strict as HM
+import Data.Text
+import System.Random
+import Data.Maybe
+import Control.Concurrent.Thread.Delay
+import Control.Concurrent
 
-import Prelude hiding (Word)
+type DB = TVar (HashMap Text Text)
+type TakenCare = TVar [Text]
+type Translations = TVar [Text]
 
+delayS :: Integer -> IO ()
+delayS n =
+  delay $ n * 1000 * 1000
 
-type Sentence = String
-type Word = String
+fetchOnline :: Text -> IO Text
+fetchOnline key = do
+  x <- randomIO :: IO Int
+  delayS 0
+  return $ pack $ show x
 
-f1 :: [[Sentence]] -> IO [[ [(Word, Word)] ]]
-f1 subs = mapConcurrently (mapConcurrently f2) subs
+fetchFromDB :: DB -> Text -> IO (Maybe Text)
+fetchFromDB fromDb key = do
+  db <- readTVarIO fromDb
+  return $ HM.lookup key db
 
-f2 :: Sentence -> IO [(Word, Word)]
-f2 sentence =
-  mapConcurrently trProcess $ words sentence
+writeOnDB :: DB -> DB -> (Text, Text) -> STM ()
+writeOnDB fromDb fetched (key, value) = do
+  db <- readTVar fromDb
+  fetched' <- readTVar fetched
+  let newDB = insert key value db
+  writeTVar fromDb newDB
+  writeTVar fetched newDB
 
-trProcess :: Word -> IO (Word, Word)
-trProcess = \word ->
-  if needTranslation word then do
-    translation <- translate word :: IO Word
-    return (word, translation)
-  else
-    return (word, word)
-
-translate :: Word -> IO Word
-translate word = do
-  putStrLn "in a thread"
-  delay 1000000
-  return $ case word of
-    "car" -> "voiture"
-    "street" -> "rue"
-    "sure" -> "sur"
-    _ -> ""
-
-needTranslation :: String -> Bool
-needTranslation word
-  | shouldBeTranslated word = True
-  | otherwise = False
+translate :: TakenCare -> DB -> DB -> Translations -> Text -> IO Text
+translate takenCare db fetched cache key = do
+  cached <- readTVarIO cache
+  if key `elem` cached then
+    fetchFromDB db key >>= maybe (return "") return
+  else do
+    shouldBeTakenCare <- atomically $ process takenCare db key
+    if shouldBeTakenCare then do
+      value <- fetchOnline key
+      atomically $ writeOnDB db fetched (key, value)
+      return value
+    else
+      atomically $ fetchFromCache fetched key
   where
-    shouldBeTranslated x = x `elem` ["car", "street", "sure"]
+    fetchFromCache :: DB -> Text -> STM Text
+    fetchFromCache cache key = do
+      cache <- readTVar fetched
+      case HM.lookup key cache of
+        Just value -> return value
+        Nothing -> retry
 
-baz :: String -> IO (String, String)
-baz =
-  \x -> do
-    putStrLn "creating threads"
-    y <- getStr x
-    return (x, y)
+process :: TakenCare -> DB -> Text -> STM Bool
+process takenCare db key = do
+  needWork <- not <$> (isTakenCare takenCare key)
+  if needWork then do
+    setAsTakenCare takenCare key
+    return True
+  else
+    return False
 
-getStr :: String -> IO String
-getStr _ = do
-  putStrLn "in a thread"
-  delay 1000000
-  return "a"
+setAsTakenCare :: TakenCare -> Text -> STM ()
+setAsTakenCare takenCare key = do
+  tc <- readTVar takenCare
+  writeTVar takenCare (key : tc)
 
---  async ::  IO a -> IO (Async a)
---  wait :: Async a -> IO a
-main :: IO ()
+isTakenCare :: TakenCare -> Text -> STM Bool
+isTakenCare takenCare key = do
+  tc <- readTVar takenCare
+  if key `elem` tc then
+    return True
+  else
+    return False
+
+wordsToTranslate = ["car", "horse", "street"] :: [Text]
+
+main :: IO [Text]
 main = do
-  let c = [["the car is in the street", "oh yeah?"], ["sure !"]]
-  e <- f1 c
-  pPrint e
+  fetched <- newTVarIO (HM.fromList([])) :: IO DB
+  initialDB <- newTVarIO (HM.fromList([("horse", "cheval")])):: IO DB
+  allreadyTranslated <- newTVarIO (["horse"]) :: IO (TVar [Text])
+  takenCare <- newTVarIO ([]) :: IO (TVar [Text])
+  let job = translate takenCare initialDB fetched allreadyTranslated  :: Text -> IO Text
+  forConcurrently wordsToTranslate job
 
 
-bez :: Reader String String
-bez =
-  biz
+foo = undefined :: Int
+bar = undefined :: Int
+baz = undefined :: IO ()
+mul = undefined :: IO Int
 
-biz :: (MonadReader String m) => m String
-biz = do
-  e <- ask
-  return e
-
-boum :: (MonadIO m) => m String
-boum = do
-  e <- return "test"
-  return e
-
-
-boul :: [String] -> String
-boul xs =
---  concat $ map ibe xs
-  xs >>= ibe
-
-ibe :: String -> String
-ibe = undefined
+test :: IO Int
+test = do
+  let a = if True then
+        foo
+        else do
+          bar
+  return a

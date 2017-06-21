@@ -47,15 +47,15 @@ instance NFData Priority where
 
 data RuntimeConf =
   RuntimeConf { translator :: Translator
-          , levelSets :: LevelSets
-          , levelToShow :: Level
-          , dir :: FilePath
-          , file :: FilePath
-          , logLevel :: Priority
-          , logFormatter :: String
-          } deriving (Generic, NFData)
+              , levelSets :: LevelSets
+              , levelToShow :: Level
+              , dir :: FilePath
+              , file :: FilePath
+              , logLevel :: Priority
+              , logFormatter :: String
+              } deriving (Generic, NFData)
 
-type Translator = StaticConf -> WordInfos -> IO Translations
+type Translator = TP -> StaticConf -> WordInfos -> IO Translations
 
 inputFile :: RuntimeConf -> FilePath
 inputFile conf = (dir conf) <> "/" <> (file conf)
