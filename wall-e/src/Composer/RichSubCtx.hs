@@ -127,4 +127,5 @@ setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =
     setCorrectSpacing as (b2:bs) (acc ++ [b1])
 setCorrectSpacing (a:as) (b:bs) acc = setCorrectSpacing as bs (acc ++ [b])
 setCorrectSpacing [] (b:bs) acc = setCorrectSpacing [] bs (acc ++ [b])
+
 setCorrectSpacing _ _ acc = acc

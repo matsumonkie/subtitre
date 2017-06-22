@@ -33,13 +33,13 @@ import Type
 
 main :: IO ()
 main = do
-  levelSets <- getLevelSets :: IO LevelSets
+  asyncLevelSets <- getLevelSets :: IO LevelSets
   staticConf <- getStaticConf
   let runtimeConf = RuntimeConf { translator = Translator.Translate.translate
-                                , levelSets = levelSets
+                                , levelSets = asyncLevelSets
                                 , levelToShow = Easy
                                 , dir = "/home/iori/temp"
-                                , file = "foo.srt"
+                                , file = "full.srt"
                                 , logLevel = HSLogger.INFO
                                 , logFormatter = "[$time $loggername $prio] $msg"
                                 }
@@ -58,7 +58,7 @@ main' = do
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched
   liftIO $ saveToFile outputFile text
-  pPrint text
+--  pPrint text
   where
     saveToFile :: FilePath -> Text -> IO ()
     saveToFile file content =

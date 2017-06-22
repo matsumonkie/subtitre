@@ -114,13 +114,7 @@ asksR :: (Monad m) => (RuntimeConf -> a) -> ReaderT Config m a
 asksR f = do
   (Config(config, _)) <- ask
   return $ f config
-{-
-asksR' :: (Monad m, Reader.MonadReader Config m) =>
-          (RuntimeConf -> a) -> m a
-asksR' f = do
-  (Config(config, _)) <- ask
-  return $ f config
--}
+
 asksS :: (Monad m) => (StaticConf -> a) -> ReaderT Config m a
 asksS f = do
   (Config(_, config)) <- ask

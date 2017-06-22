@@ -84,6 +84,7 @@ import Control.Monad
 import Data.Time.Clock
 import qualified DB.WordReference as DB
 
+
 translate :: TP -> StaticConf -> WordInfos -> IO Translations
 translate tp sc wi@(_, _, tag, _) = do
   mkTranslations wi <$> translate' tp sc wi (toTranslate wi)
@@ -196,11 +197,12 @@ fetchOnline sc toTranslate =
     urlSuffix = wordReferenceApiUrlSuffix sc
     url = urlPrefix <> key <> urlSuffix <> toTranslate
   in do
+    L.infoM $ "fetching online [" <> show toTranslate <> "]"
     catch (Just <$> (getWith defaults (unpack url))) handler
   where
     handler :: SomeException -> IO (Maybe (Response ByteString))
     handler ex = do
-      L.errorM $ "could not fetch online translation: " <> show ex
+      L.errorM $ "could not fetch online translation: [" <> show toTranslate <> "] with exception : " <> show ex
       return Nothing
 
 translationsBasedOnTag :: Tag -> Value -> [Text]

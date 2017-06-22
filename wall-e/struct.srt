@@ -1,6 +1,0 @@
--PRON- PRP
-want VBP
-to TO
-meet VB
--PRON- PRP
-! .
