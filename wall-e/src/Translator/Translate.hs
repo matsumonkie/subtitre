@@ -116,7 +116,13 @@ offline tp sc wi@(_, _, tag, _) key = do
     if available then do
       offline tp sc wi key
     else do
+      let offlineRequest = currentNbOfOfflineRequest tp
+      atomically $ do
+        waitForPool offlineRequest 5
+        acquireRequestPool offlineRequest
+--      delayS 1
       json <- DB.select sc key
+      atomically $ releaseRequestPool offlineRequest
       atomically $ writeOnCache tp (key, json)
       offline tp sc wi key
   else do
@@ -127,11 +133,12 @@ online :: TP -> StaticConf -> WordInfos -> Text -> IO [Text]
 online tp sc wi@(_, _, tag, _) key = do
   shouldFetchOnline <- atomically $ setInCharge (onlineWordsInProgress tp) key
   if shouldFetchOnline then do
+    let onlineRequest = currentNbOfOnlineRequest tp
     atomically $ do
-      waitForPool tp
-      acquireRequestPool tp
+      waitForPool onlineRequest 5
+      acquireRequestPool onlineRequest
     response <- fetchOnline sc key
-    atomically $ releaseRequestPool tp
+    atomically $ releaseRequestPool onlineRequest
     let bytestring = response >>= body :: Maybe ByteString
     let json = bytestring >>= decode :: Maybe Value
     atomically $ do
@@ -140,21 +147,22 @@ online tp sc wi@(_, _, tag, _) key = do
     offline tp sc wi key
   else
     offline tp sc wi key
-  where
-    addRequestPool :: TP -> Int -> STM ()
-    addRequestPool tp n = do
-      nbRequest <- readTVar (currentNbOfOnlineRequest tp)
-      writeTVar (currentNbOfOnlineRequest tp) $ nbRequest + n
-    releaseRequestPool tp = addRequestPool tp (-1)
-    acquireRequestPool tp = addRequestPool tp 1
-    waitForPool :: TP -> STM ()
-    waitForPool tp = do
-      nbRequest <- readTVar (currentNbOfOnlineRequest tp)
-      if nbRequest >= 5 then
-        retry
-      else
-        return ()
 
+addRequestPool :: TVar Int -> Int -> STM ()
+addRequestPool count n = do
+  nbRequest <- readTVar count
+  writeTVar count $ nbRequest + n
+
+releaseRequestPool count = addRequestPool count (-1)
+acquireRequestPool count = addRequestPool count 1
+
+waitForPool :: TVar Int -> Int -> STM ()
+waitForPool count max = do
+  nbRequest <- readTVar count
+  if nbRequest >= max then
+    retry
+  else
+    return ()
 
 fetchFromCache :: TVar Cache -> Text -> STM (Maybe Value)
 fetchFromCache tvCache key = do

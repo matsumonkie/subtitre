@@ -89,6 +89,7 @@ select :: StaticConf -> Text -> IO (Maybe Value)
 select sc word = do
   con <- connectPostgreSQL config
   responses <- query con q (Only word) :: IO ([Only Value])
+  close con
   return $ resToMaybe responses
   where
     config :: B.ByteString

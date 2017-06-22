@@ -37,7 +37,7 @@ main = do
   staticConf <- getStaticConf
   let runtimeConf = RuntimeConf { translator = Translator.Translate.translate
                                 , levelSets = asyncLevelSets
-                                , levelToShow = Easy
+                                , levelToShow = Hard
                                 , dir = "/home/iori/temp"
                                 , file = "full.srt"
                                 , logLevel = HSLogger.INFO
@@ -58,7 +58,7 @@ main' = do
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched
   liftIO $ saveToFile outputFile text
---  pPrint text
+  pPrint text
   where
     saveToFile :: FilePath -> Text -> IO ()
     saveToFile file content =

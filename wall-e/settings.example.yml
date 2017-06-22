@@ -2,11 +2,13 @@ development:
   database:
   workingDir:
   outputFileName:
+  pgPool:
   yandexApiKey:
   yandexApiUrl:
   wordReferenceApiKeys:
   wordReferenceApiUrlPrefix:
   wordReferenceApiUrlSuffix:
+  wordReferencePool:
 
 staging:
 

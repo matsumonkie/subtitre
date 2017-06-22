@@ -7,7 +7,7 @@ module Composer.RichSubCtx (
 
 import Type
 import Prelude hiding (concat, words, Word)
-import Data.Text hiding (map)
+import Data.Text as T hiding (map)
 import Data.Maybe
 import Translator.Translate
 import Data.Monoid
@@ -37,12 +37,14 @@ composeSubs subCtxs = do
   onlineWordsInProgress <- liftIO $ newTVarIO []
   responsesToSave <- liftIO $ newTVarIO $ HM.fromList([])
   currentNbOfOnlineRequest <- liftIO $ newTVarIO 0
-  let tp = TP { availableWordsInDB       = availableWordsInDB
-              , translationsInCache      = translationsInCache
-              , offlineWordsInProgress   = offlineWordsInProgress
-              , onlineWordsInProgress    = onlineWordsInProgress
-              , responsesToSave          = responsesToSave
-              , currentNbOfOnlineRequest = currentNbOfOnlineRequest
+  currentNbOfOfflineRequest <- liftIO $ newTVarIO 0
+  let tp = TP { availableWordsInDB        = availableWordsInDB
+              , translationsInCache       = translationsInCache
+              , offlineWordsInProgress    = offlineWordsInProgress
+              , onlineWordsInProgress     = onlineWordsInProgress
+              , responsesToSave           = responsesToSave
+              , currentNbOfOnlineRequest  = currentNbOfOnlineRequest
+              , currentNbOfOfflineRequest = currentNbOfOfflineRequest
               }
 
   e <- liftIO $ mapConcurrently (composeSub tp levelToShow translator sc) subCtxs :: App [Text]
@@ -52,6 +54,8 @@ composeSubs subCtxs = do
 saveResponses :: TVar Cache -> IO ()
 saveResponses tvCache = do
   cache <- readTVarIO tvCache
+  let keys = HM.keys cache
+  L.infoM $ "saving " <> (show $ Prelude.length keys) <> " : " <> show keys
   DB.insert $ HM.toList cache
 
 composeSub :: TP -> Level -> Translator -> StaticConf -> RichSubCtx -> IO Text
@@ -123,7 +127,7 @@ renderTranslation levelToShow (Translations' ((word, _, _, level), translations)
 
 setCorrectSpacing :: [Text] -> [Text] -> [Text] -> [Text]
 setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =
-  if (Data.Text.length a1 > Data.Text.length b1) then
+  if (T.length a1 > T.length b1) then
     setCorrectSpacing a ((b1 <> b2) : bs) acc
   else
     setCorrectSpacing as (b2:bs) (acc ++ [b1])

@@ -71,6 +71,7 @@ data StaticConf =
   StaticConf { database :: Text
              , workingDir :: FilePath
              , outputFileName :: Text
+             , pgPool :: Int
              -- yandex
              , yandexApiKey :: Text
              , yandexApiUrl :: Text
@@ -78,6 +79,7 @@ data StaticConf =
              , wordReferenceApiUrlPrefix :: Text
              , wordReferenceApiUrlSuffix :: Text
              , wordReferenceApiKeys :: [Text]
+             , wordReferencePool :: Int
              } deriving (Show, Generic, NFData)
 
 instance FromJSON StaticConf where
@@ -86,11 +88,13 @@ instance FromJSON StaticConf where
     database <- config .: "database"
     workingDir <- config .: "workingDir"
     outputFileName <- config .: "outputFileName"
+    pgPool <- config .: "pgPool"
     yandexApiKey <- config .: "yandexApiKey"
     yandexApiUrl <- config .: "yandexApiUrl"
     wordReferenceApiUrlPrefix <- config .: "wordReferenceApiUrlPrefix"
     wordReferenceApiUrlSuffix <- config .: "wordReferenceApiUrlSuffix"
     wordReferenceApiKeys <- config .: "wordReferenceApiKeys"
+    wordReferencePool <- config .: "wordReferencePool"
     return StaticConf {..}
   parseJSON _ = fail "Expected Object for Config value"
 
