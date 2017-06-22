@@ -39,7 +39,7 @@ main = do
                                 , levelSets = asyncLevelSets
                                 , levelToShow = Hard
                                 , dir = "/home/iori/temp"
-                                , file = "full.srt"
+                                , file = "robot.srt"
                                 , logLevel = HSLogger.INFO
                                 , logFormatter = "[$time $loggername $prio] $msg"
                                 }

@@ -120,7 +120,6 @@ offline tp sc wi@(_, _, tag, _) key = do
       atomically $ do
         waitForPool offlineRequest 5
         acquireRequestPool offlineRequest
---      delayS 1
       json <- DB.select sc key
       atomically $ releaseRequestPool offlineRequest
       atomically $ writeOnCache tp (key, json)

@@ -107,7 +107,7 @@ createTranslationProcess tp =
   where
     shouldTranslate :: Level -> WordInfos -> Bool
     shouldTranslate levelToShow wi@(word, lemma, tag, level) = do
-      level > levelToShow && tag `elem` [Verb, Noun, Adj, Propn]
+      level > levelToShow && tag `elem` [Verb, Noun, Adj, Propn, Adv]
 
 {-
   i: (("whisper", "whisper", Verb, Easy), ["murmurer"])
@@ -122,7 +122,11 @@ renderTranslation levelToShow (Translations' ((word, _, _, level), translations)
   where
     format :: Maybe Text -> Text
     format translation = case translation of
-      Just translation -> word <> " (" <> translation <> ")"
+      Just translation ->
+        if word /= translation then
+          word <> " (" <> translation <> ")"
+        else
+          word
       Nothing -> word
 
 setCorrectSpacing :: [Text] -> [Text] -> [Text] -> [Text]
