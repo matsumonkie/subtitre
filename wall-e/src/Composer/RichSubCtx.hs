@@ -124,7 +124,10 @@ renderTranslation levelToShow (Translations' ((word, _, _, level), translations)
     format translation = case translation of
       Just translation ->
         if word /= translation then
-          word <> " (" <> translation <> ")"
+          case (splitOn ", " translation) of
+            (firstTranslation : otherTranslations) ->
+              word <> " (" <> firstTranslation <> ")"
+            _ -> word
         else
           word
       Nothing -> word
