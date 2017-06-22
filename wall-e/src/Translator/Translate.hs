@@ -133,9 +133,9 @@ online tp sc wi@(_, _, tag, _) key = do
     atomically $ do
       writeOnCache tp (key, json)
       writeOnDB tp (key, json)
-    return $ translationsFromValue json wi
+    offline tp sc wi key
   else
-    translate' tp sc wi key
+    offline tp sc wi key
 
 fetchFromCache :: TVar Cache -> Text -> STM (Maybe Value)
 fetchFromCache tvCache key = do
