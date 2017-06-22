@@ -1,7 +1,11 @@
 module Lib
 ( module All
 , setLogger
+, run
 ) where
+
+import Common
+import Prelude()
 
 import Composer.RichSubCtx as All
 import Config.App as All
@@ -22,6 +26,8 @@ import System.Log.Formatter
 import System.Log.Handler (setFormatter)
 import System.Log.Handler.Simple
 import System.Log.Logger hiding (logM, debugM, infoM, noticeM, warningM, errorM, criticalM, alertM, emergencyM)
+import qualified Data.Text.IO as TIO
+import qualified Data.Text as T
 
 setLogger :: App ()
 setLogger = do
@@ -30,3 +36,20 @@ setLogger = do
   myStreamHandler <- liftIO $ streamHandler stdout logLevel
   let myStreamHandler' = setFormatter myStreamHandler $ simpleLogFormatter logFormatter
   liftIO $ updateGlobalLogger rootLoggerName $ setLevel logLevel . setHandlers [myStreamHandler']
+
+run :: App T.Text
+run = do
+  setLogger
+  sc <- askS
+  s <- ask
+  outputFile <- asksR outputFile
+  liftIO $ infoM $ s `deepseq` "Config is fine"
+  parsed <- parseSubtitlesOfFile
+  riched <- createRichSubCtx parsed
+  text   <- composeSubs riched
+  liftIO $ saveToFile outputFile text
+  return text
+  where
+    saveToFile :: FilePath -> T.Text -> IO ()
+    saveToFile file content =
+      TIO.writeFile file content
