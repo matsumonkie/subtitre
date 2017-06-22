@@ -9,26 +9,14 @@ module Deserializer.Yandex (
 , YTr(..)
 ) where
 
-import Type
-import Serializer
-import Data.Text
-import Data.Maybe
-import Network.Wreq
-import Control.Lens
-import Data.Aeson.Lens
-import Data.Aeson
+import Common
+import Prelude()
+
 import Data.Aeson.Types
+import Data.Text
 import GHC.Generics
-import Data.Aeson
-import Text.Pretty.Simple (pPrint, pString)
-import GHC.Exts
-import Debug.Trace
-import Control.Exception
-import Network.HTTP.Client (HttpException(HttpExceptionRequest))
-import Data.Either
-import qualified Data.HashMap.Strict as HM
-import Data.ByteString.Lazy hiding (elem)
-import Data.Traversable
+import Serializer
+import Type
 
 data Yandex
 

@@ -8,31 +8,34 @@ module Composer.RawSubCtx (
   compose
 ) where
 
+import Common
+import Prelude()
+
 import Type
-import Data.Text hiding (map)
+import qualified Data.Text as T
 
-compose :: [RawSubCtx] -> Text
+compose :: [RawSubCtx] -> T.Text
 compose subCtxts =
-  intercalate "\n\n" $ map composeSub subCtxts
+  T.intercalate "\n\n" $ map composeSub subCtxts
 
-composeSub :: RawSubCtx -> Text
+composeSub :: RawSubCtx -> T.Text
 composeSub (SubCtx sequence timingCtx sentences) =
-  intercalate "\n" [seq, composedTimingCtx, composedSentences]
+  T.intercalate "\n" [seq, composedTimingCtx, composedSentences]
   where
-    seq = pack $ show sequence
+    seq = T.pack $ show sequence
     composedTimingCtx = composeTimingCtx timingCtx
     composedSentences = composeSentence sentences
 
-composeTimingCtx :: TimingCtx -> Text
+composeTimingCtx :: TimingCtx -> T.Text
 composeTimingCtx (TimingCtx btiming etiming) =
   composedTimingCtx
   where
-    composedTimingCtx = intercalate " --> " [(composeTiming btiming), (composeTiming etiming)]
-    composeTiming (Timing h m s ms) = intercalate ":" [(intToText h), (intToText m), (intToText s), (intToText ms)]
+    composedTimingCtx = T.intercalate " --> " [(composeTiming btiming), (composeTiming etiming)]
+    composeTiming (Timing h m s ms) = T.intercalate ":" [(intToText h), (intToText m), (intToText s), (intToText ms)]
 
-intToText :: Int -> Text
-intToText i = pack $ show i
+intToText :: Int -> T.Text
+intToText i = T.pack $ show i
 
-composeSentence :: [Sentence] -> Text
+composeSentence :: [Sentence] -> T.Text
 composeSentence sentences =
-  intercalate "\n" sentences
+  T.intercalate "\n" sentences

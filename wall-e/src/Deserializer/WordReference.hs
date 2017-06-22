@@ -13,13 +13,13 @@ module Deserializer.WordReference (
 import Common
 import Prelude()
 
-import Type
-import qualified Data.Text as T
-import Data.Maybe
 import Data.Aeson.Types
-import GHC.Generics
 import qualified Data.HashMap.Strict as HM
 import Data.List
+import Data.Maybe
+import qualified Data.Text as T
+import GHC.Generics
+import Type
 
 allTranslations :: WRResponse -> [WRTranslation]
 allTranslations wrResponse =
