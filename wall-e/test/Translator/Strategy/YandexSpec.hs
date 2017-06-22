@@ -5,7 +5,6 @@ module Translator.Strategy.YandexSpec (main, spec) where
 import Type
 import Data.Monoid
 import Data.Text hiding (map)
-import Prelude hiding (readFile)
 import Test.Hspec
 import Data.ByteString.Lazy hiding (elem)
 import Network.Wreq

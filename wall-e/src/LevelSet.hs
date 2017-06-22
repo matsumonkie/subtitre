@@ -1,27 +1,25 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module LevelSet (
   whichLevel
 , getLevelSets
 ) where
 
-import Data.Text hiding (map)
-import Prelude hiding (readFile, lines)
-import Data.Monoid
-import Data.HashSet
-import Data.Text.IO
+import Common
+import Prelude()
+
+import qualified Data.HashSet as HS
+import qualified Data.Text as T
+import qualified Data.Text.IO as TIO
 import GHC.IO.Handle hiding (hGetLine)
 import System.IO hiding (readFile, hGetLine)
 import Type
-import Control.Applicative
 
 assetAsSet :: FilePath -> IO LevelSet
 assetAsSet file =
-  fromList <$> lines <$> readAsset file
+  HS.fromList <$> T.lines <$> readAsset file
   where
-    readAsset :: FilePath -> IO Text
+    readAsset :: FilePath -> IO T.Text
     readAsset file =
-      readFile $ "assets/" <> file
+      TIO.readFile $ "assets/" <> file
 
 easyWords   = assetAsSet "500"
 normalWords = assetAsSet "3000"
@@ -34,9 +32,9 @@ getLevelSets = do
   h <- hardWords
   return $ LevelSets (e, n, h)
 
-whichLevel :: Text -> LevelSets -> Level
+whichLevel :: Word -> LevelSets -> Level
 whichLevel word (LevelSets(easySet, normalSet, hardSet))
-  | word `member` easySet   = Easy
-  | word `member` normalSet = Normal
-  | word `member` hardSet   = Hard
+  | word `HS.member` easySet   = Easy
+  | word `HS.member` normalSet = Normal
+  | word `HS.member` hardSet   = Hard
   | otherwise = Unknown

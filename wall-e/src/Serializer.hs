@@ -7,7 +7,6 @@ module Serializer (
 
 import Type
 import Data.Text hiding (map, zipWith)
-import Prelude hiding (Word, concat)
 import Data.Aeson
 import Data.Monoid
 

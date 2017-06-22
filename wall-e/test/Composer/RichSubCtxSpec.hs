@@ -13,7 +13,6 @@ import RawSubParser
 import Control.Monad.Trans.Except
 import Composer.RichSubCtx
 import LevelSet
-import Prelude hiding (lookup)
 import Data.HashMap.Strict hiding (map)
 import Control.Monad.Reader
 import Data.Text

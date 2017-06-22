@@ -10,28 +10,16 @@ module Deserializer.WordReference (
 , allTranslations
 ) where
 
+import Common
+import Prelude()
+
 import Type
-import Serializer
-import Data.Text as T
+import qualified Data.Text as T
 import Data.Maybe
-import Network.Wreq
-import Control.Lens
-import Data.Aeson.Lens
-import Data.Aeson
 import Data.Aeson.Types
 import GHC.Generics
-import Data.Aeson
-import Text.Pretty.Simple (pPrint, pString)
-import GHC.Exts
-import Debug.Trace
-import Control.Exception
-import Network.HTTP.Client (HttpException(HttpExceptionRequest))
-import Data.Either
 import qualified Data.HashMap.Strict as HM
-import Data.Traversable
-import Data.Monoid
 import Data.List
-import Prelude as P
 
 allTranslations :: WRResponse -> [WRTranslation]
 allTranslations wrResponse =
@@ -47,23 +35,23 @@ data WRTerm =
          , additionalTranslations :: [WRTranslation]
          } deriving (Show)
 
-data WRTranslation = WRTranslation { oTerm :: Text
+data WRTranslation = WRTranslation { oTerm :: Word
                                    , oPos :: Tag
-                                   , oSense :: Text
-                                   , tTerm :: Text
+                                   , oSense :: Word
+                                   , tTerm :: Word
                                    , tPos :: Tag
-                                   , tSense :: Text
+                                   , tSense :: Word
                                    } deriving (Show)
 
 instance FromJSON WRResponse where
   parseJSON = withObject "WRResponse" $ \o -> do
     allTerms <- allWRTerms (HM.toList o)
-    let terms = P.map snd $ sortOn fst allTerms
+    let terms = map snd $ sortOn fst allTerms
     return $ WRResponse { terms = terms }
     where
-      allWRTerms :: [(Text, Value)] -> Parser [(Text, WRTerm)]
+      allWRTerms :: [(Word, Value)] -> Parser [(Word, WRTerm)]
       allWRTerms entries = catMaybes <$> mapM parseWRTerm entries
-      parseWRTerm :: (Text, Value) -> Parser (Maybe (Text, WRTerm))
+      parseWRTerm :: (Word, Value) -> Parser (Maybe (Word, WRTerm))
       parseWRTerm (key, value) =
         if "term" `T.isPrefixOf` key then do
           v <- parseJSON value
@@ -84,11 +72,11 @@ instance FromJSON WRTerm where
                   , principalTranslations = getSortedTr principalTranslations
                   , additionalTranslations = getSortedTr additionalTranslations }
     where
-      getSortedTr x = P.map snd $ sortOn fst x
-      parse :: (Text, Value) -> Parser (Int, WRTranslation)
+      getSortedTr x = map snd $ sortOn fst x
+      parse :: (Word, Value) -> Parser (Int, WRTranslation)
       parse (index, value) = do
         v <- parseJSON (value)
-        return (read $ unpack index, v)
+        return (read $ T.unpack index, v)
 
 instance FromJSON WRTranslation where
   parseJSON = withObject "WRTranslation" $ \o -> do

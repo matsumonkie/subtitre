@@ -13,7 +13,6 @@ import Data.Either
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Except
 import Data.ByteString.Lazy hiding (elem)
-import Prelude as P hiding (readFile)
 import Data.Aeson
 import Deserializer.WordReference
 import Data.Maybe

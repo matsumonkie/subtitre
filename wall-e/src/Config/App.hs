@@ -18,29 +18,25 @@ module Config.App (
 , Translator
 ) where
 
-import Type
-import Text.Parsec
-import Control.Monad.Trans.Reader
-import Control.Monad.Trans.Except
-import Control.Monad.Trans.Writer
-import qualified Data.HashMap.Strict as HM
-import Data.Monoid
-import Type
-import Data.Aeson
-import qualified Data.Yaml as Y
-import Data.Text
-import Data.Either
-import Data.ByteString hiding (putStrLn)
-import Prelude hiding (readFile)
-import Data.Monoid
-import Data.Maybe
-import Debug.Trace
+import Common
+import Prelude()
+
 import Control.DeepSeq
+import Control.Monad.Trans.Except
+import Control.Monad.Trans.Reader
+import Data.Aeson
+import qualified Data.ByteString as BS
+import Data.Maybe
+import Data.Text
+import qualified Data.Yaml as Y
 import GHC.Generics (Generic)
 import System.Log.Logger
-import qualified Control.Monad.Reader as Reader
+import Text.Parsec
+import Type
+
 
 {- RUNTIME CONF -}
+
 
 instance NFData Priority where
   rnf x = ()
@@ -102,8 +98,8 @@ getStaticConf :: IO StaticConf
 getStaticConf =
   fromJust <$> Y.decode <$> readStatic "./settings.yml"
   where
-    readStatic :: FilePath -> IO ByteString
-    readStatic file = readFile file
+    readStatic :: FilePath -> IO BS.ByteString
+    readStatic file = BS.readFile file
 
 
 {- APP CONF -}

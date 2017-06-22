@@ -5,27 +5,21 @@ module Composer.RichSubCtx (
 , composeSentence
 ) where
 
-import Type
-import Prelude hiding (concat, words, Word)
-import Data.Text as T hiding (map)
-import Data.Maybe
-import Translator.Translate
-import Data.Monoid
-import Control.Lens hiding (Level)
-import Control.Concurrent.Async
-import Debug.Trace
-import Control.Monad.Except
-import Control.Monad.Reader
-import Control.Monad.Writer
-import Config.App
-import Text.Pretty.Simple (pPrint, pString)
-import qualified Logger as L
-import Control.Concurrent.STM
-import qualified Data.HashMap.Strict as HM
-import qualified DB.WordReference as DB
-import Data.Aeson
+import Common
+import Prelude()
 
-composeSubs :: [RichSubCtx] -> App Text
+import Config.App
+import Control.Concurrent.Async
+import Control.Concurrent.STM
+import Control.Lens hiding (Level)
+import Control.Monad.IO.Class
+import qualified DB.WordReference as DB
+import qualified Data.HashMap.Strict as HM
+import qualified Data.Text as T hiding (map)
+import Translator.Translate
+import Type
+
+composeSubs :: [RichSubCtx] -> App Word
 composeSubs subCtxs = do
   levelToShow <- asksR levelToShow
   translator <- asksR translator
@@ -47,55 +41,55 @@ composeSubs subCtxs = do
               , currentNbOfOfflineRequest = currentNbOfOfflineRequest
               }
 
-  e <- liftIO $ mapConcurrently (composeSub tp levelToShow translator sc) subCtxs :: App [Text]
+  e <- liftIO $ mapConcurrently (composeSub tp levelToShow translator sc) subCtxs :: App [Word]
   liftIO $ saveResponses responsesToSave
-  return $ intercalate "\n\n" e
+  return $ T.intercalate "\n\n" e
 
 saveResponses :: TVar Cache -> IO ()
 saveResponses tvCache = do
   cache <- readTVarIO tvCache
   let keys = HM.keys cache
-  L.infoM $ "saving " <> (show $ Prelude.length keys) <> " : " <> show keys
+  infoM $ "saving " <> (show $ length keys) <> " : " <> show keys
   DB.insert $ HM.toList cache
 
-composeSub :: TP -> Level -> Translator -> StaticConf -> RichSubCtx -> IO Text
+composeSub :: TP -> Level -> Translator -> StaticConf -> RichSubCtx -> IO Word
 composeSub tp levelToShow translator sc (SubCtx sequence timingCtx sentences) = do
   composedSentences <- liftIO $ composeSentence tp levelToShow translator sc sentences
-  return $ intercalate "\n" $ subAsArray composedSentences
+  return $ T.intercalate "\n" $ subAsArray composedSentences
   where
-    subAsArray :: Text -> [Text]
+    subAsArray :: Word -> [Word]
     subAsArray composedSentences = [ seq
                                    , composeTimingCtx timingCtx
                                    , composedSentences
                                    ]
-    seq = pack $ show sequence
+    seq = T.pack $ show sequence
 
-composeTimingCtx :: TimingCtx -> Text
+composeTimingCtx :: TimingCtx -> Word
 composeTimingCtx (TimingCtx btiming etiming) =
   composedTimingCtx
   where
-    composedTimingCtx = intercalate " --> " [(composeTiming btiming), (composeTiming etiming)]
+    composedTimingCtx = T.intercalate " --> " [(composeTiming btiming), (composeTiming etiming)]
     composeTiming (Timing h m s ms) =
-      (intercalate ":" [(intToText h), (intToText m), (intToText s)]) <> "," <> (intToText ms)
-    intToText :: Int -> Text
+      (T.intercalate ":" [(intToText h), (intToText m), (intToText s)]) <> "," <> (intToText ms)
+    intToText :: Int -> Word
     intToText i =
-      pack $ if Prelude.length text < 2 then
+      T.pack $ if length text < 2 then
                '0' : text
              else
                text
       where
         text = show i
 
-composeSentence :: TP -> Level -> Translator -> StaticConf -> [(Sentence, [WordInfos])] -> IO Text
+composeSentence :: TP -> Level -> Translator -> StaticConf -> [(Sentence, [WordInfos])] -> IO Word
 composeSentence tp levelToShow translator sc sentencesInfos = do
   sentences <- mapConcurrently (translateSentence tp levelToShow translator sc) sentencesInfos :: IO [Sentence]
-  return $ intercalate "\n" sentences
+  return $ T.intercalate "\n" sentences
 
 translateSentence :: TP -> Level -> Translator -> StaticConf -> (Sentence, [WordInfos]) -> IO Sentence
 translateSentence tp levelToShow translator sc (sentence, sentenceInfos) = do
   translationsProcesses <- mapConcurrently (createTranslationProcess tp levelToShow translator sc) sentenceInfos :: IO [Translations]
   let renderedTranslation = map (renderTranslation levelToShow) translationsProcesses
-  return $ intercalate " " $ setCorrectSpacing (words sentence) renderedTranslation []
+  return $ T.intercalate " " $ setCorrectSpacing (T.words sentence) renderedTranslation []
 
 createTranslationProcess :: TP -> Level -> Translator -> StaticConf -> WordInfos -> IO (Translations)
 createTranslationProcess tp =
@@ -120,11 +114,11 @@ renderTranslation levelToShow (Translations' ((word, _, _, level), translations)
   else
     word
   where
-    format :: Maybe Text -> Text
+    format :: Maybe Word -> Word
     format translation = case translation of
       Just translation ->
         if word /= translation then
-          case (splitOn ", " translation) of
+          case (T.splitOn ", " translation) of
             (firstTranslation : otherTranslations) ->
               word <> " (" <> firstTranslation <> ")"
             _ -> word
@@ -132,7 +126,7 @@ renderTranslation levelToShow (Translations' ((word, _, _, level), translations)
           word
       Nothing -> word
 
-setCorrectSpacing :: [Text] -> [Text] -> [Text] -> [Text]
+setCorrectSpacing :: [Word] -> [Word] -> [Word] -> [Word]
 setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =
   if (T.length a1 > T.length b1) then
     setCorrectSpacing a ((b1 <> b2) : bs) acc

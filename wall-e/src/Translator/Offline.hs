@@ -12,7 +12,6 @@ import Data.Text.Lazy.Encoding
 import Type
 import Data.Text hiding (filter, null, map)
 import Data.Maybe
-import Prelude hiding (lookup)
 import Control.Applicative
 import Data.Functor.Identity
 import Text.Pretty.Simple (pPrint, pString)

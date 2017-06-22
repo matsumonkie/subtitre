@@ -23,7 +23,6 @@ import Data.Text
 import LevelSet
 import Data.Functor
 import Text.Parsec
-import Prelude hiding (Word)
 import Data.HashSet
 
 parseSentenceStructure :: LevelSets -> Text -> Either ParseError [WordInfos]

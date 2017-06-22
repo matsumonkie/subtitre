@@ -1,7 +1,4 @@
-{-# LANGUAGE DeriveGeneric, DeriveAnyClass #-}
-{-# LANGUAGE DeriveFunctor #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric, DeriveAnyClass, DeriveFunctor #-}
 
 module Type (
   Sequence
@@ -30,29 +27,19 @@ module Type (
 , TakenCare
 ) where
 
-import Data.Text hiding (length)
-import Prelude hiding (Word, or)
-import Data.Aeson
-import GHC.Generics
-import GHC.Exts hiding (Word)
-import qualified Data.HashMap.Strict as HM
-import Data.Monoid
-import Data.Functor.Identity
-import Control.Monad.IO.Class
-import Control.Monad.Trans.Class
-import Control.Monad.Reader (ReaderT, runReaderT)
-import Data.HashMap.Strict
-import Control.Monad.Trans.Except
-import Text.Parsec
-import Data.HashSet
-import Control.DeepSeq
-import GHC.Generics (Generic)
-import Control.Applicative
+import Common
+import Prelude()
+
 import Control.Concurrent.STM
-import Debug.Trace
+import Control.DeepSeq
+import Data.Aeson
+import qualified Data.HashMap.Strict as HM
+import qualified Data.HashSet as HS
+import qualified Data.Text as T
+import GHC.Generics (Generic)
 
 type Sequence = Int
-type Sentence = Text
+type Sentence = T.Text
 type Hour = Int
 type Minute = Int
 type Second = Int
@@ -64,8 +51,8 @@ data SubCtx a = SubCtx Sequence TimingCtx a deriving (Show, Eq)
 type RawSubCtx  = SubCtx [Sentence]
 type RichSubCtx = SubCtx [(Sentence, [WordInfos])]
 
-type Word = Text
-type Lemma = Text
+type Word = T.Text
+type Lemma = T.Text
 data Tag = Adj
          | Adv
          | Conj
@@ -82,7 +69,7 @@ data Tag = Adj
 newtype Translations' a =
   Translations' (WordInfos, [a]) deriving (Eq, Show, Functor)
 
-type Translations = Translations' Text
+type Translations = Translations' T.Text
 
 type WordInfos = (Word, Lemma, Tag, Level)
 
@@ -92,17 +79,17 @@ data Level = Easy
            | Unknown
            deriving (Show, Eq, Ord, Generic, NFData)
 
-type LevelSet = HashSet Text
+type LevelSet = HS.HashSet T.Text
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFData)
 
-mkTranslations :: WordInfos -> [Text] -> Translations
+mkTranslations :: WordInfos -> [T.Text] -> Translations
 mkTranslations wi translations = Translations' (wi, translations)
 
-type Cache = HashMap Text (Maybe Value)
-type SetKey = TVar [Text]
-type TakenCare = [Text]
+type Cache = HM.HashMap T.Text (Maybe Value)
+type SetKey = TVar [T.Text]
+type TakenCare = [T.Text]
 
-data TP = TP { availableWordsInDB :: TVar [Text]
+data TP = TP { availableWordsInDB :: TVar [T.Text]
              , translationsInCache :: TVar Cache
              , onlineWordsInProgress :: TVar TakenCare
              , offlineWordsInProgress :: TVar TakenCare
