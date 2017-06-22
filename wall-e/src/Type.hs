@@ -107,4 +107,5 @@ data TP = TP { availableWordsInDB :: TVar [Text]
              , onlineWordsInProgress :: TVar TakenCare
              , offlineWordsInProgress :: TVar TakenCare
              , responsesToSave :: TVar Cache
+             , currentNbOfOnlineRequest :: TVar Int
              }

@@ -36,11 +36,13 @@ composeSubs subCtxs = do
   offlineWordsInProgress <- liftIO $ newTVarIO []
   onlineWordsInProgress <- liftIO $ newTVarIO []
   responsesToSave <- liftIO $ newTVarIO $ HM.fromList([])
-  let tp = TP { availableWordsInDB     = availableWordsInDB
-              , translationsInCache    = translationsInCache
-              , offlineWordsInProgress = offlineWordsInProgress
-              , onlineWordsInProgress  = onlineWordsInProgress
-              , responsesToSave        = responsesToSave
+  currentNbOfOnlineRequest <- liftIO $ newTVarIO 0
+  let tp = TP { availableWordsInDB       = availableWordsInDB
+              , translationsInCache      = translationsInCache
+              , offlineWordsInProgress   = offlineWordsInProgress
+              , onlineWordsInProgress    = onlineWordsInProgress
+              , responsesToSave          = responsesToSave
+              , currentNbOfOnlineRequest = currentNbOfOnlineRequest
               }
 
   e <- liftIO $ mapConcurrently (composeSub tp levelToShow translator sc) subCtxs :: App [Text]
@@ -127,5 +129,4 @@ setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =
     setCorrectSpacing as (b2:bs) (acc ++ [b1])
 setCorrectSpacing (a:as) (b:bs) acc = setCorrectSpacing as bs (acc ++ [b])
 setCorrectSpacing [] (b:bs) acc = setCorrectSpacing [] bs (acc ++ [b])
-
 setCorrectSpacing _ _ acc = acc

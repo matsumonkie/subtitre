@@ -127,7 +127,11 @@ online :: TP -> StaticConf -> WordInfos -> Text -> IO [Text]
 online tp sc wi@(_, _, tag, _) key = do
   shouldFetchOnline <- atomically $ setInCharge (onlineWordsInProgress tp) key
   if shouldFetchOnline then do
+    atomically $ do
+      waitForPool tp
+      acquireRequestPool tp
     response <- fetchOnline sc key
+    atomically $ releaseRequestPool tp
     let bytestring = response >>= body :: Maybe ByteString
     let json = bytestring >>= decode :: Maybe Value
     atomically $ do
@@ -136,6 +140,21 @@ online tp sc wi@(_, _, tag, _) key = do
     offline tp sc wi key
   else
     offline tp sc wi key
+  where
+    addRequestPool :: TP -> Int -> STM ()
+    addRequestPool tp n = do
+      nbRequest <- readTVar (currentNbOfOnlineRequest tp)
+      writeTVar (currentNbOfOnlineRequest tp) $ nbRequest + n
+    releaseRequestPool tp = addRequestPool tp (-1)
+    acquireRequestPool tp = addRequestPool tp 1
+    waitForPool :: TP -> STM ()
+    waitForPool tp = do
+      nbRequest <- readTVar (currentNbOfOnlineRequest tp)
+      if nbRequest >= 5 then
+        retry
+      else
+        return ()
+
 
 fetchFromCache :: TVar Cache -> Text -> STM (Maybe Value)
 fetchFromCache tvCache key = do
