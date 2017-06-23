@@ -27,7 +27,7 @@ import Control.Monad.Trans.Reader
 import Data.Aeson
 import qualified Data.ByteString as BS
 import Data.Maybe
-import Data.Text
+import qualified Data.Text as T
 import qualified Data.Yaml as Y
 import GHC.Generics (Generic)
 import System.Log.Logger
@@ -47,11 +47,21 @@ data RuntimeConf =
               , levelToShow :: Level
               , dir :: FilePath
               , file :: FilePath
+              , to :: Language
               , logLevel :: Priority
               , logFormatter :: String
               } deriving (Generic, NFData)
 
-type Translator = TP -> StaticConf -> WordInfos -> IO Translations
+instance Show RuntimeConf where
+  show rc =
+    (show $ file rc) <> "\n" <>
+    (show $ to rc) <> "\n" <>
+    (show $ levelToShow rc) <> "\n" <>
+    (show $ dir rc) <> "\n" <>
+    (show $ logLevel rc) <> "\n" <>
+    (show $ logFormatter rc)
+
+type Translator = TP -> Language -> StaticConf -> WordInfos -> IO Translations
 
 inputFile :: RuntimeConf -> FilePath
 inputFile conf = (dir conf) <> "/" <> (file conf)
@@ -64,17 +74,17 @@ outputFile conf = (dir conf) <> "/t" <> (file conf)
 
 
 data StaticConf =
-  StaticConf { database :: Text
+  StaticConf { database :: T.Text
              , workingDir :: FilePath
-             , outputFileName :: Text
+             , outputFileName :: T.Text
              , pgPool :: Int
              -- yandex
-             , yandexApiKey :: Text
-             , yandexApiUrl :: Text
+             , yandexApiKey :: T.Text
+             , yandexApiUrl :: T.Text
              -- word reference
-             , wordReferenceApiUrlPrefix :: Text
-             , wordReferenceApiUrlSuffix :: Text
-             , wordReferenceApiKeys :: [Text]
+             , wordReferenceApiUrlPrefix :: T.Text
+             , wordReferenceApiUrlSuffix :: T.Text
+             , wordReferenceApiKeys :: [T.Text]
              , wordReferencePool :: Int
              } deriving (Show, Generic, NFData)
 

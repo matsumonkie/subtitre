@@ -17,10 +17,10 @@ import qualified Data.ByteString as BS hiding (elem, unpack, filter, map)
 import Data.Aeson.Types
 import Database.PostgreSQL.Simple
 
-select :: StaticConf -> Word -> IO (Maybe Value)
-select sc word = do
+select :: StaticConf -> Language -> Word -> IO (Maybe Value)
+select sc to word = do
   con <- connectPostgreSQL config
-  responses <- query con q (Only word) :: IO ([Only Value])
+  responses <- query con q (to, word) :: IO ([Only Value])
   close con
   return $ resToMaybe responses
   where
@@ -28,7 +28,7 @@ select sc word = do
     config = BS.append (BS.append "dbname='" (Encoding.encodeUtf8 $ database sc)) "'"
     q = "SELECT response \
         \FROM wordreference w \
-        \WHERE w.from = 'en' AND w.to = 'fr' AND w.word = ? \
+        \WHERE w.from = 'en' AND w.to = ? AND w.word = ? \
         \LIMIT 1"
     resToMaybe :: [Only a] -> Maybe a
     resToMaybe responses =
@@ -36,29 +36,29 @@ select sc word = do
         [Only i] -> Just i
         _ -> Nothing
 
-available :: StaticConf -> IO [Word]
-available sc = do
+available :: StaticConf -> Language -> IO [Word]
+available sc to = do
   con <- connectPostgreSQL config
-  map unWrapOnly <$> query_ con q
+  map unWrapOnly <$> query con q (Only to)
   where
     config :: BS.ByteString
     config = BS.append (BS.append "dbname='" (Encoding.encodeUtf8 $ database sc)) "'"
     q = "SELECT DISTINCT word \
         \FROM wordreference w \
-        \WHERE w.from = 'en' AND w.to = 'fr'"
+        \WHERE w.from = 'en' AND w.to = ?"
     unWrapOnly :: Only a -> a
     unWrapOnly (Only a) = a
 
-insert :: [(Word, Maybe Value)] -> IO ()
-insert keysAndValues = do
+insert :: Language -> [(Word, Maybe Value)] -> IO ()
+insert to keysAndValues = do
   con <- connectPostgreSQL config
   now <- getCurrentTime
-  executeMany con q $ map (param now) keysAndValues
+  executeMany con q $ map (param to now) keysAndValues
   return ()
   where
     config = "dbname='subtitre_dev'"
-    param :: UTCTime -> (Word, Maybe Value) -> (Word, Word, Word, Maybe Value, UTCTime, UTCTime)
-    param now (word, object) =
-      ("en" :: Word, "fr" :: Word, word, object, now, now)
+    param :: String -> UTCTime -> (Word, Maybe Value) -> (Word, String, Word, Maybe Value, UTCTime, UTCTime)
+    param to now (word, object) =
+      ("en" :: Word, to, word, object, now, now)
     q = "INSERT INTO wordreference (\"from\", \"to\", \"word\", \"response\", \"created_at\", \"updated_at\") \
         \ values (?, ?, ?, ?, ?, ?) "

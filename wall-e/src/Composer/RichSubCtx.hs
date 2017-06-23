@@ -11,7 +11,7 @@ import Prelude()
 import Config.App
 import Control.Concurrent.Async
 import Control.Concurrent.STM
-import Control.Lens hiding (Level)
+import Control.Lens hiding (Level, to)
 import Control.Monad.IO.Class
 import qualified DB.WordReference as DB
 import qualified Data.HashMap.Strict as HM
@@ -24,7 +24,8 @@ composeSubs subCtxs = do
   levelToShow <- asksR levelToShow
   translator <- asksR translator
   sc <- askS
-  available <- liftIO $ DB.available sc
+  to <- asksR to
+  available <- liftIO $ DB.available sc to
   availableWordsInDB <- liftIO $ newTVarIO available
   translationsInCache <- liftIO $ newTVarIO $ HM.fromList([])
   offlineWordsInProgress <- liftIO $ newTVarIO []
@@ -41,20 +42,20 @@ composeSubs subCtxs = do
               , currentNbOfOfflineRequest = currentNbOfOfflineRequest
               }
 
-  e <- liftIO $ mapConcurrently (composeSub tp levelToShow translator sc) subCtxs :: App [Word]
-  liftIO $ saveResponses responsesToSave
+  e <- liftIO $ mapConcurrently (composeSub tp to levelToShow translator sc) subCtxs :: App [Word]
+  liftIO $ saveResponses to responsesToSave
   return $ T.intercalate "\n\n" e
 
-saveResponses :: TVar Cache -> IO ()
-saveResponses tvCache = do
+saveResponses :: Language -> TVar Cache -> IO ()
+saveResponses to tvCache = do
   cache <- readTVarIO tvCache
   let keys = HM.keys cache
   infoM $ "saving " <> (show $ length keys) <> " : " <> show keys
-  DB.insert $ HM.toList cache
+  DB.insert to $ HM.toList cache
 
-composeSub :: TP -> Level -> Translator -> StaticConf -> RichSubCtx -> IO Word
-composeSub tp levelToShow translator sc (SubCtx sequence timingCtx sentences) = do
-  composedSentences <- liftIO $ composeSentence tp levelToShow translator sc sentences
+composeSub :: TP -> Language -> Level -> Translator -> StaticConf -> RichSubCtx -> IO Word
+composeSub tp to levelToShow translator sc (SubCtx sequence timingCtx sentences) = do
+  composedSentences <- liftIO $ composeSentence tp to levelToShow translator sc sentences
   return $ T.intercalate "\n" $ subAsArray composedSentences
   where
     subAsArray :: Word -> [Word]
@@ -80,22 +81,22 @@ composeTimingCtx (TimingCtx btiming etiming) =
       where
         text = show i
 
-composeSentence :: TP -> Level -> Translator -> StaticConf -> [(Sentence, [WordInfos])] -> IO T.Text
-composeSentence tp levelToShow translator sc sentencesInfos = do
-  sentences <- mapConcurrently (translateSentence tp levelToShow translator sc) sentencesInfos :: IO [Sentence]
+composeSentence :: TP -> Language -> Level -> Translator -> StaticConf -> [(Sentence, [WordInfos])] -> IO T.Text
+composeSentence tp to levelToShow translator sc sentencesInfos = do
+  sentences <- mapConcurrently (translateSentence tp to levelToShow translator sc) sentencesInfos :: IO [Sentence]
   return $ T.intercalate "\n" sentences
 
-translateSentence :: TP -> Level -> Translator -> StaticConf -> (Sentence, [WordInfos]) -> IO Sentence
-translateSentence tp levelToShow translator sc (sentence, sentenceInfos) = do
-  translationsProcesses <- mapConcurrently (createTranslationProcess tp levelToShow translator sc) sentenceInfos :: IO [Translations]
+translateSentence :: TP -> Language -> Level -> Translator -> StaticConf -> (Sentence, [WordInfos]) -> IO Sentence
+translateSentence tp to levelToShow translator sc (sentence, sentenceInfos) = do
+  translationsProcesses <- mapConcurrently (createTranslationProcess tp to levelToShow translator sc) sentenceInfos :: IO [Translations]
   let renderedTranslation = map (renderTranslation levelToShow) translationsProcesses
   return $ T.intercalate " " $ setCorrectSpacing (T.words sentence) renderedTranslation []
 
-createTranslationProcess :: TP -> Level -> Translator -> StaticConf -> WordInfos -> IO (Translations)
+createTranslationProcess :: TP -> Language -> Level -> Translator -> StaticConf -> WordInfos -> IO (Translations)
 createTranslationProcess tp =
-  \levelToShow translator sc wi@(word, lemma, tag, level) ->
+  \to levelToShow translator sc wi@(word, lemma, tag, level) ->
     if shouldTranslate levelToShow wi then do
-      translator tp sc wi
+      translator tp to sc wi
     else
       return $ mkTranslations wi []
   where

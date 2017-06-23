@@ -25,6 +25,7 @@ module Type (
 , TP(..)
 , Cache
 , TakenCare
+, Language
 ) where
 
 import Common
@@ -51,6 +52,7 @@ data SubCtx a = SubCtx Sequence TimingCtx a deriving (Show, Eq)
 type RawSubCtx  = SubCtx [Sentence]
 type RichSubCtx = SubCtx [(Sentence, [WordInfos])]
 
+type Language = String
 type Word = T.Text
 type Lemma = T.Text
 data Tag = Adj
@@ -77,10 +79,10 @@ data Level = Easy
            | Normal
            | Hard
            | Unknown
-           deriving (Show, Eq, Ord, Generic, NFData)
+           deriving (Read, Show, Eq, Ord, Generic, NFData)
 
 type LevelSet = HS.HashSet T.Text
-data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFData)
+data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFData, Show)
 
 mkTranslations :: WordInfos -> [T.Text] -> Translations
 mkTranslations wi translations = Translations' (wi, translations)
