@@ -97,6 +97,7 @@ test-suite subtitre-test
                      , mtl
                      , parsec
                      , subtitre
+                     , tagsoup
                      , text
                      , transformers >= 0.5.2.0
                      , unordered-containers >= 0.2.7.2

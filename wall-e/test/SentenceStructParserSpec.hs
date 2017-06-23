@@ -14,7 +14,7 @@ import Control.Monad.Trans.Except
 import Control.Monad.Trans.Reader
 import RichSubCtx
 import LevelSet
-import Data.HashMap.Strict hiding (map)
+import qualified  Data.HashSet as HS
 import Config.App
 
 main :: IO ()
@@ -26,7 +26,7 @@ spec = do
     describe "parse" $ do
       context "simple sample" $ do
         it "simple line" $ do
-          parseSentenceStructure lSets "I -PRON- PRON" `shouldBe` (Right [("I", "-PRON-", Pron, Unknown)] :: Either Text.Parsec.ParseError SentenceInfos)
+          parseSentenceStructure lSets "I -PRON- PRON" `shouldBe` (Right [("I", "-PRON-", Pron, Unknown)] :: Either Text.Parsec.ParseError [WordInfos])
         it "new line at end of file" $ do
           parseSentenceStructure lSets "I -PRON- PRON\n" `shouldBe` (Right [("I", "-PRON-", Pron, Unknown)] :: Either Text.Parsec.ParseError [WordInfos])
         it "multiple argument" $ do
@@ -43,16 +43,16 @@ spec = do
           parsingDoesntFail friends
 
 lSets :: LevelSets
-lSets = LevelSets (fromList [], fromList [], fromList [])
+lSets = LevelSets (HS.fromList [], HS.fromList [], HS.fromList [])
 
 parsingDoesntFail :: FilePath -> Expectation
 parsingDoesntFail file = do
   let runtimeConf = RuntimeConf { translator = undefined
-                              , levelSets = lSets
-                              , levelToShow = undefined
-                              , dir = "test/assets"
-                              , file = file
-                              }
+                                , levelSets = lSets
+                                , levelToShow = undefined
+                                , dir = "test/assets"
+                                , file = file
+                                }
   let config = Config(runtimeConf, undefined)
 
   rawParsed <- runExceptT (runReaderT parseSubtitlesOfFile config) :: IO (Either [AppError] [RawSubCtx])

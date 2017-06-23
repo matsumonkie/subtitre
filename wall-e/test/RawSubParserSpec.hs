@@ -81,7 +81,7 @@ res text =
   where
     t1 = Timing 0 0 26 722
     t2 = Timing 0 0 29 23
-    sentences = map TS.parseTags text
+    sentences = text
 
 satisfyIsRight :: Either [AppError] [RawSubCtx] -> Expectation
 satisfyIsRight parsed =

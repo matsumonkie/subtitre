@@ -15,7 +15,7 @@ import Composer.RichSubCtx
 import LevelSet
 import Data.HashMap.Strict hiding (map)
 import Control.Monad.Reader
-import Data.Text
+import qualified Data.Text as T
 import Config.App
 
 main :: IO ()
@@ -25,30 +25,25 @@ spec :: Spec
 spec = do
   describe "composeSentence" $ do
     it "without any sentences" $ do
-      composeSentence' Easy [a] `shouldReturn` Right "world (monde)"
+      composeSentence' Easy [a] `shouldReturn` "world (monde)"
     it "level to show is higher" $ do
-      composeSentence' Hard [a] `shouldReturn` Right "world"
+      composeSentence' Hard [a] `shouldReturn` "world"
     it "shows punctuation correctly" $ do
-      composeSentence' Easy [b] `shouldReturn` Right "Hello world (monde) !"
+      composeSentence' Easy [b] `shouldReturn` "Hello world (monde) !"
     it "" $ do
-      composeSentence' Normal [c] `shouldReturn` Right "Dark Army told (dire) me stage (\233tape) two is (\234tre) ready."
+      composeSentence' Normal [c] `shouldReturn` "Dark Army told (dire) me stage (\233tape) two is (\234tre) ready."
 
-composeSentence' :: Level -> [(Sentence, SentenceInfos)] -> IO (Either [AppError] Text)
+composeSentence' :: Level -> [(Sentence, [WordInfos])] -> IO T.Text
 composeSentence' level wis =
   let
-    runtimeConf = RuntimeConf { translator = translate
-                              , levelSets = undefined
-                              , levelToShow = level
-                              , dir = "test/assets"
-                              , file = undefined
-                              }
-    config = Config(runtimeConf, undefined)
-  in runExceptT (runReaderT (composeSentence wis) config) :: IO (Either [AppError] Text)
+    tp = undefined
+    sc = undefined
+  in composeSentence tp level translate sc wis :: IO T.Text
 
-translate :: StaticConf -> WordInfos -> IO Translations
-translate _ wi@(word, _, tag, _) =
+translate :: TP -> StaticConf -> WordInfos -> IO Translations
+translate _ _ wi@(word, _, tag, _) =
   return $ if shouldBeTranslated tag then
-             mkTranslations wi $ dictionary ! (toLower word)
+             mkTranslations wi $ dictionary ! (T.toLower word)
            else
              mkTranslations wi []
   where

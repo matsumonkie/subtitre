@@ -2,17 +2,10 @@
 
 module Deserializer.YandexSpec (main, spec) where
 
-import Text.Parsec
 import Test.Hspec
-import Data.Functor
 import Type
-import RawSubParser
 import Data.Monoid
-import Data.Text hiding (map)
-import Data.Either
-import Control.Monad.Trans.Reader
-import Control.Monad.Trans.Except
-import Data.ByteString.Lazy hiding (elem)
+import qualified Data.ByteString.Lazy as BSL hiding (elem)
 import Data.Aeson
 import Deserializer.Yandex
 import Data.Maybe
@@ -31,9 +24,9 @@ spec = do
 decodeYandex :: FilePath -> IO (Maybe YDef)
 decodeYandex file = decode <$> readAsset file
 
-readAsset :: FilePath -> IO (ByteString)
+readAsset :: FilePath -> IO (BSL.ByteString)
 readAsset file = do
-  readFile $ path file
+  BSL.readFile $ path file
   where
     path :: FilePath -> FilePath
     path file = "test/response/" <> file

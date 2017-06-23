@@ -2,11 +2,14 @@
 
 module Translator.Strategy.YandexSpec (main, spec) where
 
+import Common
+import Prelude
+
 import Type
 import Data.Monoid
-import Data.Text hiding (map)
+import qualified Data.Text as T
 import Test.Hspec
-import Data.ByteString.Lazy hiding (elem)
+import qualified Data.ByteString.Lazy as BSL
 import Network.Wreq
 import qualified Network.HTTP.Client.Internal as HTTP
 
@@ -27,17 +30,17 @@ spec = do
         Translations'(_, translations) <- translate (fetch "yandex.stirring.json") wi
         translations `shouldBe` ["agitation"]
 
-fetch :: String -> Text -> IO (Maybe (Response ByteString))
+fetch :: String -> T.Text -> IO (Maybe (Response BSL.ByteString))
 fetch file _ = do
   body' <- body
   return $ Just (fakeHttpResponse body')
   where
-    body :: IO ByteString
-    body = readFile path
+    body :: IO BSL.ByteString
+    body = BSL.readFile path
     path :: FilePath
     path = "test/response/" <> file
 
-fakeHttpResponse :: ByteString -> Response ByteString
+fakeHttpResponse :: BSL.ByteString -> Response BSL.ByteString
 fakeHttpResponse body =
   HTTP.Response { HTTP.responseStatus    = status200
                 , HTTP.responseVersion   = http11
