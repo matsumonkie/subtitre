@@ -121,7 +121,7 @@ renderTranslation levelToShow (Translations' ((word, _, _, level), translations)
         if word /= translation then
           case (T.splitOn ", " translation) of
             (firstTranslation : otherTranslations) ->
-              word <> " (" <> firstTranslation <> ")"
+              "<u>" <> word <> "</u>" <> " (<i>" <> firstTranslation <> "</i>)"
             _ -> word
         else
           word
