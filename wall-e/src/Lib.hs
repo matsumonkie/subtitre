@@ -21,14 +21,17 @@ import RichSubCtx as All
 import Translator.Translate as All
 import Type as All
 
+import Control.Concurrent.STM
+import qualified DB.WordReference as DB
+import qualified Data.HashMap.Strict as HM
+import qualified Data.Text as T
+import qualified Data.Text.IO as TIO
 import System.IO (stderr, stdout, Handle)
 import System.Log as All (Priority(..))
 import System.Log.Formatter
 import System.Log.Handler (setFormatter)
 import System.Log.Handler.Simple
 import System.Log.Logger hiding (logM, debugM, infoM, noticeM, warningM, errorM, criticalM, alertM, emergencyM)
-import qualified Data.Text.IO as TIO
-import qualified Data.Text as T
 
 setLogger :: App ()
 setLogger = do
@@ -52,7 +55,25 @@ getRuntimeConf file to level = do
                 , logFormatter = "[$time $loggername $prio] $msg"
                 }
 
-getTranslationsConf = undefined
+getTranslationsConf :: StaticConf -> RuntimeConf -> IO TranslationsConf
+getTranslationsConf sc rc = do
+  available <- DB.available sc (to rc)
+  availableWordsInDB <- newTVarIO available
+  translationsInCache <- newTVarIO $ HM.fromList([])
+  offlineWordsInProgress <- newTVarIO []
+  onlineWordsInProgress <- newTVarIO []
+  responsesToSave <- newTVarIO $ HM.fromList([])
+  currentNbOfOnlineRequest <- newTVarIO 0
+  currentNbOfOfflineRequest <- newTVarIO 0
+  return $
+    TranslationsConf { availableWordsInDB = availableWordsInDB
+                     , translationsInCache       = translationsInCache
+                     , offlineWordsInProgress    = offlineWordsInProgress
+                     , onlineWordsInProgress     = onlineWordsInProgress
+                     , responsesToSave           = responsesToSave
+                     , currentNbOfOnlineRequest  = currentNbOfOnlineRequest
+                     , currentNbOfOfflineRequest = currentNbOfOfflineRequest
+                     }
 
 run :: App T.Text
 run = do

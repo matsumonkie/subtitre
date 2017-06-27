@@ -59,6 +59,7 @@ offline conf@(Config {rc, sc, tc}) wi key = do
       atomically $ do
         waitForPool offlineRequest 5
         acquireRequestPool offlineRequest
+      infoM $ "fetching offline [" <> show key <> "]"
       json <- DB.select conf key
       atomically $ releaseRequestPool offlineRequest
       atomically $ writeOnCache conf (key, json)
