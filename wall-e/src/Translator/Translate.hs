@@ -22,6 +22,7 @@ import qualified Data.Text as T
 import Deserializer.WordReference
 import Network.Wreq
 import Type
+import qualified Translator.Strategy.WordReference as WRStrategy
 
 translate :: Config -> WordInfos -> IO Translations
 translate conf wi@(_, _, tag, _) = do
@@ -40,8 +41,7 @@ translate' conf@(Config {rc, sc, tc}) wi key = do
   if key `elem` availableWordsInDB' then
     offline conf wi key
   else
-    undefined
---    online key
+    online conf wi key
 
 offline :: Config -> WordInfos -> Word -> IO [Word]
 offline conf@(Config {rc, sc, tc}) wi key = do
@@ -51,8 +51,7 @@ offline conf@(Config {rc, sc, tc}) wi key = do
     json <- atomically $ fetchFromCache (translationsInCache tc) key
     return $ translationsFromValue json wi
   else do
-    cache <- readTVarIO (translationsInCache tc)
-    let available = isJust $ HM.lookup key cache
+    available <- (isJust . (HM.lookup key)) <$> readTVarIO (translationsInCache tc)
     if available then do
       offline conf wi key
     else do
@@ -73,7 +72,7 @@ online conf@(Config {rc, sc, tc}) wi key = do
     atomically $ do
       waitForPool onlineRequest 5
       acquireRequestPool onlineRequest
-    response <- fetchOnline conf key
+    response <- WRStrategy.fetch conf key
     atomically $ releaseRequestPool onlineRequest
     let bytestring = response >>= body :: Maybe BSL.ByteString
     let json = bytestring >>= decode :: Maybe Value
@@ -83,6 +82,10 @@ online conf@(Config {rc, sc, tc}) wi key = do
     offline conf wi key
   else
     offline conf wi key
+
+body :: Response BSL.ByteString -> Maybe BSL.ByteString
+body response = do
+  return $ response ^. responseBody
 
 addRequestPool :: TVar Int -> Int -> STM ()
 addRequestPool count n = do
@@ -147,26 +150,6 @@ isTakenCare takenCare key = do
 translationsFromValue :: Maybe Value -> WordInfos -> [Word]
 translationsFromValue mValue wi@(_, _, tag, _) =
   maybe [] (translationsBasedOnTag tag) mValue
-
-body :: Response BSL.ByteString -> Maybe BSL.ByteString
-body response = do
-  return $ response ^. responseBody
-
-fetchOnline :: Config -> Word -> IO (Maybe (Response BSL.ByteString))
-fetchOnline conf@(Config {rc, sc, tc}) toTranslate =
-  let
-    key = (wordReferenceApiKeys sc) !! 0
-    urlPrefix = wordReferenceApiUrlPrefix sc
-    urlSuffix = wordReferenceApiUrlSuffix sc <> T.pack (to rc) <> "/"
-    url = urlPrefix <> key <> urlSuffix <> toTranslate
-  in do
-    infoM $ "fetching online [" <> show toTranslate <> "]"
-    catch (Just <$> (getWith defaults (T.unpack url))) handler
-  where
-    handler :: SomeException -> IO (Maybe (Response BSL.ByteString))
-    handler ex = do
-      errorM $ "could not fetch online translation: [" <> show toTranslate <> "] with exception : " <> show ex
-      return Nothing
 
 translationsBasedOnTag :: Tag -> Value -> [Word]
 translationsBasedOnTag tag value = do
