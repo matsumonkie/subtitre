@@ -1,4 +1,6 @@
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
+
 module Translator.Translate (
   translate
 ) where
@@ -9,7 +11,7 @@ import Prelude()
 import Config.App
 import Control.Concurrent.STM
 import Control.Exception
-import Control.Lens
+import Control.Lens hiding (to)
 import Control.Monad
 import qualified DB.WordReference as DB
 import Data.Aeson
@@ -21,9 +23,10 @@ import Deserializer.WordReference
 import Network.Wreq
 import Type
 
-translate :: TP -> Language -> StaticConf -> WordInfos -> IO Translations
-translate tp to sc wi@(_, _, tag, _) = do
-  mkTranslations wi <$> translate' tp to sc wi (toTranslate wi)
+translate :: Config -> WordInfos -> IO Translations
+translate conf wi@(_, _, tag, _) = do
+  words <- translate' conf wi $ toTranslate wi
+  return $ mkTranslations wi words
   where
     toTranslate :: WordInfos -> Word
     toTranslate (word, lemma, tag, _) = case tag of
@@ -31,54 +34,55 @@ translate tp to sc wi@(_, _, tag, _) = do
       Noun -> lemma
       _ -> word
 
-translate' :: TP -> Language -> StaticConf -> WordInfos -> Word -> IO [Word]
-translate' tp to sc wi@(_, _, tag, _) key = do
-  availableWordsInDB' <- readTVarIO (availableWordsInDB tp)
+translate' :: Config -> WordInfos -> Word -> IO [Word]
+translate' conf@(Config {rc, sc, tc}) wi key = do
+  availableWordsInDB' <- readTVarIO $ availableWordsInDB tc
   if key `elem` availableWordsInDB' then
-    offline tp to sc wi key
+    offline conf wi key
   else
-    online tp to sc wi key
+    undefined
+--    online key
 
-offline :: TP -> Language -> StaticConf -> WordInfos -> Word -> IO [Word]
-offline tp to sc wi@(_, _, tag, _) key = do
-  onlineWordsFetched <- readTVarIO (onlineWordsInProgress tp)
-  shouldFetchOffline <- atomically $ setInCharge (offlineWordsInProgress tp) key
+offline :: Config -> WordInfos -> Word -> IO [Word]
+offline conf@(Config {rc, sc, tc}) wi key = do
+  onlineWordsFetched <- readTVarIO (onlineWordsInProgress tc)
+  shouldFetchOffline <- atomically $ setInCharge (offlineWordsInProgress tc) key
   if key `elem` onlineWordsFetched || not shouldFetchOffline then do
-    json <- atomically $ fetchFromCache (translationsInCache tp) key
+    json <- atomically $ fetchFromCache (translationsInCache tc) key
     return $ translationsFromValue json wi
   else do
-    cache <- readTVarIO (translationsInCache tp)
+    cache <- readTVarIO (translationsInCache tc)
     let available = isJust $ HM.lookup key cache
     if available then do
-      offline tp to sc wi key
+      offline conf wi key
     else do
-      let offlineRequest = currentNbOfOfflineRequest tp
+      let offlineRequest = currentNbOfOfflineRequest tc
       atomically $ do
         waitForPool offlineRequest 5
         acquireRequestPool offlineRequest
-      json <- DB.select sc to key
+      json <- DB.select conf key
       atomically $ releaseRequestPool offlineRequest
-      atomically $ writeOnCache tp (key, json)
-      offline tp to sc wi key
+      atomically $ writeOnCache conf (key, json)
+      offline conf wi key
 
-online :: TP -> Language -> StaticConf -> WordInfos -> Word -> IO [Word]
-online tp to sc wi@(_, _, tag, _) key = do
-  shouldFetchOnline <- atomically $ setInCharge (onlineWordsInProgress tp) key
+online :: Config -> WordInfos -> Word -> IO [Word]
+online conf@(Config {rc, sc, tc}) wi key = do
+  shouldFetchOnline <- atomically $ setInCharge (onlineWordsInProgress tc) key
   if shouldFetchOnline then do
-    let onlineRequest = currentNbOfOnlineRequest tp
+    let onlineRequest = currentNbOfOnlineRequest tc
     atomically $ do
       waitForPool onlineRequest 5
       acquireRequestPool onlineRequest
-    response <- fetchOnline sc to key
+    response <- fetchOnline conf key
     atomically $ releaseRequestPool onlineRequest
     let bytestring = response >>= body :: Maybe BSL.ByteString
     let json = bytestring >>= decode :: Maybe Value
     atomically $ do
-      writeOnCache tp (key, json)
-      writeOnDB tp (key, json)
-    offline tp to sc wi key
+      writeOnCache conf (key, json)
+      writeOnDB conf (key, json)
+    offline conf wi key
   else
-    offline tp to sc wi key
+    offline conf wi key
 
 addRequestPool :: TVar Int -> Int -> STM ()
 addRequestPool count n = do
@@ -103,20 +107,20 @@ fetchFromCache tvCache key = do
     Just json -> return json
     Nothing -> retry
 
-writeOnDB :: TP -> (Word, Maybe Value) -> STM ()
-writeOnDB tp (key, value) = do
+writeOnDB :: Config -> (Word, Maybe Value) -> STM ()
+writeOnDB conf@(Config {rc, sc, tc}) (key, value) = do
   when (isJust value) $ do
-    responses <- readTVar (responsesToSave tp)
+    responses <- readTVar $ responsesToSave tc
     let newResponsesToSave = HM.insert key value responses
-    writeTVar (responsesToSave tp) newResponsesToSave
+    writeTVar (responsesToSave tc) newResponsesToSave
 
-writeOnCache :: TP -> (Word, Maybe Value) -> STM ()
-writeOnCache tp (key, value) = do
-  availableWords <- readTVar (availableWordsInDB tp)
-  cache <- readTVar (translationsInCache tp)
+writeOnCache :: Config -> (Word, Maybe Value) -> STM ()
+writeOnCache conf@(Config {rc, sc, tc}) (key, value) = do
+  availableWords <- readTVar $ availableWordsInDB tc
+  cache <- readTVar $ translationsInCache tc
   let newDB = HM.insert key value cache
-  writeTVar (translationsInCache tp) newDB
-  writeTVar (availableWordsInDB tp) (key : availableWords)
+  writeTVar (translationsInCache tc) newDB
+  writeTVar (availableWordsInDB tc) (key : availableWords)
 
 setInCharge :: TVar TakenCare -> Word -> STM Bool
 setInCharge tvTakenCare key = do
@@ -148,12 +152,12 @@ body :: Response BSL.ByteString -> Maybe BSL.ByteString
 body response = do
   return $ response ^. responseBody
 
-fetchOnline :: StaticConf -> Language -> Word -> IO (Maybe (Response BSL.ByteString))
-fetchOnline sc to toTranslate =
+fetchOnline :: Config -> Word -> IO (Maybe (Response BSL.ByteString))
+fetchOnline conf@(Config {rc, sc, tc}) toTranslate =
   let
     key = (wordReferenceApiKeys sc) !! 0
     urlPrefix = wordReferenceApiUrlPrefix sc
-    urlSuffix = wordReferenceApiUrlSuffix sc <> T.pack to <> "/"
+    urlSuffix = wordReferenceApiUrlSuffix sc <> T.pack (to rc) <> "/"
     url = urlPrefix <> key <> urlSuffix <> toTranslate
   in do
     infoM $ "fetching online [" <> show toTranslate <> "]"

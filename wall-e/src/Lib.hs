@@ -1,7 +1,8 @@
 module Lib
 ( module All
-, setLogger
 , run
+, getRuntimeConf
+, getTranslationsConf
 ) where
 
 import Common
@@ -37,13 +38,27 @@ setLogger = do
   let myStreamHandler' = setFormatter myStreamHandler $ simpleLogFormatter logFormatter
   liftIO $ updateGlobalLogger rootLoggerName $ setLevel logLevel . setHandlers [myStreamHandler']
 
+getRuntimeConf :: FilePath -> String -> Level -> IO RuntimeConf
+getRuntimeConf file to level = do
+  levelSets <- getLevelSets
+  return $
+    RuntimeConf { translator = translate
+                , levelSets = levelSets
+                , dir = "/home/iori/temp"
+                , file = file
+                , to = to
+                , levelToShow = level
+                , logLevel = INFO
+                , logFormatter = "[$time $loggername $prio] $msg"
+                }
+
+getTranslationsConf = undefined
+
 run :: App T.Text
 run = do
   setLogger
   sc <- askS
-  s <- ask
   outputFile <- asksR outputFile
-  liftIO $ infoM $ s `deepseq` "Config is fine"
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched

@@ -1,3 +1,4 @@
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -9,18 +10,21 @@ module Config.App (
 , Config(..)
 , asksR
 , asksS
+, asksT
 , askS
 , RuntimeConf(..)
 , inputFile
 , outputFile
 , StaticConf(..)
 , getStaticConf
-, Translator
+, TranslationsConf(..)
+, TP(..)
 ) where
 
 import Common
 import Prelude()
 
+import Control.Concurrent.STM
 import Control.DeepSeq
 import Control.Monad.Trans.Except
 import Control.Monad.Trans.Reader
@@ -50,7 +54,7 @@ data RuntimeConf =
               , to :: Language
               , logLevel :: Priority
               , logFormatter :: String
-              } deriving (Generic, NFData)
+              }
 
 instance Show RuntimeConf where
   show rc =
@@ -61,7 +65,8 @@ instance Show RuntimeConf where
     (show $ logLevel rc) <> "\n" <>
     (show $ logFormatter rc)
 
-type Translator = TP -> Language -> StaticConf -> WordInfos -> IO Translations
+type Translator = Config -> WordInfos -> IO Translations
+type TP a = ReaderT Config IO a
 
 inputFile :: RuntimeConf -> FilePath
 inputFile conf = (dir conf) <> "/" <> (file conf)
@@ -112,25 +117,47 @@ getStaticConf =
     readStatic file = BS.readFile file
 
 
+{- TRANSLATIONS CONF -}
+
+
+data TranslationsConf =
+  TranslationsConf { availableWordsInDB :: TVar [Word]
+                   , translationsInCache :: TVar Cache
+                   , onlineWordsInProgress :: TVar TakenCare
+                   , offlineWordsInProgress :: TVar TakenCare
+                   , responsesToSave :: TVar Cache
+                   , currentNbOfOnlineRequest :: TVar Int
+                   , currentNbOfOfflineRequest :: TVar Int
+                   }
+
+
 {- APP CONF -}
 
 
-data Config = Config (RuntimeConf, StaticConf) deriving (Generic, NFData)
+data Config = Config { rc :: RuntimeConf
+                     , sc :: StaticConf
+                     , tc :: TranslationsConf
+                     }
 
 data AppError = AppError ParseError deriving (Show, Eq)
 type App a = ReaderT Config (ExceptT [AppError] IO) a
 
 asksR :: (Monad m) => (RuntimeConf -> a) -> ReaderT Config m a
 asksR f = do
-  (Config(config, _)) <- ask
-  return $ f config
+  (Config { rc, sc, tc }) <- ask
+  return $ f rc
 
 asksS :: (Monad m) => (StaticConf -> a) -> ReaderT Config m a
 asksS f = do
-  (Config(_, config)) <- ask
-  return $ f config
+  (Config { rc, sc, tc }) <- ask
+  return $ f sc
+
+asksT :: (Monad m) => (TranslationsConf -> a) -> ReaderT Config m a
+asksT f = do
+  (Config { rc, sc, tc }) <- ask
+  return $ f tc
 
 askS :: (Monad m) => ReaderT Config m StaticConf
 askS = do
-  (Config(_, config)) <- ask
-  return config
+  (Config { rc, sc, tc }) <- ask
+  return sc

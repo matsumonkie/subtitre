@@ -17,15 +17,15 @@ import qualified Data.ByteString as BS hiding (elem, unpack, filter, map)
 import Data.Aeson.Types
 import Database.PostgreSQL.Simple
 
-select :: StaticConf -> Language -> Word -> IO (Maybe Value)
-select sc to word = do
+select :: Config -> Word -> IO (Maybe Value)
+select conf word = do
   con <- connectPostgreSQL config
-  responses <- query con q (to, word) :: IO ([Only Value])
+  responses <- query con q (to $ rc conf, word) :: IO ([Only Value])
   close con
   return $ resToMaybe responses
   where
     config :: BS.ByteString
-    config = BS.append (BS.append "dbname='" (Encoding.encodeUtf8 $ database sc)) "'"
+    config = BS.append (BS.append "dbname='" (Encoding.encodeUtf8 $ database $ sc conf)) "'"
     q = "SELECT response \
         \FROM wordreference w \
         \WHERE w.from = 'en' AND w.to = ? AND w.word = ? \

@@ -22,7 +22,6 @@ module Type (
 , Level(..)
 , LevelSet
 , LevelSets(..)
-, TP(..)
 , Cache
 , TakenCare
 , Language
@@ -84,18 +83,9 @@ data Level = Easy
 type LevelSet = HS.HashSet T.Text
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFData, Show)
 
-mkTranslations :: WordInfos -> [T.Text] -> Translations
+mkTranslations :: WordInfos -> [Word] -> Translations
 mkTranslations wi translations = Translations' (wi, translations)
 
 type Cache = HM.HashMap T.Text (Maybe Value)
 type SetKey = TVar [T.Text]
 type TakenCare = [T.Text]
-
-data TP = TP { availableWordsInDB :: TVar [T.Text]
-             , translationsInCache :: TVar Cache
-             , onlineWordsInProgress :: TVar TakenCare
-             , offlineWordsInProgress :: TVar TakenCare
-             , responsesToSave :: TVar Cache
-             , currentNbOfOnlineRequest :: TVar Int
-             , currentNbOfOfflineRequest :: TVar Int
-             }

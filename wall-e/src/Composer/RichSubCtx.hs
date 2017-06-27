@@ -18,32 +18,15 @@ import qualified Data.HashMap.Strict as HM
 import qualified Data.Text as T hiding (map)
 import Translator.Translate
 import Type
+import Control.Monad.Trans.Reader
 
 composeSubs :: [RichSubCtx] -> App Word
 composeSubs subCtxs = do
   levelToShow <- asksR levelToShow
   translator <- asksR translator
-  sc <- askS
-  to <- asksR to
-  available <- liftIO $ DB.available sc to
-  availableWordsInDB <- liftIO $ newTVarIO available
-  translationsInCache <- liftIO $ newTVarIO $ HM.fromList([])
-  offlineWordsInProgress <- liftIO $ newTVarIO []
-  onlineWordsInProgress <- liftIO $ newTVarIO []
-  responsesToSave <- liftIO $ newTVarIO $ HM.fromList([])
-  currentNbOfOnlineRequest <- liftIO $ newTVarIO 0
-  currentNbOfOfflineRequest <- liftIO $ newTVarIO 0
-  let tp = TP { availableWordsInDB        = availableWordsInDB
-              , translationsInCache       = translationsInCache
-              , offlineWordsInProgress    = offlineWordsInProgress
-              , onlineWordsInProgress     = onlineWordsInProgress
-              , responsesToSave           = responsesToSave
-              , currentNbOfOnlineRequest  = currentNbOfOnlineRequest
-              , currentNbOfOfflineRequest = currentNbOfOfflineRequest
-              }
-
-  e <- liftIO $ mapConcurrently (composeSub tp to levelToShow translator sc) subCtxs :: App [Word]
-  liftIO $ saveResponses to responsesToSave
+  conf <- ask
+  e <- liftIO $ mapConcurrently (composeSub conf) subCtxs :: App [Word]
+  liftIO $ saveResponses (to $ rc conf) (responsesToSave $ tc conf)
   return $ T.intercalate "\n\n" e
 
 saveResponses :: Language -> TVar Cache -> IO ()
@@ -53,9 +36,9 @@ saveResponses to tvCache = do
   infoM $ "saving " <> (show $ length keys) <> " : " <> show keys
   DB.insert to $ HM.toList cache
 
-composeSub :: TP -> Language -> Level -> Translator -> StaticConf -> RichSubCtx -> IO Word
-composeSub tp to levelToShow translator sc (SubCtx sequence timingCtx sentences) = do
-  composedSentences <- liftIO $ composeSentence tp to levelToShow translator sc sentences
+composeSub :: Config -> RichSubCtx -> IO Word
+composeSub conf (SubCtx sequence timingCtx sentences) = do
+  composedSentences <- liftIO $ composeSentence conf sentences
   return $ T.intercalate "\n" $ subAsArray composedSentences
   where
     subAsArray :: Word -> [Word]
@@ -81,22 +64,22 @@ composeTimingCtx (TimingCtx btiming etiming) =
       where
         text = show i
 
-composeSentence :: TP -> Language -> Level -> Translator -> StaticConf -> [(Sentence, [WordInfos])] -> IO T.Text
-composeSentence tp to levelToShow translator sc sentencesInfos = do
-  sentences <- mapConcurrently (translateSentence tp to levelToShow translator sc) sentencesInfos :: IO [Sentence]
+composeSentence :: Config -> [(Sentence, [WordInfos])] -> IO T.Text
+composeSentence conf sentencesInfos = do
+  sentences <- mapConcurrently (translateSentence conf) sentencesInfos :: IO [Sentence]
   return $ T.intercalate "\n" sentences
 
-translateSentence :: TP -> Language -> Level -> Translator -> StaticConf -> (Sentence, [WordInfos]) -> IO Sentence
-translateSentence tp to levelToShow translator sc (sentence, sentenceInfos) = do
-  translationsProcesses <- mapConcurrently (createTranslationProcess tp to levelToShow translator sc) sentenceInfos :: IO [Translations]
-  let renderedTranslation = map (renderTranslation levelToShow) translationsProcesses
+translateSentence :: Config -> (Sentence, [WordInfos]) -> IO Sentence
+translateSentence conf (sentence, sentenceInfos) = do
+  translationsProcesses <- mapConcurrently (createTranslationProcess conf) sentenceInfos :: IO [Translations]
+  let renderedTranslation = map (renderTranslation $ levelToShow $ rc conf) translationsProcesses
   return $ T.intercalate " " $ setCorrectSpacing (T.words sentence) renderedTranslation []
 
-createTranslationProcess :: TP -> Language -> Level -> Translator -> StaticConf -> WordInfos -> IO (Translations)
-createTranslationProcess tp =
-  \to levelToShow translator sc wi@(word, lemma, tag, level) ->
-    if shouldTranslate levelToShow wi then do
-      translator tp to sc wi
+createTranslationProcess :: Config -> WordInfos -> IO (Translations)
+createTranslationProcess =
+  \conf wi@(word, lemma, tag, level) ->
+    if shouldTranslate (levelToShow $ rc conf) wi then do
+      (translator $ rc conf) conf wi
     else
       return $ mkTranslations wi []
   where
