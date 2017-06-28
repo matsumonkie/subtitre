@@ -13,8 +13,6 @@ module Config.App (
 , asksT
 , askS
 , RuntimeConf(..)
-, inputFile
-, outputFile
 , StaticConf(..)
 , getStaticConf
 , TranslationsConf(..)
@@ -49,7 +47,6 @@ data RuntimeConf =
   RuntimeConf { translator :: Translator
               , levelSets :: LevelSets
               , levelToShow :: Level
-              , dir :: FilePath
               , file :: FilePath
               , to :: Language
               , logLevel :: Priority
@@ -61,18 +58,11 @@ instance Show RuntimeConf where
     (show $ file rc) <> "\n" <>
     (show $ to rc) <> "\n" <>
     (show $ levelToShow rc) <> "\n" <>
-    (show $ dir rc) <> "\n" <>
     (show $ logLevel rc) <> "\n" <>
     (show $ logFormatter rc)
 
 type Translator = Config -> WordInfos -> IO Translations
 type TP a = ReaderT Config IO a
-
-inputFile :: RuntimeConf -> FilePath
-inputFile conf = (dir conf) <> "/" <> (file conf)
-
-outputFile :: RuntimeConf -> FilePath
-outputFile conf = (dir conf) <> "/t" <> (file conf)
 
 
 {- STATIC CONF -}

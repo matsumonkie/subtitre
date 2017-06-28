@@ -47,7 +47,6 @@ getRuntimeConf file to level = do
   return $
     RuntimeConf { translator = translate
                 , levelSets = levelSets
-                , dir = "/home/iori/temp"
                 , file = file
                 , to = to
                 , levelToShow = level
@@ -79,7 +78,7 @@ run :: App T.Text
 run = do
   setLogger
   sc <- askS
-  outputFile <- asksR outputFile
+  outputFile <- asksR file
   parsed <- parseSubtitlesOfFile
   riched <- createRichSubCtx parsed
   text   <- composeSubs riched
@@ -88,4 +87,4 @@ run = do
   where
     saveToFile :: FilePath -> T.Text -> IO ()
     saveToFile file content =
-      TIO.writeFile file content
+      TIO.writeFile (file <> ".output") content

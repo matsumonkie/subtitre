@@ -27,7 +27,7 @@ import Data.List
 
 parseSubtitlesOfFile :: App [RawSubCtx]
 parseSubtitlesOfFile = do
-  inputFile <- asksR inputFile
+  inputFile <- asksR file
   result <- liftIO $ Ex.tryJust invalidArgument (readWith inputFile SIO.utf8) :: App (Either () T.Text)
   content <- liftIO $ either (const $ readWith inputFile SIO.latin1) return result :: App T.Text
   case (parseSubtitles content :: Either ParseError [RawSubCtx]) of
