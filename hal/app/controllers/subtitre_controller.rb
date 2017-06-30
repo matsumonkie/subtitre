@@ -12,7 +12,7 @@ class SubtitreController < ApplicationController
       dir = File.dirname(tmp.path)
       output = File.basename(tmp.path)
 
-      system(cmd(tmp.path))
+      system(cmd(tmp.path, @subtitle.mode_text))
 
       @subtitre = Subtitre.new(file: File.new("#{dir}/#{output}.output"))
     end
@@ -20,11 +20,11 @@ class SubtitreController < ApplicationController
 
   private
 
-  def cmd input_file
-    "cd /home/iori/work/subtitre/wall-e && stack exec subtitre-exe #{input_file} en fr Normal"
+  def cmd input_file, level
+    "cd /home/iori/work/subtitre/wall-e && stack exec subtitre-exe #{input_file} en fr #{level}"
   end
 
   def subtitle_params
-    params.require(:subtitle).permit(:file)
+    params.require(:subtitle).permit(:file, :mode)
   end
 end

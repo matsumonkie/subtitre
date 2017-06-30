@@ -3,12 +3,68 @@
   <head>
     <title>Hal</title>
     <%= csrf_meta_tags %>
-
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
+    <style media="screen" type="text/css">
+    </style>
   </head>
 
   <body>
-    <%= yield %>
+
+    <section class="hero is-fullheight">
+
+      <div class="hero-head" id="header">
+        <header class="nav">
+          <div class="container">
+            <div class="nav-left">
+              <a class="nav-item">
+                <img src="" alt="Logo">
+              </a>
+            </div>
+            <span class="nav-toggle">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+            <div class="nav-right nav-menu">
+              <a class="nav-item is-active">
+                Lien 1
+              </a>
+              <a class="nav-item">
+                Lien 2
+              </a>
+              <a class="nav-item">
+                Lien 3
+              </a>
+            </div>
+          </div>
+        </header>
+      </div>
+
+      <div id="body" class="hero-body has-text-centered">
+        <div class="container">
+          <%= yield %>
+        </div>
+      </div>
+
+      <div id="footer" class="hero-foot">
+        <div class="container">
+          <nav class="tabs is-fullwidth">
+            <ul class="foo">
+              <li><a>Lien 1</a></li>
+              <li><a>Lien 2</a></li>
+              <li><a>Lien 3</a></li>
+              <li><a>Lien 4</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+    </section>
+
+
   </body>
 </html>

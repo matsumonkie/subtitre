@@ -1,0 +1,68 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require font-awesome
+ *= require_tree .
+ *= require_self
+ */
+
+@import "bulma";
+
+$main-orange: #FF601D;
+$dark-brown:  #742300;
+$brown:       #9D3C13;
+$light-brown: #DA794F;
+$salmon:      #FFA985;
+
+@mixin background($color) {
+  background-color: $color;
+}
+
+#header {
+  @include background($main-orange);
+}
+
+#body {
+  @include background($main-orange);
+
+  .demo-screenshots {
+    margin-bottom: 20px;
+  }
+
+  .form-upload {
+    /* dont show ugly radio button */
+    #subtitle_mode_easy   { display: none; }
+    #subtitle_mode_normal { display: none; }
+    #subtitle_mode_hard   { display: none; }
+
+    #label_mode_easy   {}
+    #label_mode_normal {}
+    #label_mode_hard   {}
+  }
+
+  .thumbnails {
+    height: 300px;
+    margin: auto;
+  }
+
+  #subtitle_file {
+    display: none;
+  }
+
+  #fake-upload-button {
+    margin-top: 20px;
+  }
+}
+
+#footer {
+  @include background($main-orange);
+}

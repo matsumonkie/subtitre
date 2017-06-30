@@ -1,4 +1,36 @@
-<%= form_for @subtitle, url: subtitre_index_path do |f| %>
-  <%= f.file_field :file %>
-  <%= f.submit "Create" %>
-<% end %>
+<div class="demo-screenshots is-medium">
+  <div class="slider" data-slick='{ "accessibility": false
+                                  , "slidesToShow": 1
+                                  , "slidesToScroll": 1
+                                  , "arrows": false
+                                  }'>
+    <div class="container">
+      <%= image_tag("mr_robot.png", class: 'thumbnails' ) %>
+    </div>
+    <div class="container">
+      <%= image_tag("mr_robot.png", class: 'thumbnails' ) %>
+    </div>
+    <div class="container">
+      <%= image_tag("mr_robot.png", class: 'thumbnails' ) %>
+    </div>
+  </div>
+</div>
+
+<div class="form-upload is-small">
+  <%= form_for @subtitle, url: subtitre_index_path, html: { class: "" } do |f| %>
+    <%- Subtitle.mode.options.each do |label, key| %>
+      <%= f.radio_button(:mode, key) %>
+      <%- active = (@subtitle.mode == key) ? "is-active" : "" %>
+      <%= f.label("mode_#{key}", "#{label}", class: "label-mode-selection button is-medium #{active}", id: "label-mode-#{key}") %>
+    <% end %>
+    <br/>
+
+    <a id="fake-upload-button"
+       class="button is-large"
+       onclick="document.getElementById('subtitle_file').click()">
+      <span class="icon"><i class="fa fa-file-text-o"></i></span>
+      <span>Selectionner Un fichier de sous-titre</span>
+    </a>
+    <%= f.file_field :file, class: "button is-large" %>
+  <% end %>
+</div>
