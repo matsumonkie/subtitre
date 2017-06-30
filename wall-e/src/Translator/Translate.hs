@@ -57,7 +57,7 @@ offline conf@(Config {rc, sc, tc}) wi key = do
     else do
       let offlineRequest = currentNbOfOfflineRequest tc
       atomically $ do
-        waitForPool offlineRequest 5
+        waitForPool offlineRequest $ pgPool sc
         acquireRequestPool offlineRequest
       infoM $ "fetching offline [" <> show key <> "]"
       json <- DB.select conf key
@@ -71,7 +71,7 @@ online conf@(Config {rc, sc, tc}) wi key = do
   if shouldFetchOnline then do
     let onlineRequest = currentNbOfOnlineRequest tc
     atomically $ do
-      waitForPool onlineRequest 5
+      waitForPool onlineRequest $ wordReferencePool sc
       acquireRequestPool onlineRequest
     response <- WRStrategy.fetch conf key
     atomically $ releaseRequestPool onlineRequest
