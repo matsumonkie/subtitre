@@ -29,7 +29,7 @@
        class="button is-large"
        onclick="document.getElementById('subtitle_file').click()">
       <span class="icon"><i class="fa fa-file-text-o"></i></span>
-      <span>Selectionner Un fichier de sous-titre</span>
+      <span><%= I18n.t 'sentence.select_subtitle_file' %></span>
     </a>
     <%= f.file_field :file, class: "button is-large" %>
   <% end %>

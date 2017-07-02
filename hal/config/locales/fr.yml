@@ -1,0 +1,7 @@
+en:
+  mode:
+    easy: Facile
+    normal: Normal
+    hard: Difficile
+  sentence:
+    select_subtitle_file: Sélectionner un Fichier de Sous-titre

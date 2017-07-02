@@ -27,6 +27,11 @@ $salmon:      #FFA985;
   background-color: $color;
 }
 
+.main-title {
+  color: $dark-brown;
+  font-size: 2em;
+}
+
 #header {
   @include background($main-orange);
 }
