@@ -3,5 +3,9 @@ en:
     easy: Facile
     normal: Normal
     hard: Difficile
+  translate_to:
+    french: Français
+    spanish: Espagnol
   sentence:
+    select_language: Traduire vers
     select_subtitle_file: Sélectionner un Fichier de Sous-titre

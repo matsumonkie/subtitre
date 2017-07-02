@@ -23,6 +23,24 @@
       <%- active = (@subtitle.mode == key) ? "is-active" : "" %>
       <%= f.label("mode_#{key}", "#{label}", class: "label-mode-selection button is-medium #{active}", id: "label-mode-#{key}") %>
     <% end %>
+
+    <br/>
+    <br/>
+
+    <p id="dropdown-language" class="control has-icons-left">
+      <span class="select is-horizontal is-medium">
+        <span class="icon is-medium is-left">
+          <i class="fa fa-globe"></i>
+        </span>
+        <select>
+          <option><%= I18n.t 'sentence.select_language' %></option>
+          <%- Subtitle.translate_to.options.each do |label, key| %>
+            <option> <%= label %> </option>
+          <% end %>
+        </select>
+      </span>
+    </p>
+
     <br/>
 
     <a id="fake-upload-button"

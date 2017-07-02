@@ -32,6 +32,10 @@ $salmon:      #FFA985;
   font-size: 2em;
 }
 
+#dropdown-language {
+  text-align: center;
+}
+
 #header {
   @include background($main-orange);
 }

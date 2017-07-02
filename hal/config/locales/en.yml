@@ -3,5 +3,9 @@ en:
     easy: Easy
     normal: Normal
     hard: Hard
+  translate_to:
+    french: French
+    spanish: Spanish
   sentence:
+    select_language: Translate to
     select_subtitle_file: Upload a Subtitle File
