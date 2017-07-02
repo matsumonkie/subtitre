@@ -48,8 +48,8 @@ $(document).ready(function() {
 
   (function changeMode() {
     $(".label-mode-selection").click(function () {
-      $(".label-mode-selection").removeClass('is-active');
-      $(this).addClass('is-active');
+      $(".label-mode-selection").removeClass('is-active is-warning');
+      $(this).addClass('is-active  is-warning');
     });
   }());
 

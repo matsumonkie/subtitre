@@ -7,5 +7,5 @@ en:
     french: Français
     spanish: Espagnol
   sentence:
-    select_language: Traduire vers
+    select_language: Traduire en
     select_subtitle_file: Sélectionner un Fichier de Sous-titre
