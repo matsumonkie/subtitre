@@ -32,10 +32,8 @@ selectAll conf words = do
 
 insertAll :: Config -> Word -> Language -> [(Word, Maybe Value)] -> IO ()
 insertAll conf site toLang keysAndValues = do
-  infoM "coucou"
   con <- connectPostgreSQL $ dbConfig conf
   now <- getCurrentTime
-  infoM "coucou"
   executeMany con q $ map (param toLang now site) keysAndValues
   return ()
   where
