@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric, DeriveAnyClass, DeriveFunctor #-}
 
 module Type (
@@ -34,7 +35,10 @@ import Data.Aeson
 import qualified Data.HashMap.Strict as HM
 import qualified Data.HashSet as HS
 import qualified Data.Text as T
-import GHC.Generics (Generic)
+import Text.Read
+import Data.Char
+import Text.ParserCombinators.ReadP hiding (choice)
+import Text.ParserCombinators.ReadPrec hiding (choice)
 
 type Sequence = Int
 type Sentence = T.Text
@@ -73,10 +77,20 @@ data Level = Easy
            | Normal
            | Hard
            | Unknown
-           deriving (Read, Show, Eq, Ord, Generic, NFData)
+           deriving (Show, Eq, Ord)
+
+instance Read Level where
+  readPrec =
+    choice $ strValMap [ ("easy", Easy)
+                       , ("normal", Normal)
+                       , ("hard", Hard)
+                       ]
+    where
+      strValMap :: [(String, a)] -> [ReadPrec a]
+      strValMap = map (\(x, y) -> lift $ string x >> return y)
 
 type LevelSet = HS.HashSet T.Text
-data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFData, Show)
+data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Show)
 
 type Cache = HM.HashMap Word (Maybe Value)
 type SetKey = TVar [T.Text]
