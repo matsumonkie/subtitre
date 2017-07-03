@@ -15,7 +15,7 @@ import Prelude()
 
 import Config.App
 import Control.Exception
-import Control.Lens hiding (to)
+import Control.Lens
 import Control.Monad
 import Data.Aeson
 import qualified Data.ByteString.Lazy as BSL
@@ -26,6 +26,7 @@ import Database.PostgreSQL.Simple
 import Deserializer.WordReference
 import Network.HTTP.Client (HttpException(HttpExceptionRequest))
 import Network.Wreq
+import Network.Wreq.Types as Wreq
 import Type
 
 fetch :: Config -> Word -> IO (Maybe (Response BSL.ByteString))
@@ -33,11 +34,12 @@ fetch conf@(Config {rc, sc, tc}) toTranslate =
   let
     key = (wordReferenceApiKeys sc) !! 0
     urlPrefix = wordReferenceApiUrlPrefix sc
-    urlSuffix = wordReferenceApiUrlSuffix sc <> T.pack (to rc) <> "/"
+    urlSuffix = wordReferenceApiUrlSuffix sc <> T.pack (toLang rc) <> "/"
     url = urlPrefix <> key <> urlSuffix <> toTranslate
+    opts = defaults { Wreq.redirects = 2 }
   in do
     infoM $ "fetching online [" <> show toTranslate <> "]"
-    catch (Just <$> (getWith defaults (T.unpack url))) handler
+    catch (Just <$> (getWith opts (T.unpack url))) handler
   where
     handler :: SomeException -> IO (Maybe (Response BSL.ByteString))
     handler ex = do

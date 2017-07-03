@@ -15,9 +15,7 @@ module Type (
 , RichSubCtx(..)
 , Tag(..)
 , Word
-, Translations(..)
-, Translations'(..)
-, mkTranslations
+, Translations
 , Lemma
 , Level(..)
 , LevelSet
@@ -67,10 +65,7 @@ data Tag = Adj
          | Else
          deriving (Show, Eq)
 
-newtype Translations' a =
-  Translations' (WordInfos, [a]) deriving (Eq, Show, Functor)
-
-type Translations = Translations' T.Text
+type Translations = (Word, WordInfos, [Word])
 
 type WordInfos = (Word, Lemma, Tag, Level)
 
@@ -83,9 +78,6 @@ data Level = Easy
 type LevelSet = HS.HashSet T.Text
 data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Generic, NFData, Show)
 
-mkTranslations :: WordInfos -> [Word] -> Translations
-mkTranslations wi translations = Translations' (wi, translations)
-
-type Cache = HM.HashMap T.Text (Maybe Value)
+type Cache = HM.HashMap Word (Maybe Value)
 type SetKey = TVar [T.Text]
 type TakenCare = [T.Text]

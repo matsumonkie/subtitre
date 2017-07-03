@@ -42,13 +42,12 @@ setLogger = do
   liftIO $ updateGlobalLogger rootLoggerName $ setLevel logLevel . setHandlers [myStreamHandler']
 
 getRuntimeConf :: FilePath -> String -> Level -> IO RuntimeConf
-getRuntimeConf file to level = do
+getRuntimeConf file toLang level = do
   levelSets <- getLevelSets
   return $
-    RuntimeConf { translator = translate
-                , levelSets = levelSets
+    RuntimeConf { levelSets = levelSets
                 , file = file
-                , to = to
+                , toLang = toLang
                 , levelToShow = level
                 , logLevel = INFO
                 , logFormatter = "[$time $loggername $prio] $msg"
@@ -56,35 +55,24 @@ getRuntimeConf file to level = do
 
 getTranslationsConf :: StaticConf -> RuntimeConf -> IO TranslationsConf
 getTranslationsConf sc rc = do
-  available <- DB.available sc (to rc)
-  availableWordsInDB <- newTVarIO available
-  translationsInCache <- newTVarIO $ HM.fromList([])
-  offlineWordsInProgress <- newTVarIO []
-  onlineWordsInProgress <- newTVarIO []
   responsesToSave <- newTVarIO $ HM.fromList([])
   currentNbOfOnlineRequest <- newTVarIO 0
-  currentNbOfOfflineRequest <- newTVarIO 0
   return $
-    TranslationsConf { availableWordsInDB = availableWordsInDB
-                     , translationsInCache       = translationsInCache
-                     , offlineWordsInProgress    = offlineWordsInProgress
-                     , onlineWordsInProgress     = onlineWordsInProgress
-                     , responsesToSave           = responsesToSave
+    TranslationsConf { responsesToSave           = responsesToSave
                      , currentNbOfOnlineRequest  = currentNbOfOnlineRequest
-                     , currentNbOfOfflineRequest = currentNbOfOfflineRequest
                      }
 
 run :: App T.Text
 run = do
   setLogger
-  sc <- askS
-  outputFile <- asksR file
-  parsed <- parseSubtitlesOfFile
-  riched <- createRichSubCtx parsed
-  text   <- composeSubs riched
-  liftIO $ saveToFile outputFile text
-  return text
+  parsed       <- parse
+  structurized <- structurize parsed
+  cache        <- translate structurized
+  composed     <- compose cache structurized
+  save composed
+  return composed
   where
-    saveToFile :: FilePath -> T.Text -> IO ()
-    saveToFile file content =
-      TIO.writeFile (file <> ".output") content
+    save :: T.Text -> App ()
+    save content = do
+      outputFile <- asksR file
+      liftIO $ TIO.writeFile (outputFile <> ".output") content

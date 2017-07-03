@@ -30,9 +30,7 @@ library
                      , RichSubCtx
                      , SentenceStructParser
                      , Serializer
-                     , Translator.Strategy.Yandex
                      , Translator.Strategy.WordReference
-                     , Translator.Offline
                      , Translator.Translate
                      , Type
   build-depends:       aeson

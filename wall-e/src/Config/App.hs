@@ -44,11 +44,10 @@ instance NFData Priority where
   rnf x = ()
 
 data RuntimeConf =
-  RuntimeConf { translator :: Translator
-              , levelSets :: LevelSets
+  RuntimeConf { levelSets :: LevelSets
               , levelToShow :: Level
               , file :: FilePath
-              , to :: Language
+              , toLang :: Language
               , logLevel :: Priority
               , logFormatter :: String
               }
@@ -56,7 +55,7 @@ data RuntimeConf =
 instance Show RuntimeConf where
   show rc =
     (show $ file rc) <> "\n" <>
-    (show $ to rc) <> "\n" <>
+    (show $ toLang rc) <> "\n" <>
     (show $ levelToShow rc) <> "\n" <>
     (show $ logLevel rc) <> "\n" <>
     (show $ logFormatter rc)
@@ -111,13 +110,8 @@ getStaticConf =
 
 
 data TranslationsConf =
-  TranslationsConf { availableWordsInDB :: TVar [Word]
-                   , translationsInCache :: TVar Cache
-                   , onlineWordsInProgress :: TVar TakenCare
-                   , offlineWordsInProgress :: TVar TakenCare
-                   , responsesToSave :: TVar Cache
+  TranslationsConf { responsesToSave :: TVar Cache
                    , currentNbOfOnlineRequest :: TVar Int
-                   , currentNbOfOfflineRequest :: TVar Int
                    }
 
 

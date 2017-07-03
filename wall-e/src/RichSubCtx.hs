@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module RichSubCtx (
-  createRichSubCtx
+  structurize
 ) where
 
 import Common
@@ -22,8 +22,8 @@ import Type
 sentenceSeparator = " <$> " :: T.Text
 subSeparator      = " <*> " :: T.Text
 
-createRichSubCtx :: [RawSubCtx] -> App [RichSubCtx]
-createRichSubCtx allRawSubCtx = do
+structurize :: [RawSubCtx] -> App [RichSubCtx]
+structurize allRawSubCtx = do
   levelSets <- asksR levelSets
   content <- liftIO $ runSpacy $ mergeSubs allRawSubCtx
   let unmerged    = unmergeSubs content

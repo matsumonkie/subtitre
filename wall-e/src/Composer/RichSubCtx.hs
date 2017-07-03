@@ -1,7 +1,8 @@
+{-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Composer.RichSubCtx (
-  composeSubs
+  compose
 , composeSentence
 ) where
 
@@ -13,33 +14,31 @@ import Control.Concurrent.Async
 import Control.Concurrent.STM
 import Control.Lens hiding (Level, to)
 import Control.Monad.IO.Class
+import Control.Monad.Trans.Reader
 import qualified DB.WordReference as DB
+import Data.Aeson
+import qualified Data.ByteString.Lazy as BSL
 import qualified Data.HashMap.Strict as HM
+import Data.Maybe
 import qualified Data.Text as T hiding (map)
+import Deserializer.WordReference
+import Network.Wreq
+import qualified Translator.Strategy.WordReference as WRStrategy
 import Translator.Translate
 import Type
-import Control.Monad.Trans.Reader
 
-composeSubs :: [RichSubCtx] -> App Word
-composeSubs subCtxs = do
+compose :: Cache -> [RichSubCtx] -> App T.Text
+compose cache subCtxs = do
   levelToShow <- asksR levelToShow
-  translator <- asksR translator
   conf <- ask
-  e <- liftIO $ mapConcurrently (composeSub conf) subCtxs :: App [Word]
-  liftIO $ saveResponses (to $ rc conf) (responsesToSave $ tc conf)
-  return $ T.intercalate "\n\n" e
+  let composed = map (composeSub cache levelToShow) subCtxs :: [Word]
+  liftIO $ saveResponses conf (toLang $ rc conf) cache
+  return $ T.intercalate "\n\n" composed
 
-saveResponses :: Language -> TVar Cache -> IO ()
-saveResponses to tvCache = do
-  cache <- readTVarIO tvCache
-  let keys = HM.keys cache
-  infoM $ "saving " <> (show $ length keys) <> " : " <> show keys
-  DB.insert to $ HM.toList cache
-
-composeSub :: Config -> RichSubCtx -> IO Word
-composeSub conf (SubCtx sequence timingCtx sentences) = do
-  composedSentences <- liftIO $ composeSentence conf sentences
-  return $ T.intercalate "\n" $ subAsArray composedSentences
+composeSub :: Cache -> Level -> RichSubCtx -> T.Text
+composeSub cache level (SubCtx sequence timingCtx sentences) = do
+  let composedSentences = composeSentence cache level sentences
+  T.intercalate "\n" $ subAsArray composedSentences
   where
     subAsArray :: Word -> [Word]
     subAsArray composedSentences = [ seq
@@ -64,51 +63,65 @@ composeTimingCtx (TimingCtx btiming etiming) =
       where
         text = show i
 
-composeSentence :: Config -> [(Sentence, [WordInfos])] -> IO T.Text
-composeSentence conf sentencesInfos = do
-  sentences <- mapConcurrently (translateSentence conf) sentencesInfos :: IO [Sentence]
-  return $ T.intercalate "\n" sentences
+composeSentence :: Cache -> Level -> [(Sentence, [WordInfos])] -> T.Text
+composeSentence cache levelToShow sentencesInfos = do
+  T.intercalate "\n" $ map (translateSentence cache levelToShow) sentencesInfos
 
-translateSentence :: Config -> (Sentence, [WordInfos]) -> IO Sentence
-translateSentence conf (sentence, sentenceInfos) = do
-  translationsProcesses <- mapConcurrently (createTranslationProcess conf) sentenceInfos :: IO [Translations]
-  let renderedTranslation = map (renderTranslation $ levelToShow $ rc conf) translationsProcesses
-  return $ T.intercalate " " $ setCorrectSpacing (T.words sentence) renderedTranslation []
+translateSentence :: Cache -> Level -> (Sentence, [WordInfos]) -> Sentence
+translateSentence cache levelToShow (sentence, sentenceInfos) = do
+  let keysToWis = map toKeyable sentenceInfos :: [(Word, WordInfos)]
+  T.intercalate "\n" $ map (renderWord cache levelToShow) keysToWis
 
-createTranslationProcess :: Config -> WordInfos -> IO (Translations)
-createTranslationProcess =
-  \conf wi@(word, lemma, tag, level) ->
-    if shouldTranslate (levelToShow $ rc conf) wi then do
-      (translator $ rc conf) conf wi
-    else
-      return $ mkTranslations wi []
-  where
-    shouldTranslate :: Level -> WordInfos -> Bool
-    shouldTranslate levelToShow wi@(word, lemma, tag, level) = do
-      level > levelToShow && tag `elem` [Verb, Noun, Adj, Propn, Adv]
-
-{-
-  i: (("whisper", "whisper", Verb, Easy), ["murmurer"])
-  o: "whisper (murmurer)"
--}
-renderTranslation :: Level -> Translations -> Word
-renderTranslation levelToShow (Translations' ((word, _, _, level), translations)) = do
-  if levelToShow < level then
-    format $ translations ^? element 0
+renderWord :: Cache -> Level -> (Word, WordInfos) -> Word
+renderWord cache levelToShow (key, wi@(word, lemma, tag, level)) =
+  if shouldBeTranslated levelToShow wi then
+    let (_, _, trs) = toTranslations cache (key, wi)
+        tr = trs ^? element 0
+    in
+      maybe word (format word) tr
   else
     word
   where
-    format :: Maybe Word -> Word
-    format translation = case translation of
-      Just translation ->
-        if word /= translation then
-          case (T.splitOn ", " translation) of
-            (firstTranslation : otherTranslations) ->
-              "<u>" <> word <> "</u>" <> " (<i>" <> firstTranslation <> "</i>)"
-            _ -> word
-        else
-          word
-      Nothing -> word
+    format :: Word -> Word -> Word
+    format word translation =
+      if word /= translation then
+        case (T.splitOn ", " translation) of
+          (firstTranslation : otherTranslations) ->
+            "<u>" <> word <> "</u>" <> " (<i>" <> firstTranslation <> "</i>)"
+          _ -> word
+      else
+        word
+
+toTranslations :: Cache -> (Word, WordInfos) -> Translations
+toTranslations cache (key, wi@(word, lemma, tag, level)) =
+  let
+    translations = case key `HM.lookup` cache of
+      Nothing -> []
+      Just (mTrs) -> translationsFromValue mTrs wi
+  in
+    (key, wi, translations)
+  where
+    translationsFromValue :: Maybe Value -> WordInfos -> [Word]
+    translationsFromValue mValue (_, _, tag, _) =
+      maybe [] (translationsBasedOnTag tag) mValue
+
+translationsBasedOnTag :: Tag -> Value -> [Word]
+translationsBasedOnTag tag value = do
+  case (fromJSON value :: Result WRResponse) of
+    Error _ -> []
+    Success wrResponse -> do
+      let translations = allTranslations wrResponse
+      let correctTrs = filter (\x -> tag == tPos x) translations
+      if null correctTrs then
+        map tTerm translations
+      else
+        map tTerm correctTrs
+
+saveResponses :: Config -> Language -> Cache -> IO ()
+saveResponses conf toLang cache = do
+  let keys = HM.keys cache
+  infoM $ "saving " <> (show $ length keys) <> " : " <> show keys
+  DB.insert conf "wordreference" toLang $ HM.toList cache
 
 setCorrectSpacing :: [Word] -> [Word] -> [Word] -> [Word]
 setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =

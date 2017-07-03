@@ -1,10 +1,10 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module DB.WordReference (
-  select
+  selectAll
 , insert
-, available
 ) where
 
 import Common
@@ -17,48 +17,35 @@ import qualified Data.ByteString as BS hiding (elem, unpack, filter, map)
 import Data.Aeson.Types
 import Database.PostgreSQL.Simple
 
-select :: Config -> Word -> IO (Maybe Value)
-select conf word = do
-  con <- connectPostgreSQL config
-  responses <- query con q (to $ rc conf, word) :: IO ([Only Value])
+selectAll :: Config -> [Word] -> IO [(Word, Maybe Value)]
+selectAll conf words = do
+  con <- connectPostgreSQL $ dbConfig conf
+  res <- query con q (toLang $ rc conf, In words) :: IO [(Word, Maybe Value)]
   close con
-  return $ resToMaybe responses
+  return res
   where
-    config :: BS.ByteString
-    config = BS.append (BS.append "dbname='" (Encoding.encodeUtf8 $ database $ sc conf)) "'"
-    q = "SELECT response \
-        \FROM wordreference w \
-        \WHERE w.from = 'en' AND w.to = ? AND w.word = ? \
-        \LIMIT 1"
-    resToMaybe :: [Only a] -> Maybe a
-    resToMaybe responses =
-      case responses of
-        [Only i] -> Just i
-        _ -> Nothing
+    q = "SELECT word, response \
+        \FROM translations t \
+        \WHERE t.from_lang = 'en' \
+        \AND t.to_lang = ? \
+        \AND t.word in ? "
 
-available :: StaticConf -> Language -> IO [Word]
-available sc to = do
-  con <- connectPostgreSQL config
-  map unWrapOnly <$> query con q (Only to)
-  where
-    config :: BS.ByteString
-    config = BS.append (BS.append "dbname='" (Encoding.encodeUtf8 $ database sc)) "'"
-    q = "SELECT DISTINCT word \
-        \FROM wordreference w \
-        \WHERE w.from = 'en' AND w.to = ?"
-    unWrapOnly :: Only a -> a
-    unWrapOnly (Only a) = a
-
-insert :: Language -> [(Word, Maybe Value)] -> IO ()
-insert to keysAndValues = do
-  con <- connectPostgreSQL config
+insert :: Config -> Word -> Language -> [(Word, Maybe Value)] -> IO ()
+insert conf site toLang keysAndValues = do
+  con <- connectPostgreSQL $ dbConfig conf
   now <- getCurrentTime
-  executeMany con q $ map (param to now) keysAndValues
+  executeMany con q $ map (param toLang now site) keysAndValues
   return ()
   where
-    config = "dbname='subtitre_dev'"
-    param :: String -> UTCTime -> (Word, Maybe Value) -> (Word, String, Word, Maybe Value, UTCTime, UTCTime)
-    param to now (word, object) =
-      ("en" :: Word, to, word, object, now, now)
-    q = "INSERT INTO wordreference (\"from\", \"to\", \"word\", \"response\", \"created_at\", \"updated_at\") \
+    param :: String ->
+             UTCTime ->
+             Word ->
+             (Word, Maybe Value) ->
+             (Word, String, Word, Word, Maybe Value, UTCTime, UTCTime)
+    param toLang now site (word, object) =
+      ("en" :: Word, toLang, word, site, object, now, now)
+    q = "INSERT INTO translations (\"from_lang\", \"to_lang\", \"word\", \"site\", \"response\", \"created_at\", \"updated_at\") \
         \ values (?, ?, ?, ?, ?, ?) "
+
+dbConfig :: Config -> BS.ByteString
+dbConfig conf = BS.append (BS.append "dbname='" (Encoding.encodeUtf8 $ database $ sc conf)) "'"

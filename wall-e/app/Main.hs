@@ -8,8 +8,8 @@ import Lib
 
 main :: IO ()
 main = do
-  (file:from:to:withLevel:_) <- getArgs
-  runtimeConf <- getRuntimeConf file to (read withLevel)
+  (file:from:toLang:withLevel:_) <- getArgs
+  runtimeConf <- getRuntimeConf file toLang (read withLevel)
   staticConf  <- getStaticConf
   translationsConf <- getTranslationsConf staticConf runtimeConf
   let config = Config runtimeConf staticConf translationsConf

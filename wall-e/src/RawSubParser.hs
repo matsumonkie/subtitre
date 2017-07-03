@@ -4,7 +4,7 @@
 -}
 
 module RawSubParser (
-  parseSubtitlesOfFile
+  RawSubParser.parse
 , parseSubtitles
 ) where
 
@@ -14,7 +14,7 @@ import Prelude()
 import Type
 import Text.Parsec.Combinator
 import qualified Data.Text as T
-import Text.Parsec
+import Text.Parsec as Parsec
 import qualified Data.Text.IO as TIO
 import qualified System.IO as SIO
 import qualified System.IO.Error as SIE
@@ -25,8 +25,8 @@ import Config.App
 import qualified Text.HTML.TagSoup as TS
 import Data.List
 
-parseSubtitlesOfFile :: App [RawSubCtx]
-parseSubtitlesOfFile = do
+parse :: App [RawSubCtx]
+parse = do
   inputFile <- asksR file
   result <- liftIO $ Ex.tryJust invalidArgument (readWith inputFile SIO.utf8) :: App (Either () T.Text)
   content <- liftIO $ either (const $ readWith inputFile SIO.latin1) return result :: App T.Text
@@ -44,7 +44,7 @@ parseSubtitlesOfFile = do
     invalidArgument _ = Nothing
 
 parseSubtitles :: T.Text -> Either ParseError [RawSubCtx]
-parseSubtitles = parse subtitles "game of thrones"
+parseSubtitles = Parsec.parse subtitles "game of thrones"
 
 subtitles :: Parsec T.Text () [RawSubCtx]
 subtitles = do
@@ -98,9 +98,9 @@ timingCtxP = do
   where
     readSeconds = try twoDigits <|> oneDigit
     readMSeconds = try threeDigits <|> twoDigits
-    oneDigit = read <$> Text.Parsec.count 1 digit
-    twoDigits = read <$> Text.Parsec.count 2 digit
-    threeDigits = read <$> Text.Parsec.count 3 digit
+    oneDigit = read <$> Parsec.count 1 digit
+    twoDigits = read <$> Parsec.count 2 digit
+    threeDigits = read <$> Parsec.count 3 digit
     colon = char ':'
     comma = char ','
     separator = (string " --> " <?> "RawSubParser timingCtx separator")
