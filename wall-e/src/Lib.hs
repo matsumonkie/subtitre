@@ -76,4 +76,4 @@ run = do
     save :: T.Text -> App ()
     save content = do
       outputFile <- asksR file
-      liftIO $ TIO.writeFile (outputFile <> ".output") content
+      liftIO $ TIO.writeFile (outputFile <> ".subtitre.srt") content

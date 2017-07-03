@@ -70,7 +70,7 @@ composeSentence cache levelToShow sentencesInfos = do
 translateSentence :: Cache -> Level -> (Sentence, [WordInfos]) -> Sentence
 translateSentence cache levelToShow (sentence, sentenceInfos) = do
   let keysToWis = map toKeyable sentenceInfos :: [(Word, WordInfos)]
-  T.intercalate "\n" $ map (renderWord cache levelToShow) keysToWis
+  T.intercalate " " $ map (renderWord cache levelToShow) keysToWis
 
 renderWord :: Cache -> Level -> (Word, WordInfos) -> Word
 renderWord cache levelToShow (key, wi@(word, lemma, tag, level)) =
