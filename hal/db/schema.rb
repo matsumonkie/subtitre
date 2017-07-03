@@ -15,9 +15,10 @@ ActiveRecord::Schema.define(version: 20170616150824) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "wordreference", force: :cascade do |t|
-    t.string "from"
-    t.string "to"
+  create_table "translations", force: :cascade do |t|
+    t.string "from_lang"
+    t.string "to_lang"
+    t.string "site"
     t.string "word"
     t.json "response"
     t.datetime "created_at", null: false
