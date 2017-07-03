@@ -120,8 +120,8 @@ translationsBasedOnTag tag value = do
 saveResponses :: Config -> Language -> Cache -> IO ()
 saveResponses conf toLang cache = do
   let keys = HM.keys cache
-  infoM $ "saving " <> (show $ length keys) <> " : " <> show keys
-  DB.insert conf "wordreference" toLang $ HM.toList cache
+  infoM $ "saving " <> (show $ length keys)
+  DB.insertAll conf "wordreference" toLang $ HM.toList cache
 
 setCorrectSpacing :: [Word] -> [Word] -> [Word] -> [Word]
 setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =

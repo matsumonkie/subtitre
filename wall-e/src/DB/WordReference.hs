@@ -4,7 +4,7 @@
 
 module DB.WordReference (
   selectAll
-, insert
+, insertAll
 ) where
 
 import Common
@@ -30,10 +30,12 @@ selectAll conf words = do
         \AND t.to_lang = ? \
         \AND t.word in ? "
 
-insert :: Config -> Word -> Language -> [(Word, Maybe Value)] -> IO ()
-insert conf site toLang keysAndValues = do
+insertAll :: Config -> Word -> Language -> [(Word, Maybe Value)] -> IO ()
+insertAll conf site toLang keysAndValues = do
+  infoM "coucou"
   con <- connectPostgreSQL $ dbConfig conf
   now <- getCurrentTime
+  infoM "coucou"
   executeMany con q $ map (param toLang now site) keysAndValues
   return ()
   where
@@ -43,9 +45,22 @@ insert conf site toLang keysAndValues = do
              (Word, Maybe Value) ->
              (Word, String, Word, Word, Maybe Value, UTCTime, UTCTime)
     param toLang now site (word, object) =
-      ("en" :: Word, toLang, word, site, object, now, now)
-    q = "INSERT INTO translations (\"from_lang\", \"to_lang\", \"word\", \"site\", \"response\", \"created_at\", \"updated_at\") \
-        \ values (?, ?, ?, ?, ?, ?) "
+      ("en" :: Word,
+       toLang,
+       site,
+       word,
+       object,
+       now,
+       now)
+    q = "INSERT INTO translations (\
+        \\"from_lang\", \
+        \\"to_lang\", \
+        \\"site\", \
+        \\"word\", \
+        \\"response\", \
+        \\"created_at\", \
+        \\"updated_at\") \
+        \ values (?, ?, ?, ?, ?, ?, ?) "
 
 dbConfig :: Config -> BS.ByteString
 dbConfig conf = BS.append (BS.append "dbname='" (Encoding.encodeUtf8 $ database $ sc conf)) "'"

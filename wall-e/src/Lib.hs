@@ -1,3 +1,4 @@
+{-# LANGUAGE NamedFieldPuns #-}
 module Lib
 ( module All
 , run

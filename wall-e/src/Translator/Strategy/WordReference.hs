@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -28,6 +29,7 @@ import Network.HTTP.Client (HttpException(HttpExceptionRequest))
 import Network.Wreq
 import Network.Wreq.Types as Wreq
 import Type
+import Network.HTTP.Client
 
 fetch :: Config -> Word -> IO (Maybe (Response BSL.ByteString))
 fetch conf@(Config {rc, sc, tc}) toTranslate =
@@ -41,7 +43,12 @@ fetch conf@(Config {rc, sc, tc}) toTranslate =
     infoM $ "fetching online [" <> show toTranslate <> "]"
     catch (Just <$> (getWith opts (T.unpack url))) handler
   where
-    handler :: SomeException -> IO (Maybe (Response BSL.ByteString))
+    handler :: HttpException -> IO (Maybe (Response BSL.ByteString))
     handler ex = do
-      errorM $ "could not fetch online translation: [" <> show toTranslate <> "] with exception : " <> show ex
-      return Nothing
+      case ex of
+        HttpExceptionRequest _ (TooManyRedirects _) -> do
+          errorM $ "too many redirects, could not fetch online translation: [" <> show toTranslate
+          return Nothing
+        _ -> do
+          errorM $ "could not fetch online translation: [" <> show toTranslate <> "] with exception : " <> show ex
+          return Nothing
