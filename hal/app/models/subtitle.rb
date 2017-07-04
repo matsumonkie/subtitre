@@ -5,6 +5,7 @@ class Subtitle
   include ActiveModel::Model
 
   attr_accessor :file
+
   enumerize :mode, in: [:easy, :normal, :hard],
             default: :easy,
             i18n_scope: "mode"

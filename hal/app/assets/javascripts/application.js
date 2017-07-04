@@ -40,16 +40,29 @@ $(document).ready(function() {
   window.currentSlide = slider.slick("slickCurrentSlide");
 
   (function submitFormWhenFileSelected() {
+
     $("#subtitle_file").change(function () {
-      var fileName = $(this).val();
-      $("form#new_subtitle").submit()
+      $("#fake-upload-button").addClass('is-loading');
+      $("form#new_subtitle").submit();
+
+      var doOnce = function() {
+        var subtitreDownloaded = function() {
+          return document.cookie.replace(/(?:(?:^|.*;\s*)subtitreDownloaded\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+        }
+        if (subtitreDownloaded() === "true") {
+          $("#fake-upload-button").removeClass('is-loading');
+          document.cookie = 'subtitreDownloaded=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+          clearInterval(window.intervalId);
+        }
+      }
+      window.intervalId = setInterval(doOnce, 1000);
     });
   }());
 
   (function changeMode() {
     $(".label-mode-selection").click(function () {
       $(".label-mode-selection").removeClass('is-active is-warning');
-      $(this).addClass('is-active  is-warning');
+      $(this).addClass('is-active is-warning');
     });
   }());
 

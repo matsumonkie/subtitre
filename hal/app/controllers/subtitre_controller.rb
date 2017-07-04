@@ -12,9 +12,12 @@ class SubtitreController < ApplicationController
       dir = File.dirname(tmp.path)
       output = File.basename(tmp.path)
 
-      system(cmd(tmp.path, @subtitle.mode_text))
+      system(cmd(tmp.path, @subtitle.mode))
+      @subtitre = Subtitre.new(original_filename: @subtitle.file.original_filename,
+                               file: File.new("#{dir}/#{output}.subtitre.srt"))
 
-      @subtitre = Subtitre.new(file: File.new("#{dir}/#{output}.output"))
+      cookies[:subtitreDownloaded] = true
+      send_file(@subtitre.file, filename: @subtitre.original_filename)
     end
   end
 
