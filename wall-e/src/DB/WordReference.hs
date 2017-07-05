@@ -10,6 +10,7 @@ module DB.WordReference (
 import Common
 import Prelude()
 
+import qualified Data.Text as T
 import Type
 import Config.App
 import qualified Data.Text.Encoding as Encoding
@@ -20,7 +21,7 @@ import Database.PostgreSQL.Simple
 selectAll :: Config -> [Word] -> IO [(Word, Maybe Value)]
 selectAll conf words = do
   con <- connectPostgreSQL $ dbConfig conf
-  res <- query con q (toLang $ rc conf, In words) :: IO [(Word, Maybe Value)]
+  res <- query con q (toLang $ rc conf, In $ map T.toLower words) :: IO [(Word, Maybe Value)]
   close con
   return res
   where
@@ -46,7 +47,7 @@ insertAll conf site toLang keysAndValues = do
       ("en" :: Word,
        toLang,
        site,
-       word,
+       T.toLower word,
        object,
        now,
        now)

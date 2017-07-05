@@ -69,7 +69,9 @@ composeSentence cache levelToShow sentencesInfos = do
 translateSentence :: Cache -> Level -> (Sentence, [WordInfos]) -> Sentence
 translateSentence cache levelToShow (sentence, sentenceInfos) = do
   let keysToWis = map toKeyable sentenceInfos :: [(Word, WordInfos)]
-  T.intercalate " " $ map (renderWord cache levelToShow) keysToWis
+  let unformatedSentence = map (renderWord cache levelToShow) keysToWis
+  T.intercalate " " $
+    setCorrectSpacing (T.words sentence) unformatedSentence []
 
 renderWord :: Cache -> Level -> (Word, WordInfos) -> Word
 renderWord cache levelToShow (key, wi@(word, lemma, tag, level)) =
@@ -94,7 +96,7 @@ renderWord cache levelToShow (key, wi@(word, lemma, tag, level)) =
 toTranslations :: Cache -> (Word, WordInfos) -> Translations
 toTranslations cache (key, wi@(word, lemma, tag, level)) =
   let
-    translations = case key `HM.lookup` cache of
+    translations = case (T.toLower key) `HM.lookup` cache of
       Nothing -> []
       Just (mTrs) -> translationsFromValue mTrs wi
   in

@@ -42,13 +42,12 @@ translate richSubCtxs = do
   let notCached = getNotCached offlineCache words
 
   onlineResponses <- liftIO $ mapConcurrently (translateOnline conf) notCached
---  IO (Word, Maybe Json)
   liftIO $ saveResponses conf (toLang $ rc conf) onlineResponses
   let onlineCache = HM.fromList onlineResponses
   return $ offlineCache `HM.union` onlineCache
   where
     getNotCached offlineCache words =
-      filter (\(k, _) -> not $ k `HM.member` offlineCache) words
+      filter (\(k, _) -> not $ (T.toLower k) `HM.member` offlineCache) words
     saveResponses :: Config -> Language -> [(Word, Maybe Json)] -> IO ()
     saveResponses conf toLang responses = do
       infoM $ "saving " <> (show $ length responses) <> " new words"
