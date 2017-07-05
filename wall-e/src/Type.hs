@@ -24,6 +24,7 @@ module Type (
 , Cache
 , TakenCare
 , Language
+, Json
 ) where
 
 import Common
@@ -53,6 +54,7 @@ data SubCtx a = SubCtx Sequence TimingCtx a deriving (Show, Eq)
 type RawSubCtx  = SubCtx [Sentence]
 type RichSubCtx = SubCtx [(Sentence, [WordInfos])]
 
+type Json = Value
 type Language = String
 type Word = T.Text
 type Lemma = T.Text

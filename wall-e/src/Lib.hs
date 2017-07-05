@@ -1,4 +1,6 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE NamedFieldPuns #-}
+
 module Lib
 ( module All
 , run
@@ -66,9 +68,13 @@ getTranslationsConf sc rc = do
 run :: App T.Text
 run = do
   setLogger
+  liftIO $ infoM "parsing"
   parsed       <- parse
+  liftIO $ infoM "structurizing"
   structurized <- structurize parsed
+  liftIO $ infoM "translating"
   cache        <- translate structurized
+  liftIO $ infoM "composing"
   composed     <- compose cache structurized
   save composed
   return composed
@@ -76,4 +82,7 @@ run = do
     save :: T.Text -> App ()
     save content = do
       outputFile <- asksR file
-      liftIO $ TIO.writeFile (outputFile <> ".subtitre.srt") content
+      let path = outputFile <> ".subtitre.srt"
+      liftIO $ do
+        infoM $ show path
+        TIO.writeFile path content

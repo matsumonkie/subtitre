@@ -32,7 +32,6 @@ compose cache subCtxs = do
   levelToShow <- asksR levelToShow
   conf <- ask
   let composed = map (composeSub cache levelToShow) subCtxs :: [Word]
-  liftIO $ saveResponses conf (toLang $ rc conf) cache
   return $ T.intercalate "\n\n" composed
 
 composeSub :: Cache -> Level -> RichSubCtx -> T.Text
@@ -116,12 +115,6 @@ translationsBasedOnTag tag value = do
         map tTerm translations
       else
         map tTerm correctTrs
-
-saveResponses :: Config -> Language -> Cache -> IO ()
-saveResponses conf toLang cache = do
-  let keys = HM.keys cache
-  infoM $ "saving " <> (show $ length keys)
-  DB.insertAll conf "wordreference" toLang $ HM.toList cache
 
 setCorrectSpacing :: [Word] -> [Word] -> [Word] -> [Word]
 setCorrectSpacing a@(a1:as) (b1:b2:bs) acc =

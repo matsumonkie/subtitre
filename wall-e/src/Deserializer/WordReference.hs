@@ -50,10 +50,16 @@ instance FromJSON WRResponse where
     return $ WRResponse { terms = terms }
     where
       allWRTerms :: [(Word, Value)] -> Parser [(Word, WRTerm)]
-      allWRTerms entries = catMaybes <$> mapM parseWRTerm entries
+      allWRTerms entries =
+        if (any (isTranslation . fst) entries) then
+          catMaybes <$> mapM parseWRTerm entries
+        else
+          fail "nope nope nope"
+      isTranslation :: Word -> Bool
+      isTranslation key = "term" `T.isPrefixOf` key
       parseWRTerm :: (Word, Value) -> Parser (Maybe (Word, WRTerm))
       parseWRTerm (key, value) =
-        if "term" `T.isPrefixOf` key then do
+        if isTranslation key then do
           v <- parseJSON value
           return $ Just (key, v)
         else

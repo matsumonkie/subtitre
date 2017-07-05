@@ -36,13 +36,23 @@ translate richSubCtxs = do
   levelToShow <- asksR levelToShow
   let words = wordsToTranslate levelToShow richSubCtxs
   offlineCache <- liftIO $ cacheFromDB conf words
+  liftIO $
+    infoM $ (show $ length words) <> " words to translate " <>
+    "with " <> (show $ HM.size offlineCache) <> " words already cached "
   let notCached = getNotCached offlineCache words
-  onlineCache <- liftIO $ HM.fromList <$> mapConcurrently (translateOnline conf) notCached
 
+  onlineResponses <- liftIO $ mapConcurrently (translateOnline conf) notCached
+--  IO (Word, Maybe Json)
+  liftIO $ saveResponses conf (toLang $ rc conf) onlineResponses
+  let onlineCache = HM.fromList onlineResponses
   return $ offlineCache `HM.union` onlineCache
   where
     getNotCached offlineCache words =
       filter (\(k, _) -> not $ k `HM.member` offlineCache) words
+    saveResponses :: Config -> Language -> [(Word, Maybe Json)] -> IO ()
+    saveResponses conf toLang responses = do
+      infoM $ "saving " <> (show $ length responses) <> " new words"
+      DB.insertAll conf "wordreference" toLang responses
 
 wordsToTranslate :: Level -> [RichSubCtx] -> [(Word, WordInfos)]
 wordsToTranslate levelToShow richSubCtxs =
@@ -86,25 +96,23 @@ cacheFromDB :: Config -> [(Word, WordInfos)] -> IO Cache
 cacheFromDB conf keysToWis = do
   HM.fromList <$> DB.selectAll conf (map fst keysToWis)
 
-translateOnline :: Config -> (Word, WordInfos) -> IO (Word, Maybe Value)
+translateOnline :: Config -> (Word, WordInfos) -> IO (Word, Maybe Json)
 translateOnline conf@(Config {rc, sc, tc})  (key, wi) = do
   let onlineRequest = currentNbOfOnlineRequest tc
-
   atomically $ do
     waitForPool onlineRequest $ wordReferencePool sc
     acquireRequestPool onlineRequest
   response <- WRStrategy.fetch conf key
   atomically $ releaseRequestPool onlineRequest
 
-  let json = response >>= body >>= decode >>= filterValidResponse :: Maybe Value
-
+  let json = response >>= body >>= decode >>= filterValidResponse :: Maybe Json
   return $ (key, json)
   where
     body :: Response BSL.ByteString -> Maybe BSL.ByteString
     body response = do
       return $ response ^. responseBody
 
-filterValidResponse :: Value -> Maybe Value
+filterValidResponse :: Json -> Maybe Json
 filterValidResponse json =
   case (fromJSON json :: Result WRResponse) of
     Success _ -> Just json

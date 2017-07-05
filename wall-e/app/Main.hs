@@ -14,5 +14,4 @@ main = do
   translationsConf <- getTranslationsConf staticConf runtimeConf
   let config = Config runtimeConf staticConf translationsConf
   subtitle <- runExceptT (runReaderT run config)
---  pPrint subtitle
   return ()
