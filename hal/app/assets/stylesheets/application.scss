@@ -39,9 +39,13 @@ $salmon:      #FFA985;
 #header {
   @include background($main-orange);
 
-  .nav-right a {
+  .navbar {
     @include background($salmon);
-    margin: auto;
+  }
+
+  #logo {
+    margin-left: 40px;
+    font-size: 1.6em;
   }
 }
 

@@ -43,7 +43,7 @@ GEM
     arel (8.0.0)
     bindex (0.5.0)
     builder (3.2.3)
-    bulma-rails (0.4.2)
+    bulma-rails (0.4.3)
       sass (~> 3.2)
     byebug (9.0.6)
     capybara (2.14.4)
@@ -134,7 +134,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (12.0.0)
-    rb-fsevent (0.9.8)
+    rb-fsevent (0.10.2)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
     rspec-core (3.6.0)
@@ -204,7 +204,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bulma-rails (~> 0.4.2)
+  bulma-rails (~> 0.4)
   byebug
   capybara (~> 2.13)
   coffee-rails (~> 4.2)
