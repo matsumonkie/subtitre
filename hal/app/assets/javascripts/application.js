@@ -41,6 +41,12 @@ $(document).ready(function() {
 
   (function submitFormWhenFileSelected() {
 
+
+    $("#fake-upload-button").mouseup(function () {
+      // select file modal
+      document.getElementById('subtitle_file').click()
+    })
+
     $("#subtitle_file").change(function () {
       $("#fake-upload-button").addClass('is-loading');
       $("form#new_subtitle").submit();
