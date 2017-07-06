@@ -6,7 +6,6 @@ class CreateTranslations < ActiveRecord::Migration[5.1]
       t.string :site
       t.string :word
       t.json :response
-      t.string :translations, array: true
 
       t.timestamps
     end

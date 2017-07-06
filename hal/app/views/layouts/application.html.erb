@@ -13,31 +13,10 @@
   </head>
 
   <body>
-
     <section class="hero is-fullheight">
 
       <div class="hero-head" id="header">
-        <header class="nav">
-          <div class="container">
-            <div class="nav-left">
-              <a class="nav-item">
-                <span class="main-title">
-                  <u>Sub</u>(<i>titre</i>)
-                </span>
-              </a>
-            </div>
-            <span class="nav-toggle">
-              <span></span>
-              <span></span>
-              <span></span>
-            </span>
-            <div class="nav-right nav-menu">
-              <a class="nav-item is-active"></a>
-              <a class="nav-item"></a>
-              <a class="nav-item"></a>
-            </div>
-          </div>
-        </header>
+        <%= render partial: 'layouts/header' %>
       </div>
 
       <div id="body" class="hero-body has-text-centered">

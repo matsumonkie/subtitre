@@ -38,6 +38,11 @@ $salmon:      #FFA985;
 
 #header {
   @include background($main-orange);
+
+  .nav-right a {
+    @include background($salmon);
+    margin: auto;
+  }
 }
 
 #body {
