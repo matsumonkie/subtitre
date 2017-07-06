@@ -21,7 +21,6 @@ ActiveRecord::Schema.define(version: 20170616150824) do
     t.string "site"
     t.string "word"
     t.json "response"
-    t.string "translations", array: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

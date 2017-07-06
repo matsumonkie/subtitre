@@ -7,6 +7,5 @@ Translation.create(
   to_lang: "fr",
   site: "wordreference",
   word: "attack",
-  translations: ["attaque, agression", "attaque", "assault", "crise"],
   response: readJSON("wordreference.attack.json")
 )
