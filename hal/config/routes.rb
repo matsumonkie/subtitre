@@ -2,5 +2,5 @@
 Rails.application.routes.draw do
 
   root to: "subtitre#index"
-  resources :subtitre, only: [:index, :create]
+  resources :subtitre, only: [:index, :create, :render]
 end

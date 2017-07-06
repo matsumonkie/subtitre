@@ -11,8 +11,8 @@ class SubtitreController < ApplicationController
     @subtitle.with_temp_file do |tmp|
       dir = File.dirname(tmp.path)
       output = File.basename(tmp.path)
-
-      system(cmd(tmp.path, @subtitle.mode))
+      puts cmd(tmp.path, @subtitle.translate_to, @subtitle.mode)
+      system(cmd(tmp.path, @subtitle.translate_to, @subtitle.mode))
       @subtitre = Subtitre.new(original_filename: @subtitle.file.original_filename,
                                file: File.new("#{dir}/#{output}.subtitre.srt"))
 
@@ -23,11 +23,11 @@ class SubtitreController < ApplicationController
 
   private
 
-  def cmd input_file, level
-    "cd /home/iori/work/subtitre/wall-e && stack exec subtitre-exe #{input_file} en fr #{level}"
+  def cmd input_file, translate_to, level
+    "cd /home/iori/work/subtitre/wall-e && stack exec subtitre-exe #{input_file} en #{translate_to} #{level}"
   end
 
   def subtitle_params
-    params.require(:subtitle).permit(:file, :mode)
+    params.require(:subtitle).permit(:file, :mode, :translate_to)
   end
 end

@@ -7,10 +7,10 @@ class Subtitle
   attr_accessor :file
 
   enumerize :mode, in: [:easy, :normal, :hard],
-            default: :easy,
+            default: :hard,
             i18n_scope: "mode"
-  enumerize :translate_to, in: [:french, :spanish],
-            default: :french,
+  enumerize :translate_to, in: Language.keys,
+            default: :fr,
             i18n_scope: "translate_to"
 
   def with_temp_file

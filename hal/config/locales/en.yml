@@ -4,8 +4,20 @@ en:
     normal: Normal
     hard: Hard
   translate_to:
-    french: French
-    spanish: Spanish
+    ar: Arab
+    cz: Czech
+    en: English
+    es: Spanish
+    fr: French
+    gr: Greek
+    it: Italian
+    ja: Japanese
+    ko: Korean
+    po: Polish
+    pt: Portuguese
+    ro: Romanian
+    tr: Turkish
+    zh: Chinese
   sentence:
     select_language: Translate to
     select_subtitle_file: Upload a Subtitle File

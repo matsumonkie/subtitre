@@ -41,7 +41,6 @@ $(document).ready(function() {
 
   (function submitFormWhenFileSelected() {
 
-
     $("#fake-upload-button").mouseup(function () {
       // select file modal
       document.getElementById('subtitle_file').click()
@@ -57,6 +56,7 @@ $(document).ready(function() {
         }
         if (subtitreDownloaded() === "true") {
           $("#fake-upload-button").removeClass('is-loading');
+          $("#subtitle_file").val('');
           document.cookie = 'subtitreDownloaded=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
           clearInterval(window.intervalId);
         }

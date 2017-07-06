@@ -4,8 +4,20 @@ en:
     normal: Normal
     hard: Difficile
   translate_to:
-    french: Français
-    spanish: Espagnol
+    ar: Arabe
+    cz: Tchèque
+    en: Anglais
+    es: Espagnol
+    fr: Français
+    gr: Grec
+    it: Italien
+    ja: Japonais
+    ko: Coréen
+    po: Polandais
+    pt: Portuguais
+    ro: Roumains
+    tr: Turque
+    zh: Chinois
   sentence:
     select_language: Traduire en
     select_subtitle_file: Sélectionner un Fichier de Sous-titre

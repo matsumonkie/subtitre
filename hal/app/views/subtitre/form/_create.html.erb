@@ -27,19 +27,22 @@
     <br/>
     <br/>
 
-    <p id="dropdown-language" class="control has-icons-left">
-      <span class="select is-horizontal is-medium">
+    <div class="field has-addons has-addons-centered">
+      <p class="control button is-static is-medium">
         <span class="icon is-medium is-left">
           <i class="fa fa-globe"></i>
         </span>
-        <select>
-          <option><%= I18n.t 'sentence.select_language' %></option>
-          <%- Subtitle.translate_to.options.each do |label, key| %>
-            <option> <%= label %> </option>
-          <% end %>
-        </select>
-      </span>
-    </p>
+        <span>
+          <%= I18n.t 'sentence.select_language' %> :
+        </span>
+      </p>
+      <p id="dropdown-language" class="control has-icons-left">
+        <span class="select is-medium">
+          <%= f.select(:translate_to, Subtitle.translate_to.options) %>
+        </span>
+      </p>
+    </div>
+
 
     <br/>
 
