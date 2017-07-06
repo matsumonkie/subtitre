@@ -49,13 +49,13 @@ $salmon:      #FFA985;
 
   .form-upload {
     /* dont show ugly radio button */
-    #subtitle_mode_easy   { display: none; }
-    #subtitle_mode_normal { display: none; }
-    #subtitle_mode_hard   { display: none; }
+    #subtitle_level_easy   { display: none; }
+    #subtitle_level_normal { display: none; }
+    #subtitle_level_hard   { display: none; }
 
-    #label_mode_easy   {}
-    #label_mode_normal {}
-    #label_mode_hard   {}
+    #label_level_easy   {}
+    #label_level_normal {}
+    #label_level_hard   {}
   }
 
   .thumbnails {

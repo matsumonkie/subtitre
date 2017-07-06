@@ -3,7 +3,8 @@ require 'tempfile'
 class SubtitreController < ApplicationController
 
   def index
-    @subtitle = Subtitle.new
+    @subtitle = Subtitle.new(translate_to: cookies[:prefered_language_dest],
+                             level: cookies[:prefered_level])
   end
 
   def create
@@ -11,11 +12,12 @@ class SubtitreController < ApplicationController
     @subtitle.with_temp_file do |tmp|
       dir = File.dirname(tmp.path)
       output = File.basename(tmp.path)
-      puts cmd(tmp.path, @subtitle.translate_to, @subtitle.mode)
-      system(cmd(tmp.path, @subtitle.translate_to, @subtitle.mode))
+      system(cmd(tmp.path, @subtitle.translate_to, @subtitle.level))
       @subtitre = Subtitre.new(original_filename: @subtitle.file.original_filename,
                                file: File.new("#{dir}/#{output}.subtitre.srt"))
 
+      cookies[:prefered_language_dest] = @subtitle.translate_to
+      cookies[:prefered_level] = @subtitle.level
       cookies[:subtitreDownloaded] = true
       send_file(@subtitre.file, filename: @subtitre.original_filename)
     end
@@ -28,6 +30,6 @@ class SubtitreController < ApplicationController
   end
 
   def subtitle_params
-    params.require(:subtitle).permit(:file, :mode, :translate_to)
+    params.require(:subtitle).permit(:file, :level, :translate_to)
   end
 end

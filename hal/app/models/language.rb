@@ -29,5 +29,9 @@ class Language
     def values
       all.values
     end
+
+    def valid? key
+      keys.include? key
+    end
   end
 end

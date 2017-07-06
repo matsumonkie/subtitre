@@ -6,12 +6,18 @@ class Subtitle
 
   attr_accessor :file
 
-  enumerize :mode, in: [:easy, :normal, :hard],
+  enumerize :level, in: [:easy, :normal, :hard],
             default: :hard,
-            i18n_scope: "mode"
+            i18n_scope: "level"
   enumerize :translate_to, in: Language.keys,
             default: :fr,
             i18n_scope: "translate_to"
+
+  def initialize *args
+    super
+    self.translate_to = Subtitle.translate_to.default_value if ! self.translate_to
+    self.level = Subtitle.level.default_value if ! self.level
+  end
 
   def with_temp_file
     begin
