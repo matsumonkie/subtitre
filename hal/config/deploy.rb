@@ -3,15 +3,10 @@ lock "3.8.2"
 
 set :application, "subtitre"
 set :repo_url, "https://github.com/matsumonkie/subtitre.git"
-
 set :chruby_ruby, 'ruby-2.4.1'
 
-set :deploy_via, "remote_cache_with_project_root"
 set :deploy_to, "~deploy/#{fetch(:application)}"
-
-set :project_root, "hal"
-
-set :current_release, "#{fetch(:current_release)}/hal/"
+set :repo_tree, "#{fetch(:current_release)}/hal/"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
