@@ -6,13 +6,15 @@ set :repo_url, "https://github.com/matsumonkie/subtitre.git"
 
 set :chruby_ruby, 'ruby-2.4.1'
 
+set :deploy_via, "remote_cache_with_project_root"
 set :deploy_to, "~deploy/#{fetch(:application)}"
+
+set :project_root, "hal"
+
+set :current_release, "#{fetch(:current_release)}/hal/"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
-
-# Default deploy_to directory is /var/www/my_app_name
-# set :deploy_to, "/var/www/my_app_name"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
@@ -25,7 +27,7 @@ set :deploy_to, "~deploy/#{fetch(:application)}"
 # set :pty, true
 
 # Default value for :linked_files is []
-# append :linked_files, "config/database.yml", "config/secrets.yml"
+append :linked_files, "config/database.yml", "config/secrets.yml"
 
 # Default value for linked_dirs is []
 # append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system"
