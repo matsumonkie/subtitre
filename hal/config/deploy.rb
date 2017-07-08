@@ -6,7 +6,7 @@ set :repo_url, "https://github.com/matsumonkie/subtitre.git"
 set :chruby_ruby, 'ruby-2.4.1'
 
 set :deploy_to, "~deploy/#{fetch(:application)}"
-set :repo_tree, "#{fetch(:current_release)}/hal/"
+set :repo_tree, "hal"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
