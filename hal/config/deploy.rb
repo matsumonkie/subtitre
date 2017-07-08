@@ -1,8 +1,12 @@
 # config valid only for current version of Capistrano
 lock "3.8.2"
 
-set :application, "my_app_name"
-set :repo_url, "git@example.com:me/my_repo.git"
+set :application, "subtitre"
+set :repo_url, "https://github.com/matsumonkie/subtitre.git"
+
+set :chruby_ruby, 'ruby-2.4.1'
+
+set :deploy_to, "~deploy/#{fetch(:application)}"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
