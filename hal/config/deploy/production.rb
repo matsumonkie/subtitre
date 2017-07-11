@@ -8,7 +8,6 @@
 # server "db.example.com", user: "deploy", roles: %w{db}
 
 server 'subtitre.com', user: "deploy", roles: %w{app db web} # no need to set SSH configs.
-set :stage, :production
 
 # role-based syntax
 # ==================
