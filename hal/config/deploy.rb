@@ -37,10 +37,10 @@ append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/syst
 #set :puma_rackup, -> { File.join(current_path, 'config.ru') }
 set :puma_state, "#{shared_path}/tmp/pids/puma.state"
 set :puma_pid, "#{shared_path}/tmp/pids/puma.pid"
-set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"    #accept array for multi-bind
+set :puma_bind, "unix://#{shared_path}/tmp/sockets/#{fetch(:application)}-puma.sock"    #accept array for multi-bind
 #set :puma_control_app, false
 #set :puma_default_control_app, "unix://#{shared_path}/tmp/sockets/pumactl.sock"
-set :puma_conf, "#{shared_path}/puma.rb"
+set :puma_conf, "/home/deploy/subtitre/shared/puma.rb" # path needs to be absolute, don't use #{shared_path} var
 set :puma_access_log, "#{shared_path}/log/puma_access.log"
 set :puma_error_log, "#{shared_path}/log/puma_error.log"
 set :puma_role, :app
