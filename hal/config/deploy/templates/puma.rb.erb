@@ -1,6 +1,7 @@
 #!/usr/bin/env puma
 
-directory '<%= current_path %>'
+#directory '<%= current_path %>'
+directory '/home/deploy/subtitre/current'
 rackup "<%=fetch(:puma_rackup)%>"
 environment '<%= fetch(:puma_env) %>'
 <% if fetch(:puma_tag) %>
