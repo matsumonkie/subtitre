@@ -3,10 +3,9 @@ lock "3.8.2"
 
 set :application, "subtitre"
 set :repo_url, "https://github.com/matsumonkie/subtitre.git"
-set :chruby_ruby, 'ruby-2.4.1'
-
-set :deploy_to, "~deploy/#{fetch(:application)}"
 set :repo_tree, "hal"
+set :deploy_to, "~deploy/#{fetch(:application)}"
+set :chruby_ruby, 'ruby-2.4.1'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -51,6 +50,8 @@ set :puma_init_active_record, false
 set :puma_preload_app, false
 set :puma_daemonize, true
 set :puma_tag, fetch(:application)
+
+after :deploy, "walle:ubuild"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
