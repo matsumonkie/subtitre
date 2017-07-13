@@ -2,7 +2,7 @@
 
 module RawSubParserSpec (main, spec) where
 
-import Text.Parsec
+import qualified Text.Parsec as P
 import Test.Hspec
 import Data.Functor
 import Type
@@ -31,17 +31,16 @@ spec = do
           parseSubtitles (arg <> "\nworld") `shouldBe` Right [res ["(Hello)", "world"]]
         it "multiple sub" $ do
           parseSubtitles (multipleSubs) `shouldBe` Right [res ["hello"], res ["world"]]
-
       context "real subtitles" $ do
         it "parses real subtitles" $ do
           parseFile sherlock >>= satisfyIsRight
           parseFile mrRobot >>= satisfyIsRight
-
         it "with bom" $ do
           parseFile house >>= satisfyIsRight
         it "with ascii & CRLF" $ do
           parseFile gameOfThrones >>= satisfyIsRight
-
+        it "with multiple back to back new lines" $ do
+          parseFile theOffice >>= satisfyIsRight
       context "Latin-1" $ do
         it "parses weird characters" $ do
           parseFile friends >>= satisfyIsRight
@@ -50,19 +49,21 @@ sherlock = "sherlock.srt"
 mrRobot = "mr. robot.srt"
 friends = "friends.srt"
 house = "house.srt"
+theOffice = "theOffice.srt"
 gameOfThrones = "game of thrones.srt"
 
 parseFile :: FilePath -> IO (Either [AppError] [RawSubCtx])
 parseFile file =
   let
-    runtimeConf = RuntimeConf { translator = undefined
-                              , levelSets = undefined
+    runtimeConf = RuntimeConf { levelSets = undefined
                               , levelToShow = undefined
-                              , dir = "test/assets"
-                              , file = file
+                              , file = "test/assets/" <> file
+                              , toLang = undefined
+                              , logLevel = undefined
+                              , logFormatter = undefined
                               }
-    config = Config(runtimeConf, undefined)
-  in runExceptT (runReaderT parseSubtitlesOfFile config) :: IO (Either [AppError] [RawSubCtx])
+    config = Config { rc = runtimeConf }
+  in runExceptT (runReaderT parse config) :: IO (Either [AppError] [RawSubCtx])
 
 arg = "1\n\
       \00:00:26,722 --> 00:00:29,023\n\
