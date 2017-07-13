@@ -25,7 +25,6 @@ import Translator.Translate as All
 import Type as All
 
 import Control.Concurrent.STM
-import qualified DB.WordReference as DB
 import qualified Data.HashMap.Strict as HM
 import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
