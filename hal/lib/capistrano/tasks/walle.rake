@@ -6,8 +6,6 @@ namespace :walle do
   task :ubuild do
     on roles(:app) do
       within "#{deploy_to}" do
-        #execute :rm, "-fr", WDIR
-        #execute :mkdir, "-p", WDIR
         within "./repo" do
           execute :git, :archive, :master, WDIR, "|", "/usr/bin/env", "tar", "-x", "--strip-components", "1", "-f", "-", "-C", "~deploy/subtitre/wall-e/"
         end
