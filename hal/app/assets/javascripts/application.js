@@ -15,13 +15,27 @@
 //= require jquery
 //= require_tree .
 
-$(document).ready(function() {
+$(document).on('turbolinks:load', function() {
 
-  delay = 400;
+  delay = 700;
+
+  whichInitialLevel = function() {
+    var id = $('label.is-active').prop("id");
+
+    if(id == "label-level-easy") {
+      return 0;
+    } else if (id == "label-level-medium") {
+      return 1;
+    } else {
+      return 2;
+    }
+  }
 
   slider = $(".slider").slick({
     speed: delay,
-    cssEase: 'linear'
+    fade: true,
+    cssEase: 'linear',
+    initialSlide: whichInitialLevel(),
   });
 
   moveTo = function(slider, index, changeCurrentSlide) {
