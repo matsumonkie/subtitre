@@ -18,11 +18,13 @@
 
 <div class="form-upload is-small">
   <%= form_for @subtitle, url: subtitre_index_path, html: { class: "" } do |f| %>
-    <%- Subtitle.level.options.each do |label, key| %>
-      <%= f.radio_button(:level, key) %>
-      <%- active = (@subtitle.level == key) ? "is-active is-warning" : "" %>
-      <%= f.label("level_#{key}", "#{label}", class: "label-level-selection button is-medium #{active}", id: "label-level-#{key}") %>
-    <% end %>
+    <div style="display:none">
+      <%- Subtitle.level.options.each do |label, key| %>
+        <%= f.radio_button(:level, key) %>
+        <%- active = (@subtitle.level == key) ? "is-active is-warning" : "" %>
+        <%= f.label("level_#{key}", "#{label}", class: "label-level-selection button is-medium #{active}", id: "label-level-#{key}") %>
+      <% end %>
+    </div>
 
     <br/>
     <br/>

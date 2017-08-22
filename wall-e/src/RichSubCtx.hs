@@ -30,8 +30,15 @@ structurize allRawSubCtx = do
   let parsed      = map (parse levelSets) unmerged
   let richSubCtxs = mapM toRichSubCtx (zip allRawSubCtx parsed) :: Either [ParseError] [RichSubCtx]
   case richSubCtxs of
-    Left pes -> throwError $ map AppError pes
-    Right rs -> return rs
+    Left pes -> do
+      liftIO $ infoM "error"
+--      liftIO $ infoM $ show content
+--      liftIO $ infoM $ show unmerged !! 0
+--      liftIO $ infoM $ show parsed !! 0
+      liftIO $ infoM $ show pes
+      throwError $ map AppError pes
+    Right rs -> do
+      return rs
 
 {-
 i: ["hello \nworld", "it's me"]
