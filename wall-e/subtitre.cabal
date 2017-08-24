@@ -17,11 +17,13 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     Lib
+                     , AssetAsSet
                      , Common
                      , Composer.RawSubCtx
                      , Composer.RichSubCtx
                      , Config.App
                      , DB.WordReference
+                     , DontTranslate
                      , Deserializer.WordReference
                      , Deserializer.Yandex
                      , LevelSet

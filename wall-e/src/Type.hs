@@ -19,7 +19,7 @@ module Type (
 , Translations
 , Lemma
 , Level(..)
-, LevelSet
+, TextSet
 , LevelSets(..)
 , Cache
 , TakenCare
@@ -91,8 +91,9 @@ instance Read Level where
       strValMap :: [(String, a)] -> [ReadPrec a]
       strValMap = map (\(x, y) -> lift $ string x >> return y)
 
-type LevelSet = HS.HashSet T.Text
-data LevelSets = LevelSets (LevelSet, LevelSet, LevelSet) deriving (Show)
+type Set = HS.HashSet
+type TextSet = Set T.Text
+data LevelSets = LevelSets (TextSet, TextSet, TextSet) deriving (Show)
 
 type Cache = HM.HashMap Word (Maybe Value)
 type SetKey = TVar [T.Text]

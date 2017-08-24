@@ -23,20 +23,19 @@ import Data.Maybe
 import qualified Data.Text as T hiding (map)
 import Deserializer.WordReference
 import Network.Wreq
-import qualified Translator.Strategy.WordReference as WRStrategy
 import Translator.Translate
 import Type
 
 compose :: Cache -> [RichSubCtx] -> App T.Text
 compose cache subCtxs = do
-  levelToShow <- asksR levelToShow
-  conf <- ask
-  let composed = map (composeSub cache levelToShow) subCtxs :: [Word]
+  let levelToShow = Hard
+  dontTranslate <- asksR dontTranslate
+  let composed = map (composeSub cache levelToShow dontTranslate) subCtxs :: [Word]
   return $ T.intercalate "\n\n" composed
 
-composeSub :: Cache -> Level -> RichSubCtx -> T.Text
-composeSub cache level (SubCtx sequence timingCtx sentences) = do
-  let composedSentences = composeSentence cache level sentences
+composeSub :: Cache -> Level -> TextSet -> RichSubCtx -> T.Text
+composeSub cache level dontTranslate (SubCtx sequence timingCtx sentences) = do
+  let composedSentences = composeSentence cache level dontTranslate sentences
   T.intercalate "\n" $ subAsArray composedSentences
   where
     subAsArray :: Word -> [Word]
@@ -62,20 +61,20 @@ composeTimingCtx (TimingCtx btiming etiming) =
       where
         text = show i
 
-composeSentence :: Cache -> Level -> [(Sentence, [WordInfos])] -> T.Text
-composeSentence cache levelToShow sentencesInfos = do
-  T.intercalate "\n" $ map (translateSentence cache levelToShow) sentencesInfos
+composeSentence :: Cache -> Level -> TextSet -> [(Sentence, [WordInfos])] -> T.Text
+composeSentence cache levelToShow dontTranslate sentencesInfos = do
+  T.intercalate "\n" $ map (translateSentence cache levelToShow dontTranslate) sentencesInfos
 
-translateSentence :: Cache -> Level -> (Sentence, [WordInfos]) -> Sentence
-translateSentence cache levelToShow (sentence, sentenceInfos) = do
+translateSentence :: Cache -> Level -> TextSet -> (Sentence, [WordInfos]) -> Sentence
+translateSentence cache levelToShow dontTranslate (sentence, sentenceInfos) = do
   let keysToWis = map toKeyable sentenceInfos :: [(Word, WordInfos)]
-  let unformatedSentence = map (renderWord cache levelToShow) keysToWis
+  let unformatedSentence = map (renderWord cache levelToShow dontTranslate) keysToWis
   T.intercalate " " $
     setCorrectSpacing (T.words sentence) unformatedSentence []
 
-renderWord :: Cache -> Level -> (Word, WordInfos) -> Word
-renderWord cache levelToShow (key, wi@(word, lemma, tag, level)) =
-  if shouldBeTranslated levelToShow wi then
+renderWord :: Cache -> Level -> TextSet -> (Word, WordInfos) -> Word
+renderWord cache levelToShow dontTranslate (key, wi@(word, lemma, tag, level)) =
+  if shouldBeTranslated levelToShow dontTranslate wi then
     let (_, _, trs) = toTranslations cache (key, wi)
         tr = trs ^? element 0
     in

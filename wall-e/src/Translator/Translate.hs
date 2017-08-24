@@ -33,8 +33,9 @@ import Control.Monad.IO.Class
 translate :: [RichSubCtx] -> App Cache
 translate richSubCtxs = do
   conf <- ask
+  dontTranslate <- asksR dontTranslate
   levelToShow <- asksR levelToShow
-  let words = wordsToTranslate levelToShow richSubCtxs
+  let words = wordsToTranslate levelToShow dontTranslate richSubCtxs
   offlineCache <- liftIO $ cacheFromDB conf words
   liftIO $
     infoM $ (show $ length words) <> " words to translate " <>
@@ -53,11 +54,11 @@ translate richSubCtxs = do
       infoM $ "saving " <> (show $ length responses) <> " new words"
       DB.insertAll conf "wordreference" toLang responses
 
-wordsToTranslate :: Level -> [RichSubCtx] -> [(Word, WordInfos)]
-wordsToTranslate levelToShow richSubCtxs =
+wordsToTranslate :: Level -> TextSet -> [RichSubCtx] -> [(Word, WordInfos)]
+wordsToTranslate levelToShow dontTranslate richSubCtxs =
   uniq
     $ map toKeyable
-    $ filter (shouldBeTranslated levelToShow)
+    $ filter (shouldBeTranslated levelToShow dontTranslate)
     $ richSubCtxs >>= onlyWordsInfo
 
 onlyWordsInfo :: RichSubCtx -> [WordInfos]
@@ -81,9 +82,11 @@ toKeyable :: WordInfos -> (Word, WordInfos)
 toKeyable wi =
   (whatToTranslate wi, wi)
 
-shouldBeTranslated :: Level -> WordInfos -> Bool
-shouldBeTranslated levelToShow wi@(_, _, tag, level) =
-  level > levelToShow && tag `elem` [Verb, Noun, Adj, Propn, Adv]
+shouldBeTranslated :: Level -> TextSet -> WordInfos -> Bool
+shouldBeTranslated levelToShow dontTranslate wi@(word, _, tag, level) =
+  level > levelToShow &&
+  tag `elem` [Verb, Noun, Adj, Propn, Adv] &&
+  not (word `elem` dontTranslate)
 
 whatToTranslate :: WordInfos -> Word
 whatToTranslate (word, lemma, tag, _) = case tag of

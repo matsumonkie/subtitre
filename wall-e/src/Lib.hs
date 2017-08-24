@@ -34,6 +34,7 @@ import System.Log.Formatter
 import System.Log.Handler (setFormatter)
 import System.Log.Handler.Simple
 import System.Log.Logger hiding (logM, debugM, infoM, noticeM, warningM, errorM, criticalM, alertM, emergencyM)
+import qualified DontTranslate as DT
 
 setLogger :: App ()
 setLogger = do
@@ -43,13 +44,16 @@ setLogger = do
   let myStreamHandler' = setFormatter myStreamHandler $ simpleLogFormatter logFormatter
   liftIO $ updateGlobalLogger rootLoggerName $ setLevel logLevel . setHandlers [myStreamHandler']
 
-getRuntimeConf :: FilePath -> String -> Level -> IO RuntimeConf
-getRuntimeConf file toLang level = do
+getRuntimeConf :: FilePath -> String -> String -> Level -> IO RuntimeConf
+getRuntimeConf file fromLang toLang level = do
   levelSets <- getLevelSets
+  dontTranslate <- DT.dontTranslate fromLang toLang
   return $
     RuntimeConf { levelSets = levelSets
                 , file = file
+                , fromLang = fromLang
                 , toLang = toLang
+                , dontTranslate = dontTranslate
                 , levelToShow = level
                 , logLevel = INFO
                 , logFormatter = "[$time $loggername $prio] $msg"

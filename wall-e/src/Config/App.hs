@@ -40,14 +40,13 @@ import Type
 {- RUNTIME CONF -}
 
 
-instance NFData Priority where
-  rnf x = ()
-
 data RuntimeConf =
   RuntimeConf { levelSets :: LevelSets
               , levelToShow :: Level
               , file :: FilePath
+              , fromLang :: Language
               , toLang :: Language
+              , dontTranslate :: TextSet
               , logLevel :: Priority
               , logFormatter :: String
               }
