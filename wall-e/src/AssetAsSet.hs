@@ -1,5 +1,6 @@
 module AssetAsSet (
-  assetAsSet
+  assetPath
+, assetAsSet
 ) where
 
 import Common
@@ -10,10 +11,14 @@ import qualified Data.Text as T
 import qualified Data.Text.IO as TIO
 import Type
 
+assetPath :: FilePath -> FilePath
+assetPath file =
+  "assets/" <> file
+
 assetAsSet :: FilePath -> IO TextSet
 assetAsSet file =
   HS.fromList <$> T.lines <$> readAsset file
   where
     readAsset :: FilePath -> IO T.Text
     readAsset file =
-      TIO.readFile $ "assets/" <> file
+      TIO.readFile $ assetPath file

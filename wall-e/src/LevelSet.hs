@@ -10,11 +10,11 @@ import qualified Data.HashSet as HS
 import Type
 import AssetAsSet
 
-easyWords   lang = assetAsSet $ assetPath lang "500"
-normalWords lang = assetAsSet $ assetPath lang "3000"
-hardWords   lang = assetAsSet $ assetPath lang "10000"
+easyWords   lang = assetAsSet $ levelPath lang "500"
+normalWords lang = assetAsSet $ levelPath lang "3000"
+hardWords   lang = assetAsSet $ levelPath lang "10000"
 
-assetPath lang file =
+levelPath lang file =
   "levels/" <> lang <> "/" <> file
 
 getLevelSets :: Language -> IO LevelSets
