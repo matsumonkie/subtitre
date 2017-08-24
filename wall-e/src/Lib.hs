@@ -35,6 +35,8 @@ import System.Log.Handler (setFormatter)
 import System.Log.Handler.Simple
 import System.Log.Logger hiding (logM, debugM, infoM, noticeM, warningM, errorM, criticalM, alertM, emergencyM)
 import qualified DontTranslate as DT
+import Spacy
+import SpacyParser
 
 setLogger :: App ()
 setLogger = do
@@ -71,14 +73,18 @@ getTranslationsConf sc rc = do
 run :: App T.Text
 run = do
   setLogger
-  liftIO $ infoM "parsing"
-  parsed       <- parse
-  liftIO $ infoM "structurizing"
-  structurized <- structurize parsed
+  liftIO $ infoM "parsing original file"
+  rawSubCtxs   <- parseOriginal
+  liftIO $ infoM "spacyfy"
+  spacified    <- liftIO $ spacify rawSubCtxs
+  liftIO $ infoM "parsing spacy"
+  wordsInfos   <- parseSpacy spacified
+  liftIO $ infoM "creating richSubCtx"
+  richParsed <- createRichSubCtxs rawSubCtxs wordsInfos
   liftIO $ infoM "translating"
-  cache        <- translate structurized
+  cache        <- translate richParsed
   liftIO $ infoM "composing"
-  composed     <- compose cache structurized
+  composed     <- compose cache richParsed
   save composed
   return composed
   where

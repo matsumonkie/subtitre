@@ -30,7 +30,8 @@ library
                      , Logger
                      , RawSubParser
                      , RichSubCtx
-                     , SentenceStructParser
+                     , Spacy
+                     , SpacyParser
                      , Serializer
                      , Translator.Strategy.WordReference
                      , Translator.Translate

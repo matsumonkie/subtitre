@@ -4,7 +4,7 @@
 -}
 
 module RawSubParser (
-  RawSubParser.parse
+  RawSubParser.parseOriginal
 , parseSubtitles
 ) where
 
@@ -25,8 +25,8 @@ import Config.App
 import qualified Text.HTML.TagSoup as TS
 import Data.List
 
-parse :: App [RawSubCtx]
-parse = do
+parseOriginal :: App [RawSubCtx]
+parseOriginal = do
   inputFile <- asksR file
   result <- liftIO $ Ex.tryJust invalidArgument (readWith inputFile SIO.utf8) :: App (Either () T.Text)
   content <- liftIO $ either (const $ readWith inputFile SIO.latin1) return result :: App T.Text
