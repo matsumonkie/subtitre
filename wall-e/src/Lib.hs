@@ -48,7 +48,7 @@ setLogger = do
 
 getRuntimeConf :: FilePath -> String -> String -> Level -> IO RuntimeConf
 getRuntimeConf file fromLang toLang level = do
-  levelSets <- getLevelSets
+  levelSets <- getLevelSets fromLang
   dontTranslate <- DT.dontTranslate fromLang toLang
   return $
     RuntimeConf { levelSets = levelSets

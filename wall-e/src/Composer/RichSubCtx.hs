@@ -28,7 +28,7 @@ import Type
 
 compose :: Cache -> [RichSubCtx] -> App T.Text
 compose cache subCtxs = do
-  let levelToShow = Hard
+  levelToShow <- asksR levelToShow
   dontTranslate <- asksR dontTranslate
   let composed = map (composeSub cache levelToShow dontTranslate) subCtxs :: [Word]
   return $ T.intercalate "\n\n" composed

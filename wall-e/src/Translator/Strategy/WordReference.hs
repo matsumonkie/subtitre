@@ -36,7 +36,7 @@ fetch conf@(Config {rc, sc, tc}) toTranslate =
   let
     key = (wordReferenceApiKeys sc) !! 0
     urlPrefix = wordReferenceApiUrlPrefix sc
-    urlSuffix = wordReferenceApiUrlSuffix sc <> T.pack (toLang rc) <> "/"
+    urlSuffix = wordReferenceApiUrlSuffix sc <> T.pack (fromLang rc) <> T.pack (toLang rc) <> "/"
     url = urlPrefix <> key <> urlSuffix <> toTranslate
     opts = defaults { Wreq.redirects = 2 }
   in do
