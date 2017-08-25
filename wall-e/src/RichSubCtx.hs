@@ -17,33 +17,35 @@ import Debug.Trace
 import System.Process
 import Text.Parsec hiding (parse)
 import Type
+import Data.Either.Combinators
 
 createRichSubCtxs :: [RawSubCtx] ->
                      [Either [ParseError] [[WordInfos]]]->
                      App [RichSubCtx]
 createRichSubCtxs allRawSubCtx allWordsInfos = do
-  let richSubCtxs = mapM toRichSubCtx (zip allRawSubCtx allWordsInfos) :: Either [ParseError] [RichSubCtx]
+  let richSubCtxs = map toRichSubCtx (zip allRawSubCtx allWordsInfos) :: [Either [ParseError] RichSubCtx]
+  return $ onlySuccess richSubCtxs
+
+{-
   case richSubCtxs of
     Left pes -> do
-      liftIO $ infoM "error"
---      liftIO $ infoM $ show content
---      liftIO $ infoM $ show unmerged !! 0
---      liftIO $ infoM $ show parsed !! 0
+      liftIO $ infoM "error while parsing to RichSubCtx"
       liftIO $ infoM $ show pes
       throwError $ map AppError pes
     Right rs -> do
       return rs
-
-createRichSubCtx :: RawSubCtx
-                    -> Either [ParseError] [[WordInfos]]
-                    -> Either [ParseError] RichSubCtx
-createRichSubCtx rawSubCtx eWordInfos = undefined
-
+-}
 toRichSubCtx :: (RawSubCtx, Either [ParseError] [[WordInfos]])
              -> Either [ParseError] RichSubCtx
 toRichSubCtx ((SubCtx sequence timingCtx sentences), parsed) =
   case parsed of
-    Left errors -> Left errors
-    Right sentencesInfos -> Right $ subCtx (zip sentences sentencesInfos)
+    Left errors ->
+      Left errors
+    Right sentencesInfos ->
+      Right $ subCtx (zip sentences sentencesInfos)
   where
     subCtx = SubCtx sequence timingCtx
+
+onlySuccess :: [Either [ParseError] RichSubCtx] -> [RichSubCtx]
+onlySuccess parsing =
+  rights parsing
