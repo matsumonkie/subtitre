@@ -8,7 +8,8 @@ import Data.Functor
 import Type
 import RawSubParser
 import Data.Monoid
-import Data.Text hiding (map)
+import qualified Data.Text as T
+import qualified Data.Text.IO as TIO
 import Data.Either
 import Control.Monad.Trans.Reader
 import Control.Monad.Trans.Except
@@ -33,17 +34,17 @@ spec = do
           parseSubtitles (multipleSubs) `shouldBe` Right [res ["hello"], res ["world"]]
       context "real subtitles" $ do
         it "parses real subtitles" $ do
-          parseFile sherlock >>= satisfyIsRight
-          parseFile mrRobot >>= satisfyIsRight
+          parse sherlock >>= satisfyIsRight
+          parse mrRobot >>= satisfyIsRight
         it "with bom" $ do
-          parseFile house >>= satisfyIsRight
+          parse house >>= satisfyIsRight
         it "with ascii & CRLF" $ do
-          parseFile gameOfThrones >>= satisfyIsRight
+          parse gameOfThrones >>= satisfyIsRight
         it "with multiple back to back new lines" $ do
-          parseFile theOffice >>= satisfyIsRight
+          parse theOffice >>= satisfyIsRight
       context "Latin-1" $ do
         it "parses weird characters" $ do
-          parseFile friends >>= satisfyIsRight
+          parse friends >>= satisfyIsRight
 
 sherlock = "sherlock.srt"
 mrRobot = "mr. robot.srt"
@@ -52,18 +53,17 @@ house = "house.srt"
 theOffice = "theOffice.srt"
 gameOfThrones = "game of thrones.srt"
 
-parseFile :: FilePath -> IO (Either [AppError] [RawSubCtx])
-parseFile file =
-  let
-    runtimeConf = RuntimeConf { levelSets = undefined
-                              , levelToShow = undefined
-                              , file = "test/assets/" <> file
-                              , toLang = undefined
-                              , logLevel = undefined
-                              , logFormatter = undefined
-                              }
-    config = Config { rc = runtimeConf }
-  in runExceptT (runReaderT parse config) :: IO (Either [AppError] [RawSubCtx])
+parse :: FilePath -> IO [Either P.ParseError [RawSubCtx]]
+parse file =
+  parseFile <$> readFileAsLines file
+
+readFileAsLines :: FilePath -> IO [T.Text]
+readFileAsLines file =
+  T.lines <$> (TIO.readFile $ "test/assets/" <> file)
+
+parseFile :: [T.Text] -> [Either P.ParseError [RawSubCtx]]
+parseFile lines =
+  map parseSubtitles lines
 
 arg = "1\n\
       \00:00:26,722 --> 00:00:29,023\n\
@@ -76,7 +76,7 @@ multipleSubs = "1\n\
       \00:00:26,722 --> 00:00:29,023\n\
       \world"
 
-res :: [Text] -> RawSubCtx
+res :: [T.Text] -> RawSubCtx
 res text =
   SubCtx 1 (TimingCtx t1 t2) sentences
   where
@@ -84,6 +84,6 @@ res text =
     t2 = Timing 0 0 29 23
     sentences = text
 
-satisfyIsRight :: Either [AppError] [RawSubCtx] -> Expectation
+satisfyIsRight :: [Either P.ParseError [RawSubCtx]] -> Expectation
 satisfyIsRight parsed =
-  parsed `shouldSatisfy` isRight
+  length (rights parsed) `shouldBe` length parsed

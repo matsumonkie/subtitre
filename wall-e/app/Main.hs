@@ -9,7 +9,7 @@ import Lib
 main :: IO ()
 main = do
   (file:fromLang:toLang:withLevel:_) <- getArgs
-  runtimeConf <- getRuntimeConf file fromLang toLang Hard --(read withLevel :: Level)
+  runtimeConf <- getRuntimeConf file fromLang toLang Hard
   staticConf  <- getStaticConf
   translationsConf <- getTranslationsConf staticConf runtimeConf
   let config = Config runtimeConf staticConf translationsConf

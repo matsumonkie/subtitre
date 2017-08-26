@@ -2,6 +2,7 @@
 
 module SpacyParser (
   parseSpacy
+, parseSpacySentence
 ) where
 
 import Common
@@ -31,18 +32,18 @@ import Config.App
 -}
 parseSpacy :: [[T.Text]] ->
               App ([Either [ParseError] [[WordInfos]]])
-parseSpacy sentences =
-  mapM parseSpacySentence sentences
-
-parseSpacySentence :: [T.Text] ->
-                      App (Either [ParseError] [[WordInfos]])
-parseSpacySentence sentence = do
+parseSpacy sentences = do
   levelSets <- asksR levelSets
+  return $ map (parseSpacySentence levelSets) sentences
+
+parseSpacySentence :: LevelSets ->
+                      [T.Text] ->
+                      Either [ParseError] [[WordInfos]]
+parseSpacySentence levelSets sentence =
   let res = parsed levelSets
-  return $
-    case lefts res of
-      [] -> Right $ rights res
-      errors -> Left errors
+  in case lefts res of
+    [] -> Right $ rights res
+    errors -> Left errors
   where
     parsed levelSets = map (parseSentenceStructure levelSets) sentence :: [Either ParseError [WordInfos]]
 

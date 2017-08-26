@@ -45,6 +45,10 @@ composeSub cache level dontTranslate (SubCtx sequence timingCtx sentences) = do
                                    ]
     seq = T.pack $ show sequence
 
+composeSentence :: Cache -> Level -> TextSet -> [(Sentence, [WordInfos])] -> T.Text
+composeSentence cache levelToShow dontTranslate sentencesInfos = do
+  T.intercalate "\n" $ map (translateSentence cache levelToShow dontTranslate) sentencesInfos
+
 composeTimingCtx :: TimingCtx -> Word
 composeTimingCtx (TimingCtx btiming etiming) =
   composedTimingCtx
@@ -60,10 +64,6 @@ composeTimingCtx (TimingCtx btiming etiming) =
                text
       where
         text = show i
-
-composeSentence :: Cache -> Level -> TextSet -> [(Sentence, [WordInfos])] -> T.Text
-composeSentence cache levelToShow dontTranslate sentencesInfos = do
-  T.intercalate "\n" $ map (translateSentence cache levelToShow dontTranslate) sentencesInfos
 
 translateSentence :: Cache -> Level -> TextSet -> (Sentence, [WordInfos]) -> Sentence
 translateSentence cache levelToShow dontTranslate (sentence, sentenceInfos) = do
