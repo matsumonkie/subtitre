@@ -1,0 +1,184 @@
+{
+"term0" : {
+"PrincipalTranslations" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sb, tell sb sth", "POS" : "vtr", "sense" : "say, say to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire qch (à qqn)", "POS" : "vtr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "raconter qch (à qqn)", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sb, tell sb sth", "POS" : "vtr", "sense" : "inform, convey", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire qch (à qqn)", "POS" : "vtr", "sense" : "informer"}, 
+		"SecondTranslation" : {"term" : "raconter qch (à qqn)", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "tell", "POS" : "vi", "sense" : "notice", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "se voir", "POS" : "v pron", "sense" : ""}, "Note" : ""}},
+"AdditionalTranslations" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "tell", "POS" : "vi", "sense" : "disclose or confess sth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "parler", "POS" : "vi", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "dire, révéler", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sth", "POS" : "vtr", "sense" : "story", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "raconter qch (à qqn)", "POS" : "vtr", "sense" : "une histoire"}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sb, tell sb sth", "POS" : "vtr", "sense" : "announce", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire qch (à qqn)", "POS" : "vtr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "annoncer qch (à qqn)", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"3" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sth", "POS" : "vtr", "sense" : "reveal", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire, révéler", "POS" : "vtr", "sense" : "un secret"}, "Note" : ""},
+	"4" :{
+		"OriginalTerm" : { "term" : "tell, tell sb to do sth", "POS" : "vtr", "sense" : "command, order", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire à qqn de faire qch", "POS" : "loc v", "sense" : "ordonner"}, 
+		"SecondTranslation" : {"term" : "demander à qqn de faire qch", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"5" :{
+		"OriginalTerm" : { "term" : "tell", "POS" : "vtr", "sense" : "distinguish", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "to tell the difference : faire la différence", "POS" : "loc v", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "to tell the difference : distinguer", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"6" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sth", "POS" : "vtr", "sense" : "identify", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "voir", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"7" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sth", "POS" : "vtr", "sense" : "realize", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"8" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sb", "POS" : "vtr", "sense" : "assure", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire qch à qqn, assurer qch à qqn", "POS" : "vtr + prép", "sense" : ""}, "Note" : ""},
+	"9" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sb", "POS" : "vtr", "sense" : "explain", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire qch à qqn", "POS" : "vtr + prép", "sense" : "expliquer"}, 
+		"SecondTranslation" : {"term" : "expliquer qch à qqn", "POS" : "vtr + prép", "sense" : ""}, "Note" : ""},
+	"10" :{
+		"OriginalTerm" : { "term" : "tell, replace: tell sb", "POS" : "vtr", "sense" : "carry tales", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire qch à qqn", "POS" : "vtr + prép", "sense" : ""}, "Note" : ""}}},
+"original" : {
+"Compounds" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "kiss-and-tell", "POS" : "adj", "sense" : "revealing sth private for money", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "qui révèle des secrets d'alcôve, qui fait des révélations intimes", "POS" : "loc adj", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "qui déballe tout", "POS" : "loc adj", "sense" : "familier"}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "only time will tell", "POS" : "expr", "sense" : "it will be understood in the future", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Seul l'avenir le dira", "POS" : "expr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "Seul le temps (nous) le dira", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "show and tell", "POS" : "n", "sense" : "school: class speaking exercise", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "quoi de neuf", "POS" : "nm", "sense" : "jeu d'école primaire"}, "Note" : ""},
+	"3" :{
+		"OriginalTerm" : { "term" : "tell a joke", "POS" : "v expr", "sense" : "recount a humorous story", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "raconter une blague", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"4" :{
+		"OriginalTerm" : { "term" : "tell a lie", "POS" : "v expr", "sense" : "sb: not tell truth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire un mensonge, raconter un mensonge", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"5" :{
+		"OriginalTerm" : { "term" : "tell a lie", "POS" : "v expr", "sense" : "sb: not tell truth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "mentir", "POS" : "vi", "sense" : ""}, "Note" : ""},
+	"6" :{
+		"OriginalTerm" : { "term" : "tell a secret, replace: tell sb a secret, tell a secret to sb", "POS" : "v expr", "sense" : "confide sth private to sb", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire un secret à qqn un secret", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"7" :{
+		"OriginalTerm" : { "term" : "tell a story", "POS" : "v expr", "sense" : "recite a narrative", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "raconter une histoire", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"8" :{
+		"OriginalTerm" : { "term" : "tell a story", "POS" : "v expr", "sense" : "reflect events", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "raconter une histoire", "POS" : "loc v", "sense" : "figuré"}, 
+		"SecondTranslation" : {"term" : "en dire long (sur qch)", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"9" :{
+		"OriginalTerm" : { "term" : "tell a whopper", "POS" : "v expr", "sense" : "lie", "usage" : "slang"}, 
+		"FirstTranslation" : {"term" : "raconter un mensonge", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"10" :{
+		"OriginalTerm" : { "term" : "tell about", "POS" : "", "sense" : "relate, recount", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "raconter", "POS" : "v", "sense" : "parler de"}, "Note" : ""},
+	"11" :{
+		"OriginalTerm" : { "term" : "tell apart, replace: tell sth\/sb apart", "POS" : "vtr phrasal sep", "sense" : "distinguish between", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "différencier, distinguer", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"12" :{
+		"OriginalTerm" : { "term" : "tell apart, replace: tell sth\/sb apart", "POS" : "vtr phrasal sep", "sense" : "distinguish between", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "savoir qui est qui", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"13" :{
+		"OriginalTerm" : { "term" : "tell how, replace: tell how to do sth", "POS" : "vtr", "sense" : "describe the manner in which", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire (à qqn) comment faire qch, expliquer (à qqn) comment faire qch", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"14" :{
+		"OriginalTerm" : { "term" : "tell it like it is", "POS" : "v expr", "sense" : "be honest and direct", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "dire ce qu'il en est", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"15" :{
+		"OriginalTerm" : { "term" : "tell jokes", "POS" : "v expr", "sense" : "recount funny stories", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "raconter des blagues", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"16" :{
+		"OriginalTerm" : { "term" : "tell jokes", "POS" : "v expr", "sense" : "recount funny stories", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "raconter des histoires drôles", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"17" :{
+		"OriginalTerm" : { "term" : "tell of, replace: tell of sth", "POS" : "vtr phrasal insep", "sense" : "recount", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "raconter", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"18" :{
+		"OriginalTerm" : { "term" : "tell off, replace: tell sb off", "POS" : "vtr phrasal sep", "sense" : "reprimand", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "gronder, disputer", "POS" : "vtr", "sense" : "un enfant surtout"}, "Note" : ""},
+	"19" :{
+		"OriginalTerm" : { "term" : "tell off, replace: tell sb off", "POS" : "vtr phrasal sep", "sense" : "reprimand", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "réprimander", "POS" : "vtr", "sense" : "assez soutenu"}, "Note" : ""},
+	"20" :{
+		"OriginalTerm" : { "term" : "tell on, replace: tell on sb", "POS" : "vtr phrasal insep", "sense" : "have an effect on", "usage" : "US, informal, figurative"}, 
+		"FirstTranslation" : {"term" : "faire de l'effet sur, à", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"21" :{
+		"OriginalTerm" : { "term" : "tell on, replace: tell on sb", "POS" : "vtr phrasal insep", "sense" : "inform against", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "dénoncer", "POS" : "vtr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "balancer", "POS" : "vtr", "sense" : "argot"}, 
+		"ThirdTranslation" : {"term" : "moucharder, cafarder, cafter", "POS" : "vi", "sense" : "familier, enfant"}, "Note" : ""},
+	"22" :{
+		"OriginalTerm" : { "term" : "tell right from wrong", "POS" : "v expr", "sense" : "have a sense of morality", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "distinguer le bien du mal", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"23" :{
+		"OriginalTerm" : { "term" : "tell tales", "POS" : "v expr", "sense" : "inform on sb", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "moucharder, cafter, cafarder, rapporter", "POS" : "vi", "sense" : "familier"}, "Note" : ""},
+	"24" :{
+		"OriginalTerm" : { "term" : "tell tales", "POS" : "vtr + npl", "sense" : "tell lies", "usage" : "figurative, informal"}, 
+		"FirstTranslation" : {"term" : "raconter des histoires", "POS" : "loc v", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "mentir", "POS" : "vi", "sense" : ""}, 
+		"ThirdTranslation" : {"term" : "mitonner", "POS" : "vi", "sense" : "familier, jeune"}, "Note" : ""},
+	"25" :{
+		"OriginalTerm" : { "term" : "tell the future", "POS" : "v expr", "sense" : "predict what will happen", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "prédire l'avenir", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"26" :{
+		"OriginalTerm" : { "term" : "tell the future", "POS" : "v expr", "sense" : "predict what will happen", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "prédire", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"27" :{
+		"OriginalTerm" : { "term" : "tell the future", "POS" : "v expr", "sense" : "predict what will happen", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire l'avenir", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"28" :{
+		"OriginalTerm" : { "term" : "tell the truth", "POS" : "v expr", "sense" : "be honest", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dire la vérité", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"29" :{
+		"OriginalTerm" : { "term" : "tell time, UK: tell the time", "POS" : "v expr", "sense" : "read the hour on an analogue clock", "usage" : "US"}, 
+		"FirstTranslation" : {"term" : "donner l'heure", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"30" :{
+		"OriginalTerm" : { "term" : "tell your beads", "POS" : "v expr", "sense" : "recite a rosary", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "égrener son chapelet", "POS" : "loc v", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "réciter le chapelet", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"31" :{
+		"OriginalTerm" : { "term" : "tell yourself", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dites vous-même", "POS" : "", "sense" : ""}, "Note" : ""},
+	"32" :{
+		"OriginalTerm" : { "term" : "tell-tale sign", "POS" : "n", "sense" : "visible indication", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "témoin, signe", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"33" :{
+		"OriginalTerm" : { "term" : "telltale, tell-tale, tell-tail", "POS" : "n", "sense" : "nautical: indicates air flow", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "penon", "POS" : "nm", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "girouette", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"34" :{
+		"OriginalTerm" : { "term" : "Time will tell", "POS" : "expr", "sense" : "sth will be revealed", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "l'avenir nous le dira", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"35" :{
+		"OriginalTerm" : { "term" : "Time will tell", "POS" : "expr", "sense" : "sth will be revealed", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "qui vivra verra", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"36" :{
+		"OriginalTerm" : { "term" : "Time will tell", "POS" : "expr", "sense" : "sth will be revealed", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "on verra bien", "POS" : "expr", "sense" : "familier"}, "Note" : ""},
+	"37" :{
+		"OriginalTerm" : { "term" : "to tell the truth", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "à vrai dire", "POS" : "loc adv", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "pour être honnête", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"38" :{
+		"OriginalTerm" : { "term" : "William Tell", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Guillaume Tell", "POS" : "", "sense" : ""}, "Note" : ""}}},
+"Lines" : "End Reached", "END" : true
+}

@@ -1,0 +1,339 @@
+{
+"term0" : {
+"PrincipalTranslations" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "is", "POS" : "v pres", "sense" : "be: present indicative for he, she, it", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "est", "POS" : "v aux", "sense" : "être, 3e personne singulier"}, 
+		"SecondTranslation" : {"term" : "a", "POS" : "v aux", "sense" : "âge,..."}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "is", "POS" : "v pres", "sense" : "be: used in questions", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "est", "POS" : "v aux", "sense" : "dans les questions"}, 
+		"SecondTranslation" : {"term" : "a", "POS" : "v aux", "sense" : "âge,..."}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "is", "POS" : "v aux", "sense" : "be: used in 3rd person singular passive", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "est", "POS" : "v", "sense" : "au passif"}, "Note" : ""}}},
+"original" : {
+"Compounds" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "A bird in the hand is worth two in the bush.", "POS" : "expr", "sense" : "Don't risk what you have.", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Un tiens vaut mieux que deux tu l'auras.", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "A friend in need is a friend indeed.", "POS" : "expr", "sense" : "sb who helps is real friend", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "C'est dans le besoin que l'on reconnaît ses amis", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "after all is said and done", "POS" : "adv", "sense" : "ultimately", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "en fin de compte", "POS" : "loc adv", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "au bout du compte", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"3" :{
+		"OriginalTerm" : { "term" : "All that glitters is not gold, All that glistens is not gold", "POS" : "expr", "sense" : "appearances can be deceptive", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "tout ce qui brille n'est pas or", "POS" : "expr", "sense" : "figuré"}, "Note" : ""},
+	"4" :{
+		"OriginalTerm" : { "term" : "all that is", "POS" : "n", "sense" : "everything that exists", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "tout ce qui est", "POS" : "", "sense" : ""}, "Note" : ""},
+	"5" :{
+		"OriginalTerm" : { "term" : "all that is", "POS" : "n", "sense" : "everything that exists", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "tout ce qui existe", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"6" :{
+		"OriginalTerm" : { "term" : "All's well that ends well., All is well that ends well.", "POS" : "expr", "sense" : "Everything was resolved happily.", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "tout est bien qui finit bien", "POS" : "expr", "sense" : ""}, "Note" : "This is the title of a play by Shakespeare."},
+	"7" :{
+		"OriginalTerm" : { "term" : "an Englishman's home is his castle", "POS" : "", "sense" : "proverb", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "charbonnier est maître chez soi", "POS" : "", "sense" : "proverbe"}, "Note" : ""},
+	"8" :{
+		"OriginalTerm" : { "term" : "and the rest is history", "POS" : "expr", "sense" : "what happened is well known", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "et on connaît la suite", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"9" :{
+		"OriginalTerm" : { "term" : "as is", "POS" : "adv", "sense" : "in its current state", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "en l'état", "POS" : "loc adj", "sense" : ""}, "Note" : ""},
+	"10" :{
+		"OriginalTerm" : { "term" : "as is", "POS" : "adv", "sense" : "in its current state", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "tel quel, tel quelle", "POS" : "loc adj", "sense" : ""}, "Note" : ""},
+	"11" :{
+		"OriginalTerm" : { "term" : "as is my wont", "POS" : "adv", "sense" : "as usual, as is my habit", "usage" : "formal"}, 
+		"FirstTranslation" : {"term" : "comme de coutume", "POS" : "loc adv", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "comme d'habitude", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"12" :{
+		"OriginalTerm" : { "term" : "as is the custom", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "comme le veut la coutume", "POS" : "", "sense" : ""}, "Note" : ""},
+	"13" :{
+		"OriginalTerm" : { "term" : "as it is", "POS" : "adv", "sense" : "as the situation stands", "usage" : "colloquial"}, 
+		"FirstTranslation" : {"term" : "en l'état actuel des choses", "POS" : "loc adv", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "comme c'est parti", "POS" : "loc adv", "sense" : "familier"}, "Note" : ""},
+	"14" :{
+		"OriginalTerm" : { "term" : "as it is", "POS" : "adv", "sense" : "in its current state", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "en l'état", "POS" : "", "sense" : ""}, "Note" : ""},
+	"15" :{
+		"OriginalTerm" : { "term" : "as it is", "POS" : "adv", "sense" : "in its current state", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "tel quel", "POS" : "", "sense" : ""}, "Note" : ""},
+	"16" :{
+		"OriginalTerm" : { "term" : "Beauty is skin deep", "POS" : "expr", "sense" : "physical beauty is superficial", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "la beauté est superficielle", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"17" :{
+		"OriginalTerm" : { "term" : "Blood is thicker than water., Blood before water.", "POS" : "expr", "sense" : "family relationships are strongest", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "la famille, c'est sacré", "POS" : "expr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "les liens du sang sont les plus forts", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"18" :{
+		"OriginalTerm" : { "term" : "Brevity is the soul of wit", "POS" : "expr", "sense" : "it is most effective to speak concisely", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "La concision est le secret d'un bon mot d'esprit", "POS" : "expr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "Les blagues les plus courtes sont toujours les meilleures", "POS" : "expr", "sense" : "équivalent dans certains contextes"}, "Note" : ""},
+	"19" :{
+		"OriginalTerm" : { "term" : "Business is business.", "POS" : "expr", "sense" : "Making a profit comes first.", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Les affaires sont les affaires.", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"20" :{
+		"OriginalTerm" : { "term" : "do what is needed", "POS" : "v expr", "sense" : "take necessary action", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "faire le nécessaire", "POS" : "v", "sense" : ""}, "Note" : ""},
+	"21" :{
+		"OriginalTerm" : { "term" : "Do what there is to do.", "POS" : "interj", "sense" : "Take the necessary action.", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "faire ce qu'il y a à faire", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"22" :{
+		"OriginalTerm" : { "term" : "Do what there is to do.", "POS" : "interj", "sense" : "Take the necessary action.", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "faire le nécessaire", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"23" :{
+		"OriginalTerm" : { "term" : "enough is enough", "POS" : "interj", "sense" : "expressing exasperation", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "ça commence à bien faire !", "POS" : "interj", "sense" : ""}, "Note" : ""},
+	"24" :{
+		"OriginalTerm" : { "term" : "enough is enough", "POS" : "interj", "sense" : "expressing exasperation", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "trop, c'est trop", "POS" : "interj", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "c'en est trop", "POS" : "interj", "sense" : ""}, 
+		"ThirdTranslation" : {"term" : "la coupe est pleine", "POS" : "interj", "sense" : ""}, "Note" : ""},
+	"25" :{
+		"OriginalTerm" : { "term" : "here is, here are", "POS" : "expr", "sense" : "presenting sth, sb", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "voici, voilà", "POS" : "", "sense" : "introduit qch ou qqn"}, "Note" : ""},
+	"26" :{
+		"OriginalTerm" : { "term" : "how is it that...?", "POS" : "", "sense" : "explain why", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "comment se fait-il que + [subjonctif]", "POS" : "", "sense" : ""}, "Note" : ""},
+	"27" :{
+		"OriginalTerm" : { "term" : "how is it that...?", "POS" : "", "sense" : "explain why", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "comment ça se fait que + [subjonctif]", "POS" : "", "sense" : "familier"}, "Note" : ""},
+	"28" :{
+		"OriginalTerm" : { "term" : "how it is", "POS" : "", "sense" : "reality, the way life is", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "c'est comme ça", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"29" :{
+		"OriginalTerm" : { "term" : "is the game worth the candle?", "POS" : "expr", "sense" : "is the effort required worthwhile?", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "Le jeu en vaut-il la chandelle ?", "POS" : "", "sense" : ""}, "Note" : ""},
+	"30" :{
+		"OriginalTerm" : { "term" : "is the responsibility of", "POS" : "prep", "sense" : "is the duty of, falls to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "être de la responsabilité de", "POS" : "v", "sense" : ""}, "Note" : ""},
+	"31" :{
+		"OriginalTerm" : { "term" : "is the responsibility of", "POS" : "prep", "sense" : "is the duty of, falls to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il est du devoir de", "POS" : "", "sense" : ""}, "Note" : ""},
+	"32" :{
+		"OriginalTerm" : { "term" : "is the responsibility of", "POS" : "prep", "sense" : "is the duty of, falls to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il appartient à", "POS" : "", "sense" : ""}, "Note" : ""},
+	"33" :{
+		"OriginalTerm" : { "term" : "it is advisable to", "POS" : "expr", "sense" : "it is wise to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il est recommandé de (faire qch), il est conseillé de (faire qch)", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"34" :{
+		"OriginalTerm" : { "term" : "it is advisable to", "POS" : "expr", "sense" : "it is wise to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il vaut mieux (faire qch)", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"35" :{
+		"OriginalTerm" : { "term" : "It is all for the best, It's all for the best", "POS" : "expr", "sense" : "outcome is beneficial", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "c'est mieux ainsi, c'est mieux comme ça", "POS" : "", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "c'est aussi bien comme ça", "POS" : "", "sense" : ""}, 
+		"ThirdTranslation" : {"term" : "ce n'est pas plus mal", "POS" : "", "sense" : "familier"}, "Note" : ""},
+	"36" :{
+		"OriginalTerm" : { "term" : "It is all in the mind", "POS" : "expr", "sense" : "It is imaginary.", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "c'est dans la tête, c'est psychologique", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"37" :{
+		"OriginalTerm" : { "term" : "it is all the same", "POS" : "", "sense" : "there is no difference, it makes no difference", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "ça m'est égal", "POS" : "", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "c'est du pareil au même", "POS" : "", "sense" : ""}, "Note" : ""},
+	"38" :{
+		"OriginalTerm" : { "term" : "It is conceivable that", "POS" : "expr", "sense" : "sth is possible", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il est concevable que + [subjonctif]", "POS" : "", "sense" : ""}, "Note" : ""},
+	"39" :{
+		"OriginalTerm" : { "term" : "it is necessary", "POS" : "", "sense" : "it is essential or required", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "c'est nécessaire", "POS" : "", "sense" : ""}, "Note" : ""},
+	"40" :{
+		"OriginalTerm" : { "term" : "it is necessary to", "POS" : "", "sense" : "it is required or essential for one to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il est nécessaire de (faire qch)", "POS" : "loc v impers", "sense" : ""}, "Note" : ""},
+	"41" :{
+		"OriginalTerm" : { "term" : "it is necessary to", "POS" : "", "sense" : "it is required or essential for one to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il faut (faire qch)", "POS" : "loc v impers", "sense" : ""}, "Note" : ""},
+	"42" :{
+		"OriginalTerm" : { "term" : "it is necessary to", "POS" : "", "sense" : "it is required or essential for one to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il faut que + [subjonctif]", "POS" : "loc v impers", "sense" : ""}, "Note" : ""},
+	"43" :{
+		"OriginalTerm" : { "term" : "it is written", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "c'est écrit", "POS" : "", "sense" : ""}, "Note" : ""},
+	"44" :{
+		"OriginalTerm" : { "term" : "it is written that", "POS" : "", "sense" : "Bible: it has been prophesied that", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il est écrit que", "POS" : "", "sense" : ""}, "Note" : ""},
+	"45" :{
+		"OriginalTerm" : { "term" : "It's none too soon, it is none too soon", "POS" : "expr", "sense" : "it is overdue", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "c'est pas trop tôt", "POS" : "expr", "sense" : "familier"}, "Note" : ""},
+	"46" :{
+		"OriginalTerm" : { "term" : "my name is", "POS" : "", "sense" : "I am called, I am known as", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "mon nom est", "POS" : "", "sense" : ""}, "Note" : ""},
+	"47" :{
+		"OriginalTerm" : { "term" : "my name is", "POS" : "", "sense" : "I am called, I am known as", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "je m'appelle", "POS" : "", "sense" : ""}, "Note" : ""},
+	"48" :{
+		"OriginalTerm" : { "term" : "Necessity is the mother of invention", "POS" : "n", "sense" : "need inspires solutions", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "La nécessité est mère de l'invention", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"49" :{
+		"OriginalTerm" : { "term" : "Patience is a virtue", "POS" : "expr", "sense" : "It is good to know how to wait", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "la patience est mère de toutes les vertus", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"50" :{
+		"OriginalTerm" : { "term" : "Patience is a virtue", "POS" : "expr", "sense" : "It is good to know how to wait", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "patience et longueur de temps font plus que force ni que rage", "POS" : "expr", "sense" : "devenu adage"}, "Note" : ""},
+	"51" :{
+		"OriginalTerm" : { "term" : "put your money where your mouth is, replace: Put your money where your mouth is.", "POS" : "expr", "sense" : "prove sth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "joindre le geste à la parole", "POS" : "loc v", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "sortir son portefeuille", "POS" : "loc v", "sense" : "Finance"}, 
+		"ThirdTranslation" : {"term" : "prouver", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"52" :{
+		"OriginalTerm" : { "term" : "revenge is a dish best served cold", "POS" : "", "sense" : "revenge is sweet", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "la vengeance est un plat qui se mange froid", "POS" : "", "sense" : ""}, "Note" : ""},
+	"53" :{
+		"OriginalTerm" : { "term" : "Silence is golden", "POS" : "expr", "sense" : "It is wisest to say nothing", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "le silence est d'or", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"54" :{
+		"OriginalTerm" : { "term" : "so it is", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "je le vois bien", "POS" : "", "sense" : ""}, "Note" : ""},
+	"55" :{
+		"OriginalTerm" : { "term" : "so what else is new", "POS" : "interj", "sense" : "not surprised", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "ce n'est pas un scoop", "POS" : "interj", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "comme d'hab !", "POS" : "interj", "sense" : "familier"}, 
+		"ThirdTranslation" : {"term" : "la routine !", "POS" : "interj", "sense" : ""}, "Note" : ""},
+	"56" :{
+		"OriginalTerm" : { "term" : "Such is life", "POS" : "expr", "sense" : "expressing resigned attitude", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "C'est la vie !", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"57" :{
+		"OriginalTerm" : { "term" : "Such is life", "POS" : "expr", "sense" : "expressing resigned attitude", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Ainsi va la vie !", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"58" :{
+		"OriginalTerm" : { "term" : "Such is life", "POS" : "expr", "sense" : "expressing resigned attitude", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "C'est comme ça !", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"59" :{
+		"OriginalTerm" : { "term" : "Such is life", "POS" : "expr", "sense" : "expressing resigned attitude", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Que voulez-vous !", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"60" :{
+		"OriginalTerm" : { "term" : "Talk is cheap.", "POS" : "expr", "sense" : "Talk is too plentiful; act.", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "les paroles n'engagent à rien", "POS" : "expr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "Il est facile de parler.", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"61" :{
+		"OriginalTerm" : { "term" : "tell it like it is", "POS" : "v expr", "sense" : "be honest and direct", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "dire ce qu'il en est", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"62" :{
+		"OriginalTerm" : { "term" : "that is", "POS" : "adv", "sense" : "i.e., in other words", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "c'est-à-dire", "POS" : "loc conj", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "autrement dit", "POS" : "", "sense" : ""}, "Note" : ""},
+	"63" :{
+		"OriginalTerm" : { "term" : "that is to say", "POS" : "adv", "sense" : "in other words", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "c'est-à-dire", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"64" :{
+		"OriginalTerm" : { "term" : "the coast is clear", "POS" : "expr", "sense" : "no one is there", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "La voie est libre", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"65" :{
+		"OriginalTerm" : { "term" : "the coast is clear", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "la voie est libre", "POS" : "", "sense" : ""}, "Note" : ""},
+	"66" :{
+		"OriginalTerm" : { "term" : "the die is cast", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "les dés sont jetés", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"67" :{
+		"OriginalTerm" : { "term" : "The flesh is weak", "POS" : "expr", "sense" : "It is easy to give in to temptation", "usage" : "figurative, Biblical"}, 
+		"FirstTranslation" : {"term" : "la chair est faible", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"68" :{
+		"OriginalTerm" : { "term" : "The pen is mightier than the sword.", "POS" : "expr", "sense" : "words are powerful", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "La plume est plus forte que l'épée.", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"69" :{
+		"OriginalTerm" : { "term" : "The pleasure is all mine.", "POS" : "expr", "sense" : "You're welcome.", "usage" : "formal"}, 
+		"FirstTranslation" : {"term" : "tout le plaisir est pour moi", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"70" :{
+		"OriginalTerm" : { "term" : "The pleasure is all mine.", "POS" : "expr", "sense" : "You're welcome.", "usage" : "formal"}, 
+		"FirstTranslation" : {"term" : "c'est moi qui vous remercie", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"71" :{
+		"OriginalTerm" : { "term" : "the shoe is on the other foot, the boot is on the other foot", "POS" : "expr", "sense" : "sb's circumstances are now reversed", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "les rôles sont inversés", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"72" :{
+		"OriginalTerm" : { "term" : "The time is ripe", "POS" : "expr", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "l'heure est arrivée", "POS" : "expr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "c'est le bon moment", "POS" : "expr", "sense" : ""}, 
+		"ThirdTranslation" : {"term" : "c'est le moment ou jamais", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"73" :{
+		"OriginalTerm" : { "term" : "The time is ripe, replace: The time is ripe for sth", "POS" : "expr", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "l'heure de qch est arrivée", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"74" :{
+		"OriginalTerm" : { "term" : "The world is your oyster.", "POS" : "expr", "sense" : "You can have or achieve anything.", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "le monde est à toi", "POS" : "expr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "le monde t'appartient", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"75" :{
+		"OriginalTerm" : { "term" : "there is, there's", "POS" : "expr", "sense" : "indicating sth singular", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il y a", "POS" : "expr", "sense" : ""}, "Note" : "incorrectly but commonly used with plural nouns"},
+	"76" :{
+		"OriginalTerm" : { "term" : "There is more than meets the eye.", "POS" : "expr", "sense" : "This is not what it seems.", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "les apparences sont trompeuses, la réalité est toute autre", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"77" :{
+		"OriginalTerm" : { "term" : "there is no question", "POS" : "interj", "sense" : "it is indisputable", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "c'est indéniable", "POS" : "", "sense" : ""}, "Note" : ""},
+	"78" :{
+		"OriginalTerm" : { "term" : "there is no question", "POS" : "interj", "sense" : "it is indisputable", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "cela ne fait aucun doute, il n'y a pas de doute (là-dessus)", "POS" : "", "sense" : ""}, "Note" : ""},
+	"79" :{
+		"OriginalTerm" : { "term" : "there is no question", "POS" : "interj", "sense" : "it is indisputable", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "pour sûr", "POS" : "", "sense" : ""}, "Note" : ""},
+	"80" :{
+		"OriginalTerm" : { "term" : "there is no question", "POS" : "interj", "sense" : "it is indisputable", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "la question ne se pose pas", "POS" : "", "sense" : ""}, "Note" : ""},
+	"81" :{
+		"OriginalTerm" : { "term" : "there is no question, there is no question (that\/of)", "POS" : "expr", "sense" : "it is indisputable that", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "cela ne fait aucun doute que, il n'y a pas de doute sur le fait que", "POS" : "", "sense" : ""}, "Note" : ""},
+	"82" :{
+		"OriginalTerm" : { "term" : "there is no question, there is no question (that\/of)", "POS" : "expr", "sense" : "it is indisputable that", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "incontestablement, assurément", "POS" : "adv", "sense" : ""}, "Note" : ""},
+	"83" :{
+		"OriginalTerm" : { "term" : "there is no question, there is no question (that\/of)", "POS" : "expr", "sense" : "it is indisputable that", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "une chose est sûre", "POS" : "", "sense" : ""}, "Note" : ""},
+	"84" :{
+		"OriginalTerm" : { "term" : "There is no such thing as a free lunch.", "POS" : "expr", "sense" : "Everything has a cost.", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "on n'a rien sans rien", "POS" : "expr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "tout se paie", "POS" : "expr", "sense" : ""}, 
+		"ThirdTranslation" : {"term" : "rien n'est gratuit", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"85" :{
+		"OriginalTerm" : { "term" : "time is money", "POS" : "interj", "sense" : "don't waste time", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "le temps, c'est de l'argent", "POS" : "interj", "sense" : ""}, "Note" : ""},
+	"86" :{
+		"OriginalTerm" : { "term" : "Time is of the essence", "POS" : "expr", "sense" : "Action must be taken urgently", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "chaque seconde compte, chaque minute compte", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"87" :{
+		"OriginalTerm" : { "term" : "time is running out", "POS" : "n", "sense" : "there is not much time left: before sth happens", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "le temps presse", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"88" :{
+		"OriginalTerm" : { "term" : "what is more", "POS" : "adv", "sense" : "moreover, in addition", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "de plus", "POS" : "loc adv", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "qui plus est", "POS" : "loc adv", "sense" : "plus familier"}, 
+		"ThirdTranslation" : {"term" : "qui plus est", "POS" : "loc adv", "sense" : ""}, 
+		"FourthTranslation" : {"term" : "de surcroît", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"89" :{
+		"OriginalTerm" : { "term" : "what is to come", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "ce qui est à venir", "POS" : "", "sense" : ""}, "Note" : ""},
+	"90" :{
+		"OriginalTerm" : { "term" : "What time is it?", "POS" : "expr", "sense" : "What hour is it?", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Quelle heure est-il ?", "POS" : "", "sense" : ""}, "Note" : ""},
+	"91" :{
+		"OriginalTerm" : { "term" : "What time is it?", "POS" : "expr", "sense" : "What hour is it?", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Il est quelle heure ?", "POS" : "", "sense" : "plus familier"}, "Note" : ""},
+	"92" :{
+		"OriginalTerm" : { "term" : "when all is said and done", "POS" : "adv", "sense" : "ultimately", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "en fin de compte", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"93" :{
+		"OriginalTerm" : { "term" : "when all is said and done", "POS" : "adv", "sense" : "ultimately", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "au bout du compte", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"94" :{
+		"OriginalTerm" : { "term" : "when all is said and done", "POS" : "adv", "sense" : "ultimately", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "en définitive", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"95" :{
+		"OriginalTerm" : { "term" : "where is", "POS" : "", "sense" : "in what location is", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "où est", "POS" : "", "sense" : ""}, "Note" : ""},
+	"96" :{
+		"OriginalTerm" : { "term" : "where is", "POS" : "", "sense" : "in what location is", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "où se trouve", "POS" : "", "sense" : ""}, "Note" : ""},
+	"97" :{
+		"OriginalTerm" : { "term" : "while there is life", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "tant qu'il y a de la vie", "POS" : "", "sense" : ""}, "Note" : ""},
+	"98" :{
+		"OriginalTerm" : { "term" : "woe is me", "POS" : "interj", "sense" : "expressing self-pity", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "pauvre de moi", "POS" : "interj", "sense" : ""}, "Note" : ""}}},
+"Lines" : "End Reached", "END" : true
+}

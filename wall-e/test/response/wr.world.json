@@ -1,0 +1,344 @@
+{
+"term0" : {
+"PrincipalTranslations" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "world, replace: the world", "POS" : "n", "sense" : "planet Earth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde", "POS" : "nm", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "planète", "POS" : "nf", "sense" : "la Terre"}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "world, replace: the world", "POS" : "n", "sense" : "humanity, society", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde", "POS" : "nm", "sense" : "personnes"}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "world", "POS" : "n", "sense" : "group of people", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "monde, milieu", "POS" : "nm", "sense" : "intérêts communs"}, 
+		"SecondTranslation" : {"term" : "univers", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"3" :{
+		"OriginalTerm" : { "term" : "world", "POS" : "n", "sense" : "celestial body", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"4" :{
+		"OriginalTerm" : { "term" : "world", "POS" : "n", "sense" : "realm", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "règne", "POS" : "nm", "sense" : "sciences naturelles"}, "Note" : ""},
+	"5" :{
+		"OriginalTerm" : { "term" : "world", "POS" : "n", "sense" : "era", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde", "POS" : "nm", "sense" : ""}, "Note" : ""}},
+"AdditionalTranslations" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "world, replace: the world", "POS" : "n", "sense" : "everybody, the public", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "les gens", "POS" : "nmpl", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "le grand public", "POS" : "nm", "sense" : ""}, "Note" : ""}}},
+"original" : {
+"Compounds" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "a whole new world", "POS" : "n", "sense" : "unfamiliar experience", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "pays inconnu", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "a whole new world", "POS" : "n", "sense" : "unfamiliar experience", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "une toute autre affaire", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "a world of", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "un monde de", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"3" :{
+		"OriginalTerm" : { "term" : "a world of sth", "POS" : "n", "sense" : "a great amount of sth", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "monde", "POS" : "nm", "sense" : "figuré"}, "Note" : ""},
+	"4" :{
+		"OriginalTerm" : { "term" : "across the world", "POS" : "adv", "sense" : "all over the Earth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "sur Terre", "POS" : "adv", "sense" : ""}, "Note" : ""},
+	"5" :{
+		"OriginalTerm" : { "term" : "across the world", "POS" : "adv", "sense" : "all over the Earth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dans le monde entier", "POS" : "adv", "sense" : ""}, "Note" : ""},
+	"6" :{
+		"OriginalTerm" : { "term" : "all over the world", "POS" : "adv", "sense" : "in many countries", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dans le monde entier", "POS" : "adv", "sense" : ""}, "Note" : ""},
+	"7" :{
+		"OriginalTerm" : { "term" : "all over the world", "POS" : "adv", "sense" : "everywhere", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "absolument partout", "POS" : "adv", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "dans le monde entier", "POS" : "loc adv", "sense" : "figuré : partout"}, "Note" : ""},
+	"8" :{
+		"OriginalTerm" : { "term" : "all the time in the world", "POS" : "n", "sense" : "as much time as needed", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "tout son temps", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"9" :{
+		"OriginalTerm" : { "term" : "all the world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "le monde entier", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"10" :{
+		"OriginalTerm" : { "term" : "ancient world", "POS" : "n", "sense" : "civilization of the distant past", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "ancien monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"11" :{
+		"OriginalTerm" : { "term" : "around the world", "POS" : "adv", "sense" : "in many countries", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "à travers le monde, de par le monde", "POS" : "adv", "sense" : ""}, "Note" : ""},
+	"12" :{
+		"OriginalTerm" : { "term" : "around the world", "POS" : "adv", "sense" : "circumnavigating the world", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "autour du monde", "POS" : "adv", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "to go around the world, to travel around the world : faire le tour du monde", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"13" :{
+		"OriginalTerm" : { "term" : "better world", "POS" : "n", "sense" : "heaven", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde meilleur", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"14" :{
+		"OriginalTerm" : { "term" : "bring into the world, replace: bring sb\/sth into the world", "POS" : "v expr", "sense" : "give birth to", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "donner naissance à qqn\/qch", "POS" : "loc v + prép", "sense" : ""}, "Note" : ""},
+	"15" :{
+		"OriginalTerm" : { "term" : "citizen of the world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "citoyen du monde, citoyenne du monde", "POS" : "nm, nf", "sense" : ""}, "Note" : ""},
+	"16" :{
+		"OriginalTerm" : { "term" : "come into the world", "POS" : "v expr", "sense" : "person: be born", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "venir au monde", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"17" :{
+		"OriginalTerm" : { "term" : "come into the world", "POS" : "v expr", "sense" : "person: be born", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "naître", "POS" : "vi", "sense" : ""}, "Note" : ""},
+	"18" :{
+		"OriginalTerm" : { "term" : "come into the world", "POS" : "v expr", "sense" : "person: be born", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "voir le jour", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"19" :{
+		"OriginalTerm" : { "term" : "corner of the world", "POS" : "n", "sense" : "geographic area", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "par chez toi", "POS" : "", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "coin", "POS" : "nm", "sense" : "familier"}, "Note" : ""},
+	"20" :{
+		"OriginalTerm" : { "term" : "corporate world", "POS" : "n", "sense" : "realm of business", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde des affaires", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"21" :{
+		"OriginalTerm" : { "term" : "dead to the world", "POS" : "adj", "sense" : "asleep", "usage" : "slang, figurative"}, 
+		"FirstTranslation" : {"term" : "impossible à réveiller", "POS" : "adj", "sense" : ""}, "Note" : ""},
+	"22" :{
+		"OriginalTerm" : { "term" : "dead to the world", "POS" : "adj", "sense" : "asleep", "usage" : "slang, figurative"}, 
+		"FirstTranslation" : {"term" : "avoir un sommeil de plomb", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"23" :{
+		"OriginalTerm" : { "term" : "developing world", "POS" : "n", "sense" : "Third World: poor countries", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "pays en voie de développement", "POS" : "nmpl", "sense" : ""}, "Note" : ""},
+	"24" :{
+		"OriginalTerm" : { "term" : "developing world", "POS" : "n", "sense" : "Third World: poor countries", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "pays émergents", "POS" : "nmpl", "sense" : ""}, "Note" : ""},
+	"25" :{
+		"OriginalTerm" : { "term" : "dream world", "POS" : "n", "sense" : "idealization, fantasy", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde imaginaire", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"26" :{
+		"OriginalTerm" : { "term" : "free world", "POS" : "n", "sense" : "democratic nations", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde libre", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"27" :{
+		"OriginalTerm" : { "term" : "ghost world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde des esprits", "POS" : "", "sense" : ""}, "Note" : ""},
+	"28" :{
+		"OriginalTerm" : { "term" : "in the whole wide world", "POS" : "adv", "sense" : "anywhere on earth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dans le monde (entier)", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"29" :{
+		"OriginalTerm" : { "term" : "in the world", "POS" : "adv", "sense" : "anywhere on earth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dans le monde", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"30" :{
+		"OriginalTerm" : { "term" : "in your own little world", "POS" : "adj", "sense" : "oblivious to others", "usage" : "informal, figurative"}, 
+		"FirstTranslation" : {"term" : "dans son petit monde, dans son univers", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"31" :{
+		"OriginalTerm" : { "term" : "it takes all kinds to make a world", "POS" : "", "sense" : "proverb", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "il faut de tout pour faire un monde", "POS" : "", "sense" : "proverbe"}, "Note" : ""},
+	"32" :{
+		"OriginalTerm" : { "term" : "knowledge of the world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "connaissance du monde", "POS" : "", "sense" : ""}, "Note" : ""},
+	"33" :{
+		"OriginalTerm" : { "term" : "Latin world", "POS" : "n", "sense" : "Latin America", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Amérique latine", "POS" : "nf propre", "sense" : ""}, "Note" : ""},
+	"34" :{
+		"OriginalTerm" : { "term" : "lower world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "bas monde", "POS" : "", "sense" : "en ce"}, "Note" : ""},
+	"35" :{
+		"OriginalTerm" : { "term" : "man of the world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "homme d'expérience", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"36" :{
+		"OriginalTerm" : { "term" : "map of the world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "mappemonde", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"37" :{
+		"OriginalTerm" : { "term" : "material world", "POS" : "n", "sense" : "physical world", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde matériel", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"38" :{
+		"OriginalTerm" : { "term" : "natural world", "POS" : "n", "sense" : "nature, life on earth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "nature", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"39" :{
+		"OriginalTerm" : { "term" : "natural world", "POS" : "n", "sense" : "nature, life on earth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde naturel", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"40" :{
+		"OriginalTerm" : { "term" : "nether world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Le monde des ténèbres", "POS" : "", "sense" : ""}, "Note" : ""},
+	"41" :{
+		"OriginalTerm" : { "term" : "nether world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Le royaume des ténèbres", "POS" : "", "sense" : ""}, "Note" : ""},
+	"42" :{
+		"OriginalTerm" : { "term" : "new world, new-world", "POS" : "n", "sense" : "unfamiliar environment or experience", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde nouveau", "POS" : "nm", "sense" : ""}, "Note" : "hyphen used when term is an adj before a noun"},
+	"43" :{
+		"OriginalTerm" : { "term" : "not for the world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "pas pour rien", "POS" : "", "sense" : ""}, "Note" : ""},
+	"44" :{
+		"OriginalTerm" : { "term" : "not of this world", "POS" : "adj", "sense" : "otherworldly", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "pas de ce monde", "POS" : "adj", "sense" : ""}, "Note" : ""},
+	"45" :{
+		"OriginalTerm" : { "term" : "not of this world", "POS" : "adj", "sense" : "sb; engrossed by spiritual matters", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "détaché des affaires de ce monde", "POS" : "loc adj", "sense" : ""}, "Note" : ""},
+	"46" :{
+		"OriginalTerm" : { "term" : "old-world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "d'antan", "POS" : "adj", "sense" : "vieux"}, "Note" : ""},
+	"47" :{
+		"OriginalTerm" : { "term" : "on top of the world", "POS" : "adj", "sense" : "happy", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "aux anges", "POS" : "adv", "sense" : ""}, "Note" : ""},
+	"48" :{
+		"OriginalTerm" : { "term" : "other-world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "autre monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"49" :{
+		"OriginalTerm" : { "term" : "out of this world", "POS" : "adj", "sense" : "excellent", "usage" : "dated, slang"}, 
+		"FirstTranslation" : {"term" : "fantastique, extraordinaire", "POS" : "adj", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "divin", "POS" : "adj", "sense" : "nourriture"}, 
+		"ThirdTranslation" : {"term" : "à tomber", "POS" : "loc adj", "sense" : "nourriture : familier"}, "Note" : ""},
+	"50" :{
+		"OriginalTerm" : { "term" : "out of touch with the real world", "POS" : "adj", "sense" : "unrealistic", "usage" : "figurative, informal"}, 
+		"FirstTranslation" : {"term" : "ne pas avoir le sens des réalités", "POS" : "loc v", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "avoir perdu le sens des réalités, avoir perdu le sens de la réalité", "POS" : "loc v", "sense" : ""}, 
+		"ThirdTranslation" : {"term" : "ne pas avoir les pieds sur terre", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"51" :{
+		"OriginalTerm" : { "term" : "physical world", "POS" : "n", "sense" : "geography of planet Earth", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde physique", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"52" :{
+		"OriginalTerm" : { "term" : "physical world", "POS" : "n", "sense" : "all that is material, not spiritual", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde matériel", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"53" :{
+		"OriginalTerm" : { "term" : "real world", "POS" : "n", "sense" : "reality", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "réalité", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"54" :{
+		"OriginalTerm" : { "term" : "roof of the world", "POS" : "n", "sense" : "Himalayas", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "toit du monde", "POS" : "nm", "sense" : "figuré"}, "Note" : ""},
+	"55" :{
+		"OriginalTerm" : { "term" : "round-the-world", "POS" : "", "sense" : "tour", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "du monde", "POS" : "adj", "sense" : "tour"}, "Note" : ""},
+	"56" :{
+		"OriginalTerm" : { "term" : "Second World War, World War II, WWII", "POS" : "n", "sense" : "1939-45 European conflict", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Seconde Guerre mondiale, Deuxième Guerre mondiale", "POS" : "nf", "sense" : "guerre de 1939-45"}, "Note" : ""},
+	"57" :{
+		"OriginalTerm" : { "term" : "small world", "POS" : "n", "sense" : "theory of interconnectedness", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Le monde est petit !", "POS" : "expr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "Comme le monde est petit !", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"58" :{
+		"OriginalTerm" : { "term" : "spirit world", "POS" : "n", "sense" : "supernatural dimension", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde spirituel", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"59" :{
+		"OriginalTerm" : { "term" : "spirit world", "POS" : "n", "sense" : "supernatural dimension", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde des esprits", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"60" :{
+		"OriginalTerm" : { "term" : "take the world by storm", "POS" : "v expr", "sense" : "be a sudden success", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "faire sensation, faire fureur", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"61" :{
+		"OriginalTerm" : { "term" : "take the world by storm", "POS" : "v expr", "sense" : "be a sudden success", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "cartonner", "POS" : "vi", "sense" : "familier"}, "Note" : ""},
+	"62" :{
+		"OriginalTerm" : { "term" : "the Light of the World", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "la lumière du monde", "POS" : "", "sense" : ""}, "Note" : ""},
+	"63" :{
+		"OriginalTerm" : { "term" : "the next world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "l'autre monde", "POS" : "", "sense" : ""}, "Note" : ""},
+	"64" :{
+		"OriginalTerm" : { "term" : "the Old World", "POS" : "n", "sense" : "Europe, Africa and Asia collectively", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "le Vieux, l'Ancien monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"65" :{
+		"OriginalTerm" : { "term" : "the Old World", "POS" : "n", "sense" : "Europe, Africa and Asia collectively", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "le vieux continent", "POS" : "nm", "sense" : "Europe"}, "Note" : ""},
+	"66" :{
+		"OriginalTerm" : { "term" : "the wider world", "POS" : "n", "sense" : "society at large, world in general", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "le Monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"67" :{
+		"OriginalTerm" : { "term" : "the world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "le monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"68" :{
+		"OriginalTerm" : { "term" : "The world is your oyster.", "POS" : "expr", "sense" : "You can have or achieve anything.", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "le monde est à toi", "POS" : "expr", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "le monde t'appartient", "POS" : "expr", "sense" : ""}, "Note" : ""},
+	"69" :{
+		"OriginalTerm" : { "term" : "the world over", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "de par le monde", "POS" : "", "sense" : ""}, "Note" : ""},
+	"70" :{
+		"OriginalTerm" : { "term" : "the world stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "l'échiquier mondial", "POS" : "nm", "sense" : "figuré, politique"}, "Note" : ""},
+	"71" :{
+		"OriginalTerm" : { "term" : "theater world", "POS" : "", "sense" : "", "usage" : "US"}, 
+		"FirstTranslation" : {"term" : "monde du théâtre", "POS" : "", "sense" : ""}, "Note" : ""},
+	"72" :{
+		"OriginalTerm" : { "term" : "think the world of, replace: think the world of sb", "POS" : "v expr", "sense" : "adore or admire greatly", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "idolâtrer, aduler", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"73" :{
+		"OriginalTerm" : { "term" : "think the world of, replace: think the world of sb", "POS" : "v expr", "sense" : "adore or admire greatly", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "porter aux nues", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"74" :{
+		"OriginalTerm" : { "term" : "think the world of, replace: think the world of sb", "POS" : "v expr", "sense" : "adore or admire greatly", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "tenir qqn en haute estime", "POS" : "vtr + loc adv", "sense" : ""}, "Note" : ""},
+	"75" :{
+		"OriginalTerm" : { "term" : "think the world of, replace: think the world of sb", "POS" : "v expr", "sense" : "adore or admire greatly", "usage" : "informal"}, 
+		"FirstTranslation" : {"term" : "être rempli d'adoration pour", "POS" : "loc v + prép", "sense" : ""}, "Note" : ""},
+	"76" :{
+		"OriginalTerm" : { "term" : "Third World, replace: the Third World", "POS" : "n", "sense" : "poor, developing countries", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "le tiers monde, le tiers-monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"77" :{
+		"OriginalTerm" : { "term" : "Third World", "POS" : "n as adj", "sense" : "of, in developing countries", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "du tiers monde, du tiers-monde", "POS" : "loc adj", "sense" : ""}, "Note" : ""},
+	"78" :{
+		"OriginalTerm" : { "term" : "third world country, Third World country", "POS" : "n", "sense" : "under-developed nation", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "pays du tiers monde, pays du tiers-monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"79" :{
+		"OriginalTerm" : { "term" : "Third-World country", "POS" : "n", "sense" : "nation: poor, developing", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "pays du tiers monde, pays du tiers-monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"80" :{
+		"OriginalTerm" : { "term" : "throughout the world", "POS" : "adv", "sense" : "all over the world", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dans le monde entier", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"81" :{
+		"OriginalTerm" : { "term" : "throughout the world", "POS" : "adv", "sense" : "all over the world", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "partout dans le monde", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"82" :{
+		"OriginalTerm" : { "term" : "throughout the world", "POS" : "adv", "sense" : "all over the world", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "à travers le monde", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"83" :{
+		"OriginalTerm" : { "term" : "top of the world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "sommet du monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"84" :{
+		"OriginalTerm" : { "term" : "Welcome to my world!", "POS" : "interj", "sense" : "expressing familiarity with an experience", "usage" : "informal, figurative"}, 
+		"FirstTranslation" : {"term" : "bienvenue au club !", "POS" : "interj", "sense" : ""}, "Note" : ""},
+	"85" :{
+		"OriginalTerm" : { "term" : "Welcome to my world!", "POS" : "interj", "sense" : "expressing familiarity with an experience", "usage" : "informal, figurative"}, 
+		"FirstTranslation" : {"term" : "bienvenue dans mon univers !", "POS" : "interj", "sense" : "fig,"}, "Note" : ""},
+	"86" :{
+		"OriginalTerm" : { "term" : "woman of the world", "POS" : "n", "sense" : "sophisticated woman", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "femme du monde", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"87" :{
+		"OriginalTerm" : { "term" : "wonder of the world", "POS" : "n", "sense" : "ancient landmark or feature", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "l'une des merveilles du monde", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"88" :{
+		"OriginalTerm" : { "term" : "wonders of the world", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "les Merveilles du Monde", "POS" : "", "sense" : ""}, "Note" : ""},
+	"89" :{
+		"OriginalTerm" : { "term" : "work world, world of work", "POS" : "n", "sense" : "employment", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monde du travail", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"90" :{
+		"OriginalTerm" : { "term" : "World Bank", "POS" : "n", "sense" : "international financial institution", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Banque mondiale", "POS" : "nf propre", "sense" : ""}, "Note" : ""},
+	"91" :{
+		"OriginalTerm" : { "term" : "world champion", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "champion du monde, championne du monde", "POS" : "nm, nf", "sense" : ""}, "Note" : ""},
+	"92" :{
+		"OriginalTerm" : { "term" : "world champions", "POS" : "npl", "sense" : "winning team in an international competition", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "champions du monde", "POS" : "nmpl", "sense" : ""}, "Note" : ""},
+	"93" :{
+		"OriginalTerm" : { "term" : "world championship", "POS" : "n", "sense" : "sport: top competition", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "championnat du monde", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"94" :{
+		"OriginalTerm" : { "term" : "world class, world-class", "POS" : "adj", "sense" : "of highest quality", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "de classe internationale", "POS" : "loc adj", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "d'envergure internationale", "POS" : "loc adj", "sense" : ""}, "Note" : ""},
+	"95" :{
+		"OriginalTerm" : { "term" : "world class, world-class", "POS" : "adj", "sense" : "of highest quality", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "de classe mondiale", "POS" : "loc adj", "sense" : ""}, "Note" : ""},
+	"96" :{
+		"OriginalTerm" : { "term" : "World Cup", "POS" : "n", "sense" : "soccer championship", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "Coupe du monde (de football)", "POS" : "nf", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "Mondial", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"97" :{
+		"OriginalTerm" : { "term" : "world economy", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "économie mondiale", "POS" : "", "sense" : ""}, "Note" : ""},
+	"98" :{
+		"OriginalTerm" : { "term" : "world famous, world-famous", "POS" : "adj", "sense" : "known everywhere", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "mondialement célèbre, mondialement connu", "POS" : "adv + adj", "sense" : ""}, "Note" : "A hyphen is used when the adjective precedes the noun"},
+	"99" :{
+		"OriginalTerm" : { "term" : "world famous, world-famous", "POS" : "adj", "sense" : "known everywhere", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "de renommée mondiale", "POS" : "loc adj", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "à la renommée mondiale", "POS" : "loc adj", "sense" : ""}, "Note" : "A hyphen is used when the adjective precedes the noun"}}},
+"Lines" : "End Reached", "END" : true
+}

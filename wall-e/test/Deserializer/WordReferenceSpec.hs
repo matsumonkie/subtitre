@@ -7,7 +7,7 @@ import Prelude()
 
 import Test.Hspec
 import Type
-import qualified Data.ByteString.Lazy as BSL hiding (elem)
+import qualified Data.ByteString.Lazy as BSL
 import Data.Aeson
 import Deserializer.WordReference
 import Data.Maybe

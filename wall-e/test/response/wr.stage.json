@@ -1,0 +1,204 @@
+{
+"term0" : {
+"PrincipalTranslations" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "stage", "POS" : "n", "sense" : "raised performance area", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "scène", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "stage", "POS" : "n", "sense" : "step in a process", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "étape", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "stage, replace: stage sth", "POS" : "vtr", "sense" : "artificially arrange", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "mettre en scène", "POS" : "vtr", "sense" : ""}, "Note" : ""}},
+"AdditionalTranslations" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "stage, the stage", "POS" : "n", "sense" : "theatre as a profession", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "la scène", "POS" : "nf", "sense" : "le théâtre"}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "stage", "POS" : "n", "sense" : "stretch of a race", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "étape", "POS" : "nf", "sense" : "d'une course"}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "stage", "POS" : "n", "sense" : "part of a rocket", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "étage", "POS" : "nm", "sense" : "d'une fusée"}, "Note" : ""},
+	"3" :{
+		"OriginalTerm" : { "term" : "stage", "POS" : "n", "sense" : "microscope platform", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "platine", "POS" : "nf", "sense" : "d'un microscope"}, "Note" : ""},
+	"4" :{
+		"OriginalTerm" : { "term" : "stage", "POS" : "n as adj", "sense" : "theatrical", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "de théâtre", "POS" : "loc adj", "sense" : ""}, "Note" : ""},
+	"5" :{
+		"OriginalTerm" : { "term" : "stage, replace: stage sth", "POS" : "vtr", "sense" : "put on a play", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "mettre en scène", "POS" : "vtr", "sense" : ""}, "Note" : ""},
+	"6" :{
+		"OriginalTerm" : { "term" : "stage, replace: stage sth", "POS" : "vtr", "sense" : "arrange an event", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "organiser", "POS" : "vtr", "sense" : ""}, "Note" : ""}}},
+"original" : {
+"Compounds" : {
+	"0" :{
+		"OriginalTerm" : { "term" : "at this stage", "POS" : "adv", "sense" : "at this point: in a process", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "à ce stade de", "POS" : "prép", "sense" : ""}, "Note" : ""},
+	"1" :{
+		"OriginalTerm" : { "term" : "at this stage", "POS" : "adv", "sense" : "at this point: in a process", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "arrivé à ce stade", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"2" :{
+		"OriginalTerm" : { "term" : "boo off, replace: boo sb off the stage", "POS" : "v expr", "sense" : "performer, speaker: jeer from stage", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "faire quitter la scène à qqn sous les huées", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"3" :{
+		"OriginalTerm" : { "term" : "center stage, UK: centre stage", "POS" : "adv", "sense" : "in the spotlight, in a leading role", "usage" : "US"}, 
+		"FirstTranslation" : {"term" : "rôle principal", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"4" :{
+		"OriginalTerm" : { "term" : "committee stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "discussion en comité", "POS" : "", "sense" : ""}, "Note" : ""},
+	"5" :{
+		"OriginalTerm" : { "term" : "early stage", "POS" : "n", "sense" : "beginnings", "usage" : "often plural"}, 
+		"FirstTranslation" : {"term" : "débuts", "POS" : "nmpl", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "balbutiements", "POS" : "nmpl", "sense" : "figuré"}, "Note" : ""},
+	"6" :{
+		"OriginalTerm" : { "term" : "early stage, early-stage", "POS" : "n as adj", "sense" : "illness: in initial phase", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "à un stade précoce", "POS" : "loc adv", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "précoce", "POS" : "adj", "sense" : ""}, 
+		"ThirdTranslation" : {"term" : "début", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"7" :{
+		"OriginalTerm" : { "term" : "end stage", "POS" : "n", "sense" : "final phase", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dernier stade", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"8" :{
+		"OriginalTerm" : { "term" : "end stage", "POS" : "n", "sense" : "final phase", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "phase finale", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"9" :{
+		"OriginalTerm" : { "term" : "end stage", "POS" : "n", "sense" : "final stage of terminal disease", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "phase terminale", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"10" :{
+		"OriginalTerm" : { "term" : "first stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "premier stade", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"11" :{
+		"OriginalTerm" : { "term" : "foundation stage", "POS" : "n", "sense" : "period of education up to 5 years", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "maternelle", "POS" : "nf", "sense" : "Scolaire"}, "Note" : ""},
+	"12" :{
+		"OriginalTerm" : { "term" : "go on stage", "POS" : "v expr", "sense" : "perform, act publicly", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monter sur scène", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"13" :{
+		"OriginalTerm" : { "term" : "go on stage", "POS" : "v expr", "sense" : "become performer", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "monter sur scène", "POS" : "loc v", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "monter sur les planches", "POS" : "loc v", "sense" : "figuré"}, "Note" : ""},
+	"14" :{
+		"OriginalTerm" : { "term" : "knockout stage", "POS" : "n", "sense" : "competition: elimination round", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "éliminatoires", "POS" : "nmpl", "sense" : ""}, "Note" : ""},
+	"15" :{
+		"OriginalTerm" : { "term" : "landing stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "embarcadère", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"16" :{
+		"OriginalTerm" : { "term" : "landing stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "estacade", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"17" :{
+		"OriginalTerm" : { "term" : "landing stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "débarcadère", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"18" :{
+		"OriginalTerm" : { "term" : "last stage", "POS" : "n", "sense" : "final part, final step", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dernière phase", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"19" :{
+		"OriginalTerm" : { "term" : "leave the stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "quitter la scène", "POS" : "v", "sense" : ""}, "Note" : ""},
+	"20" :{
+		"OriginalTerm" : { "term" : "musical stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "scène de concert", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"21" :{
+		"OriginalTerm" : { "term" : "off stage, off-stage", "POS" : "adv", "sense" : "in the wings", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "to go off stage : sortir de scène", "POS" : "", "sense" : "mouvement"}, "Note" : "hyphen used when term is an adj before a noun"},
+	"22" :{
+		"OriginalTerm" : { "term" : "off stage, off-stage", "POS" : "adv", "sense" : "in the wings", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "en coulisse, en coulisses", "POS" : "loc adv", "sense" : ""}, "Note" : "hyphen used when term is an adj before a noun"},
+	"23" :{
+		"OriginalTerm" : { "term" : "off stage, off-stage", "POS" : "adv", "sense" : "in the wings", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dans les coulisses", "POS" : "", "sense" : ""}, "Note" : "hyphen used when term is an adj before a noun"},
+	"24" :{
+		"OriginalTerm" : { "term" : "off stage, off-stage", "POS" : "adv", "sense" : "backstage", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "en coulisse(s)", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"25" :{
+		"OriginalTerm" : { "term" : "off stage, off-stage", "POS" : "adv", "sense" : "backstage", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "dans les coulisses", "POS" : "loc adv", "sense" : ""}, "Note" : ""},
+	"26" :{
+		"OriginalTerm" : { "term" : "on stage", "POS" : "adv", "sense" : "performer: in a theatre", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "sur scène", "POS" : "adv", "sense" : ""}, "Note" : ""},
+	"27" :{
+		"OriginalTerm" : { "term" : "on stage", "POS" : "adv", "sense" : "performer: in a theatre", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "sur les planches", "POS" : "", "sense" : ""}, "Note" : ""},
+	"28" :{
+		"OriginalTerm" : { "term" : "one-stage lock", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "écluse à sas", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"29" :{
+		"OriginalTerm" : { "term" : "political stage", "POS" : "n", "sense" : "public politics", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "scène politique", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"30" :{
+		"OriginalTerm" : { "term" : "set the stage", "POS" : "v expr", "sense" : "make everything ready", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "préparer le terrain", "POS" : "loc v", "sense" : "figuré"}, "Note" : ""},
+	"31" :{
+		"OriginalTerm" : { "term" : "single-stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "à un étage", "POS" : "", "sense" : "maison"}, "Note" : ""},
+	"32" :{
+		"OriginalTerm" : { "term" : "stage crew", "POS" : "n", "sense" : "theatre technicians", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "équipe technique", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"33" :{
+		"OriginalTerm" : { "term" : "stage crew", "POS" : "n", "sense" : "theatre technicians", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "staff technique", "POS" : "nm", "sense" : "pop"}, "Note" : ""},
+	"34" :{
+		"OriginalTerm" : { "term" : "stage crew", "POS" : "n", "sense" : "theatre technicians", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "technique", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"35" :{
+		"OriginalTerm" : { "term" : "stage direction, replace: stage directions", "POS" : "npl", "sense" : "instructions in script of a play", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "indications scéniques", "POS" : "nfpl", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "didascalies", "POS" : "nfpl", "sense" : ""}, "Note" : ""},
+	"36" :{
+		"OriginalTerm" : { "term" : "stage director", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "metteur en scène de théâtre", "POS" : "", "sense" : ""}, "Note" : ""},
+	"37" :{
+		"OriginalTerm" : { "term" : "stage door", "POS" : "n", "sense" : "backstage entrance to a venue", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "entrée des artistes", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"38" :{
+		"OriginalTerm" : { "term" : "stage fright", "POS" : "n", "sense" : "severe performance anxiety", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "trac", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"39" :{
+		"OriginalTerm" : { "term" : "stage left", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "côté cour", "POS" : "", "sense" : ""}, "Note" : ""},
+	"40" :{
+		"OriginalTerm" : { "term" : "stage manager", "POS" : "n", "sense" : "theatre director", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "régisseur, régisseuse", "POS" : "nm, nf", "sense" : "Théâtre"}, "Note" : ""},
+	"41" :{
+		"OriginalTerm" : { "term" : "stage name", "POS" : "n", "sense" : "entertainer's pseudonym", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "nom de scène", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"42" :{
+		"OriginalTerm" : { "term" : "stage performance", "POS" : "n", "sense" : "act put on in a theatre", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "représentation (musicale, théâtrale, etc.)", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"43" :{
+		"OriginalTerm" : { "term" : "stage performance", "POS" : "n", "sense" : "act put on in a theatre", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "spectacle", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"44" :{
+		"OriginalTerm" : { "term" : "stage persona", "POS" : "n", "sense" : "image cultivated by a performer", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "personnage (de scène)", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"45" :{
+		"OriginalTerm" : { "term" : "stage right", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "côté jardin", "POS" : "", "sense" : ""}, "Note" : ""},
+	"46" :{
+		"OriginalTerm" : { "term" : "stage structure", "POS" : "n", "sense" : "platform or support for performing", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "scène", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"47" :{
+		"OriginalTerm" : { "term" : "stage whisper", "POS" : "n", "sense" : "actor's loud whisper", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "aparté", "POS" : "nm", "sense" : "Théâtre"}, "Note" : ""},
+	"48" :{
+		"OriginalTerm" : { "term" : "stage whisper", "POS" : "n", "sense" : "loud whisper", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "chuchotement", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"49" :{
+		"OriginalTerm" : { "term" : "stage-managed", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "orchestré", "POS" : "nm", "sense" : ""}, "Note" : ""},
+	"50" :{
+		"OriginalTerm" : { "term" : "stage-managing", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "régie", "POS" : "nf", "sense" : ""}, "Note" : ""},
+	"51" :{
+		"OriginalTerm" : { "term" : "take center stage, replace: take center stage (US), take centre stage (UK)", "POS" : "expr", "sense" : "be the focus of attention", "usage" : "figurative"}, 
+		"FirstTranslation" : {"term" : "être sur le devant de la scène", "POS" : "loc v", "sense" : ""}, 
+		"SecondTranslation" : {"term" : "se retrouver sur le devant de la scène", "POS" : "loc v", "sense" : ""}, 
+		"ThirdTranslation" : {"term" : "être sous les feux de la rampe, être au centre de l'attention", "POS" : "loc v", "sense" : ""}, "Note" : ""},
+	"52" :{
+		"OriginalTerm" : { "term" : "the world stage", "POS" : "", "sense" : "", "usage" : ""}, 
+		"FirstTranslation" : {"term" : "l'échiquier mondial", "POS" : "nm", "sense" : "figuré, politique"}, "Note" : ""}}},
+"Lines" : "End Reached", "END" : true
+}
