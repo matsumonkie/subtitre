@@ -30,7 +30,7 @@ spec = do
         it "new line at end of file" $ do
           parseSpacySentence lSets ["I -PRON- PRON\n"] `shouldBe` Right [[("I", "-PRON-", Pron, Unknown)]]
         it "multiple argument" $ do
-          length <$> parseSpacySentence lSets [multipleArg] `shouldBe` Right 4
+          length <$> parseSpacySentence lSets multipleArg `shouldBe` Right 4
         it "different level" $ do
           parseSpacySentence lSets ["worthless worthless ADJ"] `shouldBe` Right [[("worthless", "worthless", Adj, Unknown)]]
           parseSpacySentence lSets ["mighty mighty ADV"] `shouldBe` Right [[("mighty", "mighty", Adv, Unknown)]]
@@ -38,7 +38,8 @@ spec = do
 lSets :: LevelSets
 lSets = LevelSets (HS.fromList [], HS.fromList [], HS.fromList [])
 
-multipleArg = "I -PRON- PRON\n\
-              \wanted want VERB\n\
-              \ice ice NOUN\n\
-              \creams cream NOUN"
+multipleArg = [ "I -PRON- PRON\n"
+              , "wanted want VERB\n"
+              , "ice ice NOUN\n"
+              , "creams cream NOUN"
+              ]

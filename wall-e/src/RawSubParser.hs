@@ -5,6 +5,7 @@
 
 module RawSubParser (
   RawSubParser.parseOriginal
+, parseFile
 , parseSubtitles
 ) where
 
@@ -25,14 +26,23 @@ import Config.App
 import qualified Text.HTML.TagSoup as TS
 import Data.List
 
+
 parseOriginal :: App [RawSubCtx]
 parseOriginal = do
   inputFile <- asksR file
-  result <- liftIO $ Ex.tryJust invalidArgument (readWith inputFile SIO.utf8) :: App (Either () T.Text)
-  content <- liftIO $ either (const $ readWith inputFile SIO.latin1) return result :: App T.Text
-  case (parseSubtitles content :: Either ParseError [RawSubCtx]) of
+  res <- liftIO $ parseFile inputFile
+  case (res :: Either ParseError [RawSubCtx]) of
     Left pe -> throwError [AppError pe]
     Right rs -> return rs
+
+parseFile :: FilePath -> IO (Either ParseError [RawSubCtx])
+parseFile file = do
+  result <- Ex.tryJust invalidArgument (readWith file SIO.utf8) :: IO (Either () T.Text)
+  content <- either (const $ readWith file SIO.latin1) return result :: IO T.Text
+  return $
+    case (parseSubtitles content :: Either ParseError [RawSubCtx]) of
+      Left pe -> Left pe
+      Right rs -> Right rs
   where
     readWith :: FilePath -> SIO.TextEncoding -> IO T.Text
     readWith inputFile encoding = do

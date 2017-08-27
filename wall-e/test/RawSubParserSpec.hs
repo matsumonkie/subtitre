@@ -34,17 +34,17 @@ spec = do
           parseSubtitles (multipleSubs) `shouldBe` Right [res ["hello"], res ["world"]]
       context "real subtitles" $ do
         it "parses real subtitles" $ do
-          parse sherlock >>= satisfyIsRight
-          parse mrRobot >>= satisfyIsRight
+          parseSucceed sherlock
+          parseSucceed mrRobot
         it "with bom" $ do
-          parse house >>= satisfyIsRight
+          parseSucceed house
         it "with ascii & CRLF" $ do
-          parse gameOfThrones >>= satisfyIsRight
+          parseSucceed gameOfThrones
         it "with multiple back to back new lines" $ do
-          parse theOffice >>= satisfyIsRight
+          parseSucceed theOffice
       context "Latin-1" $ do
         it "parses weird characters" $ do
-          parse friends >>= satisfyIsRight
+          parseSucceed friends
 
 sherlock = "sherlock.srt"
 mrRobot = "mr. robot.srt"
@@ -53,17 +53,6 @@ house = "house.srt"
 theOffice = "theOffice.srt"
 gameOfThrones = "game of thrones.srt"
 
-parse :: FilePath -> IO [Either P.ParseError [RawSubCtx]]
-parse file =
-  parseFile <$> readFileAsLines file
-
-readFileAsLines :: FilePath -> IO [T.Text]
-readFileAsLines file =
-  T.lines <$> (TIO.readFile $ "test/assets/" <> file)
-
-parseFile :: [T.Text] -> [Either P.ParseError [RawSubCtx]]
-parseFile lines =
-  map parseSubtitles lines
 
 arg = "1\n\
       \00:00:26,722 --> 00:00:29,023\n\
@@ -84,6 +73,9 @@ res text =
     t2 = Timing 0 0 29 23
     sentences = text
 
-satisfyIsRight :: [Either P.ParseError [RawSubCtx]] -> Expectation
-satisfyIsRight parsed =
-  length (rights parsed) `shouldBe` length parsed
+parseSucceed :: FilePath -> Expectation
+parseSucceed file = do
+  parsed <- parseFile $ assetPath file
+  parsed `shouldSatisfy` isRight
+  where
+    assetPath file = "test/assets/" <> file
