@@ -1,0 +1,101 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "9e236a755f6462486b8a0f458784330edd2c164eb34131e42dc660e181a1bb7d"
+        },
+        "requires": {},
+        "sources": [
+            {
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "asyncio": {
+            "version": "==3.4.3"
+        },
+        "certifi": {
+            "version": "==2017.7.27.1"
+        },
+        "chardet": {
+            "version": "==3.0.4"
+        },
+        "cymem": {
+            "version": "==1.31.2"
+        },
+        "cytoolz": {
+            "version": "==0.8.2"
+        },
+        "dill": {
+            "version": "==0.2.7.1"
+        },
+        "ftfy": {
+            "version": "==4.4.3"
+        },
+        "html5lib": {
+            "version": "==0.999999999"
+        },
+        "idna": {
+            "version": "==2.6"
+        },
+        "murmurhash": {
+            "version": "==0.26.4"
+        },
+        "numpy": {
+            "version": "==1.13.1"
+        },
+        "pathlib": {
+            "version": "==1.0.1"
+        },
+        "plac": {
+            "version": "==0.9.6"
+        },
+        "preshed": {
+            "version": "==1.0.0"
+        },
+        "redis": {
+            "version": "==2.10.6"
+        },
+        "regex": {
+            "version": "==2017.7.28"
+        },
+        "requests": {
+            "version": "==2.18.4"
+        },
+        "six": {
+            "version": "==1.10.0"
+        },
+        "spacy": {
+            "version": "==1.9.0"
+        },
+        "termcolor": {
+            "version": "==1.1.0"
+        },
+        "thinc": {
+            "version": "==6.5.2"
+        },
+        "toolz": {
+            "version": "==0.8.2"
+        },
+        "tqdm": {
+            "version": "==4.15.0"
+        },
+        "ujson": {
+            "version": "==1.35"
+        },
+        "urllib3": {
+            "version": "==1.22"
+        },
+        "wcwidth": {
+            "version": "==0.1.7"
+        },
+        "webencodings": {
+            "version": "==0.5.1"
+        },
+        "wrapt": {
+            "version": "==1.10.11"
+        }
+    },
+    "develop": {}
+}

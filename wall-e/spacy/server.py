@@ -1,32 +1,24 @@
-#!/usr/bin/env python
-
-print "[SERVER] starting"
-
 import spacy
 import signal
 import sys
 from util import *
+import time
+import asyncio
+import redis
 
 from spacy.symbols import ORTH, LEMMA, POS
 from spacy.tokens import Doc
 
 HOST = 'localhost'
-PORT = 15556
-MAX_CONNECTIONS = 1
+PORT = 6379
+DB = 0
 
-socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-socket.bind((HOST, PORT))
+nlp = { 'en': spacy.load('en'),
+        'fr': spacy.load('fr') }
 
-print "[SERVER] loading spacy"
-
-nlp = spacy.load('en_core_web_sm')
-
-nlp.tokenizer.add_special_case(u'<*>', [{ ORTH: u'<*>', LEMMA: u'<*>', POS: u'VERB' }])
-nlp.tokenizer.add_special_case(u'<$>', [{ ORTH: u'<$>', LEMMA: u'<$>', POS: u'VERB' }])
-
-print "[SERVER] listening"
-socket.listen(MAX_CONNECTIONS)
-client = ""
+for key in nlp:
+  nlp[key].tokenizer.add_special_case(u'<*>', [{ ORTH: u'<*>', LEMMA: u'<*>', POS: u'VERB' }])
+  nlp[key].tokenizer.add_special_case(u'<$>', [{ ORTH: u'<$>', LEMMA: u'<$>', POS: u'VERB' }])
 
 def toToken(word):
   if word.lemma_ == "<*>":
@@ -36,21 +28,23 @@ def toToken(word):
   else:
     return word.text + " " + word.lemma_ + " " + word.pos_
 
-while True:
-  try:
-    client, address = socket.accept()
-    print "[SERVER] accepting request"
-    request = recv_msg(client)
-    doc = nlp(unicode(request, "utf-8"))
-    response = "\n".join([toToken(w) for w in doc])
+def handler(message):
+  _, lang, id = message['channel'].decode("utf-8").split(":")
+  content = message['data']
+  doc = nlp[lang](content.decode("utf-8"))
+  response = "\n".join([toToken(w) for w in doc])
+  print(response)
 
-    print "[SERVER] replying"
-    print response
-    send_msg(client, response.encode("utf-8"))
-  except KeyboardInterrupt:
-    if hasattr(client, 'close'):
-      print "[SERVER] closing client"
-      client.close()
-    else:
-      print "[SERVER] closing"
-    sys.exit()
+loop = asyncio.get_event_loop()
+try:
+  client = redis.StrictRedis(host=HOST, port=PORT, db=DB)
+  pubsub = client.pubsub()
+  pubsub.psubscribe(**{ 'spacy:en:*': handler,
+                        'spacy:fr:*': handler })
+  thread = pubsub.run_in_thread(sleep_time=0.001)
+  loop.run_forever()
+except KeyboardInterrupt:
+  pass
+finally:
+  pubsub.close()
+  loop.close()
