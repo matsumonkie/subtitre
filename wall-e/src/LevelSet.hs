@@ -9,6 +9,7 @@ import Prelude()
 import qualified Data.HashSet as HS
 import Type
 import AssetAsSet
+import qualified Data.Text as T
 
 easyWords   lang = assetAsSet $ levelPath lang "500"
 normalWords lang = assetAsSet $ levelPath lang "3000"
@@ -19,9 +20,9 @@ levelPath lang file =
 
 getLevelSets :: Language -> IO LevelSets
 getLevelSets lang = do
-  e <- easyWords   lang
-  n <- normalWords lang
-  h <- hardWords   lang
+  e <- easyWords   $ T.unpack lang
+  n <- normalWords $ T.unpack lang
+  h <- hardWords   $ T.unpack lang
   return $ LevelSets (e, n, h)
 
 whichLevel :: Word -> LevelSets -> Level

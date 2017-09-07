@@ -20,11 +20,12 @@ import Control.Monad
 import Redis.Channel
 import Redis.PubSub
 
-listenNewSubtitle :: IO ()
-listenNewSubtitle = do
+listenNewSubtitle :: (Message -> IO ()) -> IO ()
+listenNewSubtitle handler = do
   co <- checkedConnect defaultConnectInfo
   runRedis co $
     pubSub (subscribe subtitleChannelsPattern) $ \msg -> do
+      handler msg
       return mempty
 
 main2 = do

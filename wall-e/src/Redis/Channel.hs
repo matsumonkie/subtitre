@@ -4,6 +4,7 @@ module Redis.Channel (
   subtitleChannelsPattern
 , spacyChannel
 , spacifiedChannel
+, channelInfos
 ) where
 
 import Common
@@ -43,6 +44,7 @@ channel :: BS.ByteString -> BS.ByteString -> BS.ByteString -> BS.ByteString
 channel key lang id =
   key <> ":" <> lang <> ":" <> id
 
-channelId :: Message -> T.Text
-channelId msg =
-  last $ T.splitOn ":" $ decodeUtf8 $ msgChannel msg
+channelInfos :: Message -> (T.Text, T.Text, T.Text)
+channelInfos msg =
+  let (channel:fromLang:toLang:id:xs) = T.splitOn ":" $ decodeUtf8 $ msgChannel msg
+  in (fromLang, toLang, id)

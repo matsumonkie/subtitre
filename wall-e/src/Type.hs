@@ -55,7 +55,7 @@ type RawSubCtx  = SubCtx [Sentence]
 type RichSubCtx = SubCtx [(Sentence, [WordInfos])]
 
 type Json = Value
-type Language = String
+type Language = T.Text
 type Word = T.Text
 type Lemma = T.Text
 data Tag = Adj

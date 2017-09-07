@@ -46,9 +46,9 @@ setLogger = do
   let myStreamHandler' = setFormatter myStreamHandler $ simpleLogFormatter logFormatter
   liftIO $ updateGlobalLogger rootLoggerName $ setLevel logLevel . setHandlers [myStreamHandler']
 
-getRuntimeConf :: FilePath -> String -> String -> Level -> IO RuntimeConf
+getRuntimeConf :: FilePath -> T.Text -> T.Text -> Level -> IO RuntimeConf
 getRuntimeConf file fromLang toLang level = do
-  levelSets <- getLevelSets fromLang
+  levelSets <- getLevelSets $ fromLang
   dontTranslate <- DT.dontTranslate fromLang toLang
   return $
     RuntimeConf { levelSets = levelSets

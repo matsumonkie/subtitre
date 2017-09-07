@@ -44,8 +44,8 @@ data RuntimeConf =
   RuntimeConf { levelSets :: LevelSets
               , levelToShow :: Level
               , file :: FilePath
-              , fromLang :: Language
-              , toLang :: Language
+              , fromLang :: T.Text
+              , toLang :: T.Text
               , dontTranslate :: TextSet
               , logLevel :: Priority
               , logFormatter :: String
