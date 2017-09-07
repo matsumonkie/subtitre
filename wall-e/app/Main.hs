@@ -8,6 +8,8 @@ import Lib
 
 main :: IO ()
 main = do
+  return ()
+  {-
   (file:fromLang:toLang:withLevel:_) <- getArgs
   runtimeConf <- getRuntimeConf file fromLang toLang Hard
   staticConf  <- getStaticConf
@@ -15,3 +17,4 @@ main = do
   let config = Config runtimeConf staticConf translationsConf
   subtitle <- runExceptT (runReaderT run config)
   return ()
+-}
