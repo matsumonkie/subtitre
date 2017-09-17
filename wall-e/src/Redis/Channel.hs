@@ -2,7 +2,7 @@
 
 module Redis.Channel (
   subtitleChannelsPattern
-, spacyChannel
+, spacifyChannel
 , spacifiedChannel
 , channelInfos
 ) where
@@ -28,9 +28,9 @@ subtitleChannelPattern :: BS.ByteString -> BS.ByteString
 subtitleChannelPattern lang =
   channelPattern "subtitle" lang
 
-spacyChannel :: BS.ByteString -> BS.ByteString -> BS.ByteString
-spacyChannel lang id =
-  channel "spacy" lang id
+spacifyChannel :: BS.ByteString -> BS.ByteString -> BS.ByteString
+spacifyChannel lang id =
+  channel "spacify" lang id
 
 spacifiedChannel :: BS.ByteString -> BS.ByteString -> BS.ByteString
 spacifiedChannel lang id =

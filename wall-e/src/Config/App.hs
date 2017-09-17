@@ -46,6 +46,7 @@ data RuntimeConf =
               , file :: FilePath
               , fromLang :: T.Text
               , toLang :: T.Text
+              , subId :: T.Text
               , dontTranslate :: TextSet
               , logLevel :: Priority
               , logFormatter :: String

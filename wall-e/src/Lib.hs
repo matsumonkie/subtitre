@@ -11,6 +11,7 @@ module Lib
 import Common
 import Prelude()
 
+import qualified Data.ByteString as BS
 import Composer.RichSubCtx as All
 import Config.App as All
 import Control.DeepSeq as All
@@ -23,6 +24,8 @@ import RawSubParser as All
 import RichSubCtx as All
 import Translator.Translate as All
 import Type as All
+import Redis.Connection
+import Redis.Handler
 
 import Control.Concurrent.STM
 import qualified Data.HashMap.Strict as HM
@@ -35,8 +38,12 @@ import System.Log.Handler (setFormatter)
 import System.Log.Handler.Simple
 import System.Log.Logger hiding (logM, debugM, infoM, noticeM, warningM, errorM, criticalM, alertM, emergencyM)
 import qualified DontTranslate as DT
-import Spacy
-import SpacyParser
+import Spacy.Spacify
+import Spacy.Parser
+import Database.Redis
+import Text.Parsec as Parsec
+import Control.Concurrent
+import Data.Text.Encoding
 
 setLogger :: App ()
 setLogger = do
@@ -46,8 +53,8 @@ setLogger = do
   let myStreamHandler' = setFormatter myStreamHandler $ simpleLogFormatter logFormatter
   liftIO $ updateGlobalLogger rootLoggerName $ setLevel logLevel . setHandlers [myStreamHandler']
 
-getRuntimeConf :: FilePath -> T.Text -> T.Text -> Level -> IO RuntimeConf
-getRuntimeConf file fromLang toLang level = do
+getRuntimeConf :: FilePath -> T.Text -> T.Text -> Level -> T.Text -> IO RuntimeConf
+getRuntimeConf file fromLang toLang level subId = do
   levelSets <- getLevelSets $ fromLang
   dontTranslate <- DT.dontTranslate fromLang toLang
   return $
@@ -56,6 +63,7 @@ getRuntimeConf file fromLang toLang level = do
                 , fromLang = fromLang
                 , toLang = toLang
                 , dontTranslate = dontTranslate
+                , subId = subId
                 , levelToShow = level
                 , logLevel = INFO
                 , logFormatter = "[$time $loggername $prio] $msg"
@@ -70,28 +78,30 @@ getTranslationsConf sc rc = do
                      , currentNbOfOnlineRequest  = currentNbOfOnlineRequest
                      }
 
-run :: App T.Text
+run :: App ()
 run = do
   setLogger
   liftIO $ infoM "parsing original file"
   rawSubCtxs   <- parseOriginal
   liftIO $ infoM "spacyfy"
-  spacified    <- liftIO $ spacify rawSubCtxs
-  liftIO $ infoM "parsing spacy"
-  wordsInfos   <- parseSpacy spacified
-  liftIO $ infoM "creating richSubCtx"
-  richParsed <- createRichSubCtxs rawSubCtxs wordsInfos
-  liftIO $ infoM "translating"
-  cache        <- translate richParsed
-  liftIO $ infoM "composing"
-  composed     <- compose cache richParsed
-  save composed
-  return composed
-  where
-    save :: T.Text -> App ()
-    save content = do
-      outputFile <- asksR file
-      let path = outputFile <> ".subtitre.srt"
-      liftIO $ do
-        infoM $ show path
-        TIO.writeFile path content
+  co <- liftIO $ redisCon
+  fromLang <- asksR fromLang
+  subId <- asksR subId
+  liftIO $ spacify fromLang subId rawSubCtxs co
+  config <- ask :: App Config
+  liftIO $ runRedis co $ listenSpacified fromLang subId $ \response -> do
+    l <- runExceptT (runReaderT (runAfterSpacy (responseToText response) rawSubCtxs) config)
+    return mempty
+  return ()
+
+runAfterSpacy :: T.Text -> [RawSubCtx] -> App T.Text
+runAfterSpacy message rawSubCtxs = do
+    liftIO $ infoM "parsing spacy"
+    wordsInfos <- Spacy.Parser.parse message
+    liftIO $ infoM "creating richSubCtx"
+    richParsed <- createRichSubCtxs rawSubCtxs wordsInfos
+    liftIO $ infoM "translating"
+    cache        <- translate richParsed
+    liftIO $ infoM "composing"
+    composed     <- compose cache richParsed
+    return composed

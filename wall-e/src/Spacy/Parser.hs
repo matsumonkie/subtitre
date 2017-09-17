@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module SpacyParser (
-  parseSpacy
+module Spacy.Parser (
+  Spacy.Parser.parse
 , parseSpacySentence
 ) where
 
@@ -12,9 +12,16 @@ import Type
 import qualified Data.Text as T
 import LevelSet
 import Data.Functor
-import Text.Parsec
+import Text.Parsec as Parsec
 import Data.Either
 import Config.App
+import Spacy.Constants
+
+parse :: T.Text -> App ([Either [ParseError] [[WordInfos]]])
+parse allSubs = do
+  levelSets <- asksR levelSets
+  return $
+    parseSpacy levelSets $ unmerge allSubs
 
 {-
   Take a structured sentence and deserialize it
@@ -30,11 +37,17 @@ import Config.App
      , ("creams", "cream", Noun, Easy)
      ]
 -}
-parseSpacy :: [[T.Text]] ->
-              App ([Either [ParseError] [[WordInfos]]])
-parseSpacy sentences = do
-  levelSets <- asksR levelSets
-  return $ map (parseSpacySentence levelSets) sentences
+parseSpacy :: LevelSets -> [[T.Text]] -> [Either [ParseError] [[WordInfos]]]
+parseSpacy levelSets sentences = do
+  map (parseSpacySentence levelSets) sentences
+
+{-
+i: "hello hello NOUN\n <$> \nworld world NOUN\n <*> \nyeah yeah NOUN"
+o: [["hello hello NOUN", "world world NOUN"], ["yeah yeah NOUN"]]
+-}
+unmerge :: T.Text -> [[T.Text]]
+unmerge allSubs =
+  map (T.splitOn ("\n" <> sentenceSeparator <> "\n")) (T.splitOn ("\n" <> subSeparator <> "\n") allSubs)
 
 parseSpacySentence :: LevelSets ->
                       [T.Text] ->
@@ -49,7 +62,7 @@ parseSpacySentence levelSets sentence =
 
 parseSentenceStructure :: LevelSets -> T.Text -> Either ParseError [WordInfos]
 parseSentenceStructure levelSets =
-  parse (sentence levelSets) "game of thrones"
+  Parsec.parse (sentence levelSets) "game of thrones"
 
 sentence :: LevelSets -> Parsec T.Text () [WordInfos]
 sentence levelSets = do
