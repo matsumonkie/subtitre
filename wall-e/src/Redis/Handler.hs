@@ -23,6 +23,7 @@ import Control.Concurrent
 import Control.Monad
 import Control.Monad.Reader.Class
 import Redis.Channel
+import Redis.Connection
 
 responseToText :: Message -> T.Text
 responseToText message =
@@ -30,7 +31,7 @@ responseToText message =
 
 listenNewSubtitleRequest :: (Message -> IO ()) -> IO ()
 listenNewSubtitleRequest handler = do
-  co <- checkedConnect defaultConnectInfo
+  co <- redisCon
   runRedis co $
     pubSub (subscribe subtitleChannelsPattern) $ \msg -> do
       handler msg
