@@ -96,12 +96,12 @@ run = do
 
 runAfterSpacy :: T.Text -> [RawSubCtx] -> App T.Text
 runAfterSpacy message rawSubCtxs = do
-    liftIO $ infoM "parsing spacy"
-    wordsInfos <- Spacy.Parser.parse message
-    liftIO $ infoM "creating richSubCtx"
-    richParsed <- createRichSubCtxs rawSubCtxs wordsInfos
-    liftIO $ infoM "translating"
-    cache        <- translate richParsed
-    liftIO $ infoM "composing"
-    composed     <- compose cache richParsed
-    return composed
+  liftIO $ infoM "parsing spacy"
+  wordsInfos <- Spacy.Parser.parse message
+  liftIO $ infoM "creating richSubCtx"
+  richParsed <- createRichSubCtxs rawSubCtxs wordsInfos
+  liftIO $ infoM "translating"
+  cache        <- translate richParsed
+  liftIO $ infoM "composing"
+  composed     <- compose cache richParsed
+  return composed

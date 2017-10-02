@@ -28,7 +28,6 @@ import Spacy.Constants
 spacify :: T.Text -> T.Text -> [RawSubCtx] -> Connection -> IO ()
 spacify fromLang subId allRawSubCtx co = do
   let merged = mergeSubs allRawSubCtx
-  undefined
   liftIO $ forkIO $ do
     runRedis co $ publish (spacifyChannel (E.encodeUtf8 fromLang) (E.encodeUtf8 subId)) (E.encodeUtf8 merged)
     return ()

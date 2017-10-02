@@ -33,7 +33,7 @@ listenNewSubtitleRequest :: (Message -> IO ()) -> IO ()
 listenNewSubtitleRequest handler = do
   co <- redisCon
   runRedis co $
-    pubSub (subscribe subtitleChannelsPattern) $ \msg -> do
+    pubSub (psubscribe subtitleChannelsPattern) $ \msg -> do
       handler msg
       return mempty
 

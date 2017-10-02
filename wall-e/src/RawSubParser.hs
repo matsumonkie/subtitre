@@ -32,7 +32,9 @@ parseOriginal = do
   inputFile <- asksR file
   res <- liftIO $ parseFile inputFile
   case (res :: Either ParseError [RawSubCtx]) of
-    Left pe -> throwError [AppError pe]
+    Left pe -> do
+      liftIO $ putStrLn $ show pe
+      throwError [AppError pe]
     Right rs -> return rs
 
 parseFile :: FilePath -> IO (Either ParseError [RawSubCtx])
