@@ -5,6 +5,7 @@ module Redis.Handler (
   listenNewSubtitleRequest
 , listenSpacified
 , responseToText
+, publishResult
 ) where
 
 import Common
@@ -24,6 +25,7 @@ import Control.Monad
 import Control.Monad.Reader.Class
 import Redis.Channel
 import Redis.Connection
+import Data.Text.Encoding
 
 responseToText :: Message -> T.Text
 responseToText message =
@@ -41,3 +43,10 @@ listenSpacified :: T.Text -> T.Text -> (Message -> IO PubSub) -> Redis ()
 listenSpacified lang id = do
   let channel = spacifiedChannel (encodeUtf8 lang) (encodeUtf8 id)
   pubSub (subscribe [channel])
+
+publishResult :: T.Text -> T.Text -> IO ()
+publishResult subId subtitles = do
+  co <- redisCon
+  runRedis co $ do
+    publish (encodeUtf8 $ "subtitled:" <> subId) (encodeUtf8 subtitles)
+    return ()

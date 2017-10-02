@@ -94,7 +94,7 @@ run = do
     return mempty
   return ()
 
-runAfterSpacy :: T.Text -> [RawSubCtx] -> App T.Text
+runAfterSpacy :: T.Text -> [RawSubCtx] -> App ()
 runAfterSpacy message rawSubCtxs = do
   liftIO $ infoM "parsing spacy"
   wordsInfos <- Spacy.Parser.parse message
@@ -104,4 +104,7 @@ runAfterSpacy message rawSubCtxs = do
   cache        <- translate richParsed
   liftIO $ infoM "composing"
   composed     <- compose cache richParsed
-  return composed
+  liftIO $ infoM "sending result back"
+  subId <- asksR subId
+  liftIO $ publishResult subId composed
+  return ()
