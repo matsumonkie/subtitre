@@ -82,6 +82,10 @@ $salmon:      #FFA985;
   }
 }
 
+.hidden {
+  display: none;
+}
+
 #footer {
   @include background($main-orange);
 }

@@ -1,9 +1,8 @@
 class Subtitre
-  include ActiveModel::Model
 
-  attr_accessor :file, :original_filename
+  attr_accessor :filename, :content
 
-  def content
-    file.read
+  def initialize subtitle
+    @filename = "subtitre_#{subtitle.filename}"
   end
 end

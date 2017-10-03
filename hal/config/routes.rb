@@ -3,5 +3,7 @@ Rails.application.routes.draw do
 
   root to: "subtitre#index"
   get '/about', to: 'home#about'
-  resources :subtitre, only: [:index, :create, :render]
+
+  resources :subtitre, only: [:index, :create] do
+  end
 end

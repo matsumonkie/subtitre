@@ -5,7 +5,7 @@ en:
     easy: Easy
     normal: Normal
     hard: Hard
-  translate_to:
+  lang:
     ar: Arab
     cz: Czech
     en: English
@@ -21,5 +21,6 @@ en:
     tr: Turkish
     zh: Chinese
   sentence:
-    select_language: Translate to
+    select_orig_language: Translate from
+    select_dest_language: to
     select_subtitle_file: Upload a Subtitle File

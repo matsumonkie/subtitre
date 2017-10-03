@@ -7,25 +7,13 @@
     <div class="container">
       <%= image_tag("mr_robot.png", class: 'thumbnails' ) %>
     </div>
-    <div class="container">
-      <%= image_tag("mr_robot.png", class: 'thumbnails' ) %>
-    </div>
-    <div class="container">
-      <%= image_tag("mr_robot.png", class: 'thumbnails' ) %>
-    </div>
   </div>
 </div>
 
 <div class="form-upload is-small">
-  <%= form_for @subtitle, url: subtitre_index_path, html: { class: "" } do |f| %>
-    <div style="display:none">
-      <%- Subtitle.level.options.each do |label, key| %>
-        <%= f.radio_button(:level, key) %>
-        <%- active = (@subtitle.level == key) ? "is-active is-warning" : "" %>
-        <%= f.label("level_#{key}", "#{label}", class: "label-level-selection button is-medium #{active}", id: "label-level-#{key}") %>
-      <% end %>
-    </div>
-
+  <%= form_for(@subtitle,
+               url: subtitre_index_path,
+               html: { id: "new_subtitle", class: "" }) do |f| %>
     <br/>
     <br/>
 
@@ -35,7 +23,17 @@
           <i class="fa fa-language"></i>
         </span>
         <span>
-          <%= I18n.t 'sentence.select_language' %> :
+          <%= I18n.t 'sentence.select_orig_language' %> :
+        </span>
+      </p>
+      <p id="dropdown-language" class="control has-icons-left">
+        <span class="select is-medium">
+          <%= f.select(:translate_from, Subtitle.translate_from.options) %>
+        </span>
+      </p>
+      <p class="control button is-static is-medium">
+        <span>
+          <%= I18n.t 'sentence.select_dest_language' %> :
         </span>
       </p>
       <p id="dropdown-language" class="control has-icons-left">
@@ -52,6 +50,13 @@
       <span class="icon"><i class="fa fa-file-text-o"></i></span>
       <span><%= I18n.t 'sentence.select_subtitle_file' %></span>
     </a>
-    <%= f.file_field :file, class: "button is-large" %>
+    <%= f.file_field(:file,
+                     id: "file_input",
+                     class: "hidden") %>
+
+    <%= f.submit(:submit,
+                 id: 'submit',
+                 class: "hidden",
+                 data: { disable_with: false }) %>
   <% end %>
 </div>
