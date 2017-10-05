@@ -1,17 +1,8 @@
-development:
-  database:
-  workingDir:
-  outputFileName:
-  pgPool:
-  yandexApiKey:
-  yandexApiUrl:
-  wordReferenceApiKeys:
-  wordReferenceApiUrlPrefix:
-  wordReferenceApiUrlSuffix:
-  wordReferencePool:
-
-staging:
-
-test:
-
 production:
+  database: subtitre_production
+  yandexApiKey: a
+  yandexApiUrl: b
+  wordReferenceApiKeys: [pass1, pass2]
+  wordReferenceApiUrlPrefix: http://api.wordreference.com/
+  wordReferenceApiUrlSuffix: /json/
+  wordReferencePool: 5
