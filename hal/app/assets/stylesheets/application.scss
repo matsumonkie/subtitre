@@ -36,6 +36,10 @@ $salmon:      #FFA985;
   text-align: center;
 }
 
+.question {
+  font-size: 2em;
+}
+
 #header {
   @include background($main-orange);
 
