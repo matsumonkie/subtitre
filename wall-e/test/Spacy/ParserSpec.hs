@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module SpacyParserSpec (main, spec) where
+module Spacy.ParserSpec (main, spec) where
 
 import Text.Parsec
 import Test.Hspec
@@ -11,7 +11,7 @@ import Data.Either
 import RawSubParser
 import Control.Monad.Trans.Except
 import Control.Monad.Trans.Reader
-import SpacyParser
+import Spacy.Parser
 import RichSubCtx
 import LevelSet
 import qualified  Data.HashSet as HS
