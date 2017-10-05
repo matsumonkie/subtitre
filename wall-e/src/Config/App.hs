@@ -69,9 +69,6 @@ type TP a = ReaderT Config IO a
 
 data StaticConf =
   StaticConf { database :: T.Text
-             , workingDir :: FilePath
-             , outputFileName :: T.Text
-             , pgPool :: Int
              -- yandex
              , yandexApiKey :: T.Text
              , yandexApiUrl :: T.Text
@@ -84,11 +81,8 @@ data StaticConf =
 
 instance FromJSON StaticConf where
   parseJSON (Y.Object v) = do
-    config <- v .: "development"
+    config <- v .: "production"
     database <- config .: "database"
-    workingDir <- config .: "workingDir"
-    outputFileName <- config .: "outputFileName"
-    pgPool <- config .: "pgPool"
     yandexApiKey <- config .: "yandexApiKey"
     yandexApiUrl <- config .: "yandexApiUrl"
     wordReferenceApiUrlPrefix <- config .: "wordReferenceApiUrlPrefix"
