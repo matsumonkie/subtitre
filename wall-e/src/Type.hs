@@ -50,7 +50,7 @@ type MSecond = Int
 
 data TimingCtx = TimingCtx Timing Timing deriving (Show, Eq)
 data Timing = Timing Hour Minute Second MSecond deriving (Show, Eq)
-data SubCtx a = SubCtx Sequence TimingCtx a deriving (Show, Eq)
+data SubCtx a = SubCtx (Maybe Sequence) TimingCtx a deriving (Show, Eq)
 type RawSubCtx  = SubCtx [Sentence]
 type RichSubCtx = SubCtx [(Sentence, [WordInfos])]
 

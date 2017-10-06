@@ -24,6 +24,7 @@ import GHC.IO.Exception
 import Control.Monad.Except
 import Config.App
 import qualified Text.HTML.TagSoup as TS
+import Control.Monad
 import Data.List
 
 
@@ -67,16 +68,25 @@ subtitles = do
 
 subtitleCtxP :: Parsec T.Text () RawSubCtx
 subtitleCtxP = do
+  optional $ (char '-' >> many (noneOf "\n")) `sepEndBy` endOfLine
+  skipMany endOfLine
   sequence <- sequenceP
-  endOfLine
+  optional endOfLine
   timingCtx <- timingCtxP
   endOfLine
   lines <- sentenceWithoutTagsP `sepEndBy` endOfLine
   return $ SubCtx sequence timingCtx lines
 
-sequenceP :: Parsec T.Text () Sequence
-sequenceP =
-  read <$> many1 digit <?> "RawSubParser sequence"
+alwaysMinus1 :: Parsec T.Text () String
+alwaysMinus1 = return "-1"
+
+sequenceP :: Parsec T.Text () (Maybe Sequence)
+sequenceP = do
+  let seq = many1 digit <* (notFollowedBy $ char ':') :: Parsec T.Text () String
+  a <- try seq <|> alwaysMinus1 :: Parsec T.Text () String
+  return $ case a of
+    "-1" -> Nothing
+    _ -> Just $ read a
 
 sentenceWithoutTagsP :: Parsec T.Text () T.Text
 sentenceWithoutTagsP = do
