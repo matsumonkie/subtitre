@@ -11,86 +11,8 @@
  * It is generally better to create a new file per style scope.
  *
  *= require font-awesome
- *= require bootstrap
- *= require_tree .
+ *= require_tree ./vendor/bootstrap
+ *= require creative
+ *= require_tree ./application
  *= require_self
  */
-
-@import "bulma";
-
-$main-orange: #FF601D;
-$dark-brown:  #742300;
-$brown:       #9D3C13;
-$light-brown: #DA794F;
-$salmon:      #FFA985;
-
-@mixin background($color) {
-  background-color: $color;
-}
-
-.main-title {
-  color: $dark-brown;
-  font-size: 2em;
-}
-
-#dropdown-language {
-  text-align: center;
-}
-
-.question {
-  font-size: 2em;
-}
-
-#header {
-  @include background($main-orange);
-
-  .navbar {
-    @include background($salmon);
-  }
-
-  #logo {
-    margin-left: 40px;
-    font-size: 1.6em;
-  }
-}
-
-#body {
-  @include background($main-orange);
-
-  .demo-screenshots {
-    margin-bottom: 20px;
-  }
-
-  .form-upload {
-    /* dont show ugly radio button */
-    #subtitle_level_easy   { display: none; }
-    #subtitle_level_normal { display: none; }
-    #subtitle_level_hard   { display: none; }
-
-    #label_level_easy   {}
-    #label_level_normal {}
-    #label_level_hard   {}
-  }
-
-  .thumbnails {
-    height: 300px;
-    border-radius: 1%;
-    margin: auto;
-  }
-
-  #subtitle_file {
-    display: none;
-  }
-
-  #fake-upload-button {
-    margin-top: 20px;
-  }
-}
-
-.hidden {
-  display: none;
-}
-
-#footer {
-  @include background($main-orange);
-}

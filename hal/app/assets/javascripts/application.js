@@ -13,4 +13,9 @@
 //= require rails-ujs
 //= require turbolinks
 //= require jquery
+//= require ./vendor/popper
+//= require ./vendor/jquery.easing
+//= require ./vendor/scrollreveal
+//= require ./vendor/bootstrap
+//= require ./vendor/creative
 //= require_tree ./application
