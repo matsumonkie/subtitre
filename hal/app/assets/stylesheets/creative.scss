@@ -144,11 +144,14 @@ body {
 header.masthead {
   position: relative;
   width: 100%;
-  min-height: auto;
+  height: 500px;
+  min-height: 600px;
   text-align: center;
   color: white;
   background-image: image-url("header.jpg");
   background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -174,7 +177,7 @@ header.masthead {
   @media (min-width: 768px) {
     header.masthead {
       height: 100%;
-      min-height: 600px; }
+      min-height: 700px; }
       header.masthead .header-content {
         position: absolute;
         top: 50%;
