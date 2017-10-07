@@ -1,5 +1,12 @@
 $(document).on('turbolinks:load', function() {
 
+  // form submission
+  $("#file_input").change(function () {
+    console.log("test")
+    $(".loading-icon").removeClass('invisible');
+    $("#submit").click();
+  })
+
   // check for form answer
   function resetForm() {
     var subtitreDownloaded = function() {
@@ -9,16 +16,11 @@ $(document).on('turbolinks:load', function() {
       document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     }
     if (subtitreDownloaded() === "true") {
-      $("#fake-upload-button").removeClass('is-loading');
+      $(".loading-icon").addClass('invisible');
       $("#file_input").val('');
       delete_cookie("subtitre_downloaded");
     }
   }
   setInterval(resetForm, 500);
 
-  // submit form
-  $("#file_input").change(function () {
-    $("#fake-upload-button").addClass('is-loading');
-    $("#submit").click();
-  })
 });
