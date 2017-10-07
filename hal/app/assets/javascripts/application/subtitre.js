@@ -18,6 +18,7 @@ $(document).on('turbolinks:load', function() {
     if (subtitreDownloaded() === "true") {
       $(".loading-icon").addClass('invisible');
       $("#file_input").val('');
+      $('#close-modal-btn').click();
       delete_cookie("subtitre_downloaded");
     }
   }
