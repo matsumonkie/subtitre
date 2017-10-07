@@ -1,10 +1,5 @@
 $(document).on('turbolinks:load', function() {
 
-  // select file modal
-  $("#fake-upload-button").mouseup(function () {
-    $('#file_input').click()
-  })
-
   // check for form answer
   function resetForm() {
     var subtitreDownloaded = function() {
