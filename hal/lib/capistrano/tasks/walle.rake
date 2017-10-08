@@ -3,7 +3,7 @@ namespace :walle do
   WDIR = "wall-e"
 
   desc 'restart'
-  task :restart do
+  task :restart_stack do
     Rake::Task["walle:kill" ].invoke
     Rake::Task["walle:build"].invoke
     Rake::Task["walle:start"].invoke
@@ -34,14 +34,6 @@ namespace :walle do
   task :start do
     on roles(:app) do
       execute "cd #{deploy_to}/#{WDIR}; nohup stack exec ./.stack-work/install/x86_64-linux-nopie/lts-8.5/8.0.2/bin/subtitre-exe > /dev/null & sleep 5"
-    end
-  end
-
-  desc 'restart spacy instance'
-  task :restart_spacy do
-    on roles(:app) do
-      execute :pkill, "python", ";true" #always exit successfully
-      execute "python /home/deploy/subtitre/wall-e/spacy &  > /dev/null & sleep 25"
     end
   end
 end
