@@ -4,9 +4,9 @@ namespace :walle do
 
   desc 'restart'
   task :restart do
-    Rake::Task["wall-e:build"].invoke
-    Rake::Task["wall-e:kill" ].invoke
-    Rake::Task["wall-e:start"].invoke
+    Rake::Task["walle:build"].invoke
+    Rake::Task["walle:kill" ].invoke
+    Rake::Task["walle:start"].invoke
   end
 
   desc 'update & build wall-e'
