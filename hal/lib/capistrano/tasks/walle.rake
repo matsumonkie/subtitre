@@ -36,4 +36,12 @@ namespace :walle do
       execute "cd #{deploy_to}/#{WDIR}; nohup stack exec ./.stack-work/install/x86_64-linux-nopie/lts-8.5/8.0.2/bin/subtitre-exe > /dev/null & sleep 5"
     end
   end
+
+  desc 'restart spacy instance'
+  task :restart_spacy do
+    on roles(:app) do
+      execute :pkill, "python", ";true" #always exit successfully
+      execute "python /home/deploy/subtitre/wall-e/spacy &  > /dev/null & sleep 25"
+    end
+  end
 end

@@ -15,7 +15,7 @@ HOST = 'localhost'
 PORT = 6379
 DB = 0
 
-nlp = { 'en': spacy.load('en')
+nlp = { 'en': spacy.load('en'),
         'fr': spacy.load('fr') }
 
 for key in nlp:
