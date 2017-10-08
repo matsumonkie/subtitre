@@ -15,8 +15,8 @@ HOST = 'localhost'
 PORT = 6379
 DB = 0
 
-nlp = { 'en': spacy.load('en') }
-#        'fr': spacy.load('fr') }
+nlp = { 'en': spacy.load('en')
+        'fr': spacy.load('fr') }
 
 for key in nlp:
   nlp[key].tokenizer.add_special_case(u'<*>', [{ ORTH: u'<*>', LEMMA: u'<*>', POS: u'VERB' }])
