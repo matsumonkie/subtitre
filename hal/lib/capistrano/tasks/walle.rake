@@ -4,8 +4,8 @@ namespace :walle do
 
   desc 'restart'
   task :restart do
-    Rake::Task["walle:build"].invoke
     Rake::Task["walle:kill" ].invoke
+    Rake::Task["walle:build"].invoke
     Rake::Task["walle:start"].invoke
   end
 
@@ -33,11 +33,7 @@ namespace :walle do
   desc 'start wall-e instance'
   task :start do
     on roles(:app) do
-      within "#{deploy_to}/#{WDIR}" do
-        within WDIR do
-          execute :stack, :exec, 'subtitre-exe', '&'
-        end
-      end
+      execute "cd #{deploy_to}/#{WDIR}; nohup stack exec ./.stack-work/install/x86_64-linux-nopie/lts-8.5/8.0.2/bin/subtitre-exe > /dev/null & sleep 5"
     end
   end
 end
