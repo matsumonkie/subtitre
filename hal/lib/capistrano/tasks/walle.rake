@@ -25,7 +25,9 @@ namespace :walle do
 
   desc 'kill former wall-e instance if it exists'
   task :kill do
-    execute :pkill, "subtitre-exe"
+    on roles(:app) do
+      execute :pkill, "subtitre-exe"
+    end
   end
 
   desc 'start wall-e instance'
