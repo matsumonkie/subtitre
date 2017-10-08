@@ -2,8 +2,15 @@ namespace :walle do
 
   WDIR = "wall-e"
 
+  desc 'restart'
+  task :restart do
+    Rake::Task["wall-e:build"].invoke
+    Rake::Task["wall-e:kill" ].invoke
+    Rake::Task["wall-e:start"].invoke
+  end
+
   desc 'update & build wall-e'
-  task :ubuild do
+  task :build do
     on roles(:app) do
       within "#{deploy_to}" do
         within "./repo" do
@@ -11,6 +18,22 @@ namespace :walle do
         end
         within WDIR do
           execute :stack, :build
+        end
+      end
+    end
+  end
+
+  desc 'kill former wall-e instance if it exists'
+  task :kill do
+    execute :pkill, "subtitre-exe"
+  end
+
+  desc 'start wall-e instance'
+  task :start do
+    on roles(:app) do
+      within "#{deploy_to}/#{WDIR}" do
+        within WDIR do
+          execute :stack, :exec, 'subtitre-exe', '&'
         end
       end
     end

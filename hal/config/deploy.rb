@@ -51,7 +51,7 @@ set :puma_preload_app, false
 set :puma_daemonize, true
 set :puma_tag, fetch(:application)
 
-after :deploy, "walle:ubuild"
+after :deploy, "walle:restart"
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
