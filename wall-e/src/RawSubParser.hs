@@ -62,7 +62,8 @@ parseSubtitles = Parsec.parse subtitles "game of thrones"
 subtitles :: Parsec T.Text () [RawSubCtx]
 subtitles = do
   optional bom
-  subtitles <- subtitleCtxP `sepBy` (many1 endOfLine)
+  subtitles <- subtitleCtxP `sepEndBy` (many1 endOfLine)
+--  skipMany endOfLine
   eof
   return subtitles
 

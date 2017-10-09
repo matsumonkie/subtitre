@@ -23,6 +23,9 @@ spec :: Spec
 spec = do
   describe "RawSubParserSpec" $ do
     describe "parse" $ do
+      context "real subtitles" $ do
+        it "parses real subtitles" $ do
+          parseSucceed amelie
       context "short sample" $ do
         it "end with newline" $ do
           parseSubtitles (arg <> "\n") `shouldBe` Right [res (Just 1) ["(Hello)"]]
@@ -56,6 +59,7 @@ spec = do
         it "parses weird characters" $ do
           parseSucceed friends
 
+amelie = "amelie.srt"
 sherlock = "sherlock.srt"
 mrRobot = "mr. robot.srt"
 friends = "friends.srt"
