@@ -69,6 +69,7 @@ type TP a = ReaderT Config IO a
 
 data StaticConf =
   StaticConf { database :: T.Text
+             , logFile :: String
              -- yandex
              , yandexApiKey :: T.Text
              , yandexApiUrl :: T.Text
@@ -83,6 +84,7 @@ instance FromJSON StaticConf where
   parseJSON (Y.Object v) = do
     config <- v .: "production"
     database <- config .: "database"
+    logFile <- config .: "logFile"
     yandexApiKey <- config .: "yandexApiKey"
     yandexApiUrl <- config .: "yandexApiUrl"
     wordReferenceApiUrlPrefix <- config .: "wordReferenceApiUrlPrefix"

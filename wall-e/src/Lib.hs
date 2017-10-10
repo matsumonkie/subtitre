@@ -49,9 +49,12 @@ setLogger :: App ()
 setLogger = do
   logLevel <- asksR logLevel
   logFormatter <- asksR logFormatter
+  logFile <- asksS logFile
+  myFileHandler <- liftIO $ fileHandler logFile logLevel
   myStreamHandler <- liftIO $ streamHandler stdout logLevel
   let myStreamHandler' = setFormatter myStreamHandler $ simpleLogFormatter logFormatter
-  liftIO $ updateGlobalLogger rootLoggerName $ setLevel logLevel . setHandlers [myStreamHandler']
+  let myFileHandler' = setFormatter myFileHandler $ simpleLogFormatter logFormatter
+  liftIO $ updateGlobalLogger rootLoggerName $ setLevel logLevel . setHandlers [myFileHandler', myStreamHandler']
 
 getRuntimeConf :: FilePath -> T.Text -> T.Text -> Level -> T.Text -> IO RuntimeConf
 getRuntimeConf file fromLang toLang level subId = do
