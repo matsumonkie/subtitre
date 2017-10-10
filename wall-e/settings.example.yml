@@ -1,5 +1,6 @@
 production:
   database: subtitre_production
+  logFile: wall-e.log
   yandexApiKey: a
   yandexApiUrl: b
   wordReferenceApiKeys: [pass1, pass2]

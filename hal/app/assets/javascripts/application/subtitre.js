@@ -2,10 +2,49 @@ $(document).on('turbolinks:load', function() {
 
   // form submission
   $("#file_input").change(function () {
-    console.log("test")
     $(".loading-icon").removeClass('invisible');
     $("#submit").click();
   })
+
+  // form language constraints
+  var selectFrom = "#subtitle_translate_from";
+  var selectTo = "#subtitle_translate_to";
+
+  $(selectFrom).change(function() {
+    adaptDestinationLanguages();
+  });
+  adaptDestinationLanguages();
+
+  function adaptDestinationLanguages () {
+    function createOption(lang, humanLang) {
+      return $('<option></option>').attr("value", lang).text(humanLang);
+    }
+
+    if ($(selectFrom).val() == "en") {
+      var allLang = {
+        "ar": "Arabic",
+        "cz": "Czech",
+        "en": "English",
+        "es": "Spanish",
+        "fr": "French",
+        "gr": "Greek",
+        "it": "Italian",
+        "ja": "Japanese",
+        "ko": "Korean",
+        "po": "Polish",
+        "pt": "Portuguese",
+        "ro": "Romanian",
+        "tr": "Turkish",
+        "zh": "Chinese",
+      };
+      $(selectTo).empty();
+      $.each(allLang, function(key, value) {
+        $(selectTo).append(createOption(key, value));
+      });
+    } else {
+      $(selectTo).empty().append(createOption("en", "English"));
+    }
+  }
 
   // check for form answer
   function resetForm() {

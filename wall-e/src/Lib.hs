@@ -84,11 +84,12 @@ getTranslationsConf sc rc = do
 run :: App ()
 run = do
   setLogger
-  liftIO $ infoM "parsing original file"
+  fromLang <- asksR fromLang
+  toLang <- asksR toLang
+  liftIO $ infoM $ "parsing original file from " <> T.unpack fromLang <> " to " <> T.unpack toLang
   rawSubCtxs   <- parseOriginal
   liftIO $ infoM "spacyfy"
   co <- liftIO $ redisCon
-  fromLang <- asksR fromLang
   subId <- asksR subId
   liftIO $ spacify fromLang subId rawSubCtxs co
   config <- ask :: App Config
@@ -108,6 +109,7 @@ runAfterSpacy message rawSubCtxs = do
   liftIO $ infoM "composing"
   composed     <- compose cache richParsed
   liftIO $ infoM "sending result back"
+  liftIO $ removeAllHandlers
   subId <- asksR subId
   liftIO $ publishResult subId composed
   return ()
