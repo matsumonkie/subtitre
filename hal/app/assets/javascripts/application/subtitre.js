@@ -6,6 +6,25 @@ $(document).on('turbolinks:load', function() {
     $("#submit").click();
   })
 
+
+  // level explanation
+  function changeLevelText () {
+    var level = $('input[name="subtitle[level]"]:checked').val();
+    if (level == "easy") {
+      var levelHelp = "Most words will be translated"
+    } else if (level == "normal") {
+      var levelHelp = "Easy words won't be translated"
+    } else {
+      var levelHelp = "Only words considered to be hard will be translated"
+    }
+
+    $("#level-explanation").text(levelHelp);
+  }
+  $('input[name="subtitle[level]"]').change(function() {
+    changeLevelText();
+  })
+  changeLevelText();
+
   // form language constraints
   var selectFrom = "#subtitle_translate_from";
   var selectTo = "#subtitle_translate_to";

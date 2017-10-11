@@ -5,6 +5,6 @@ class HomeController < ApplicationController
                   description: 'Translate your movie\'s subtitles. Translations are available from english and french to many languages.'
     @subtitle = Subtitle.new(translate_from: cookies[:prefered_orig_language],
                              translate_to:   cookies[:prefered_dest_language],
-                             level:          cookies[:prefered_level])
+                             level:          cookies[:prefered_level] || Subtitle.new.level)
   end
 end

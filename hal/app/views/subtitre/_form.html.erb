@@ -24,7 +24,26 @@
 
     <hr class="primary">
 
-    <div class="form-group">
+    <p class="bold text-center">
+      <b>Translation Level</b>
+    </p>
+
+    <div class="form-group text-center">
+      <% Subtitle.level.options.each do |key, label| %>
+        <div class="form-check form-check-inline">
+          <label class="form-check-label">
+            <%= f.radio_button(:level, label) %> <%= label.capitalize %>
+          </label>
+        </div>
+      <% end %>
+
+    <p id="level-explanation" class="text-center">
+      Only words considered to be hard will be translated
+    </p>
+
+    <hr class="primary">
+
+    <div class="form-group text-center">
       <label for="exampleFormControlFile1">Upload a Subtitle File</label>
       <%= f.file_field(:file,
                        id: "file_input",

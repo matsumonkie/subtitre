@@ -18,8 +18,8 @@ main = do
   listenNewSubtitleRequest $ \newRequest -> do
     forkIO $ do
       let filePath = T.unpack $ responseToText newRequest
-      let (fromLang, toLang, subId) = channelInfos newRequest
-      runtimeConf <- getRuntimeConf filePath fromLang toLang Hard subId
+      let (fromLang, toLang, level, subId) = channelInfos newRequest
+      runtimeConf <- getRuntimeConf filePath fromLang toLang (read $ T.unpack level) subId
       translationsConf <- getTranslationsConf staticConf runtimeConf
       let config = Config runtimeConf staticConf translationsConf
       subtitle <- runExceptT (runReaderT run config)

@@ -44,7 +44,8 @@ channel :: BS.ByteString -> BS.ByteString -> BS.ByteString -> BS.ByteString
 channel key lang id =
   key <> ":" <> lang <> ":" <> id
 
-channelInfos :: Message -> (T.Text, T.Text, T.Text)
+channelInfos :: Message -> (T.Text, T.Text, T.Text, T.Text)
 channelInfos msg =
-  let (channel:fromLang:toLang:id:xs) = T.splitOn ":" $ decodeUtf8 $ msgChannel msg
-  in (fromLang, toLang, id)
+  let (channel:fromLang:toLang:level:id:xs) =
+        T.splitOn ":" $ decodeUtf8 $ msgChannel msg
+  in (fromLang, toLang, level, id)

@@ -37,7 +37,8 @@ class Subtitle
     [ "subtitle",
       translate_from,
       translate_to,
-      id
+      level,
+      id,
     ].join(":")
   end
 
