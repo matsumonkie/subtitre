@@ -29,29 +29,11 @@ import Data.Maybe
 import Control.Concurrent.Thread.Delay
 import Control.Concurrent
 import Redis.Channel
-import Redis.PubSub
 import Redis.Connection
 import qualified Data.ByteString as BS
-import Database.Redis
 
-listenSpacified :: BS.ByteString -> BS.ByteString -> (Message -> IO PubSub) -> Redis ()
-listenSpacified lang id = do
-  let channel = spacifiedChannel lang id
-  pubSub (subscribe [channel])
 
 main :: IO ()
 main = do
-  e <- runExceptT (runReaderT run undefined)
-  return ()
-
-run :: App T.Text
-run = do
-  config <- ask
-  co <- liftIO $ redisConnection
-  liftIO $ runRedis co $ listenSpacified "en" "1" $ \msg -> do
-    l <- runExceptT (runReaderT (run2 msg) config)
-    return mempty
-  undefined
-
-run2 :: Message -> App T.Text
-run2 response = undefined
+  putStrLn $ show $
+    Common.foldl (\acc x -> acc + (T.length x)) 0 (["test"] :: [T.Text])

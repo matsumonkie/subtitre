@@ -28,13 +28,13 @@ spec :: Spec
 spec = do
   describe "composeSentence" $ do
     it "without any sentences" $ do
-      composeSentence' Easy [a] `shouldReturn` "<u>world</u> (<i>monde</i>)"
+      composeSentence' Easy [a] `shouldReturn` "<u>world</u> (<i>monde, règne</i>)"
     it "level to show is higher" $ do
       composeSentence' Hard [a] `shouldReturn` "world"
     it "shows punctuation correctly" $ do
-      composeSentence' Easy [b] `shouldReturn` "Hello <u>world</u> (<i>monde</i>) !"
+      composeSentence' Easy [b] `shouldReturn` "Hello <u>world</u> (<i>monde, règne</i>) !"
     it "works with accent too" $ do
-      composeSentence' Normal [c] `shouldReturn` "Dark Army told me <u>stage</u> (<i>sc\232ne</i>) two is ready."
+      composeSentence' Normal [c] `shouldReturn` "Dark Army told me <u>stage</u> (<i>sc\232ne, étape, la scène</i>) two is ready."
 
 composeSentence' :: Level -> [(Sentence, [WordInfos])] -> IO T.Text
 composeSentence' level wis = do

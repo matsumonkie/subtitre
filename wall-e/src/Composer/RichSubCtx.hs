@@ -68,29 +68,50 @@ composeTimingCtx (TimingCtx btiming etiming) =
 translateSentence :: Cache -> Level -> TextSet -> (Sentence, [WordInfos]) -> Sentence
 translateSentence cache levelToShow dontTranslate (sentence, sentenceInfos) = do
   let keysToWis = map toKeyable sentenceInfos :: [(Word, WordInfos)]
-  let unformatedSentence = map (renderWord cache levelToShow dontTranslate) keysToWis
+  let unformatedSentence = map (renderWord cache levelToShow dontTranslate sentence) keysToWis
   T.intercalate " " $
     setCorrectSpacing (T.words sentence) unformatedSentence []
 
-renderWord :: Cache -> Level -> TextSet -> (Word, WordInfos) -> Word
-renderWord cache levelToShow dontTranslate (key, wi@(word, lemma, tag, level)) =
+renderWord :: Cache -> Level -> TextSet -> Sentence -> (Word, WordInfos) -> Word
+renderWord cache levelToShow dontTranslate sentence (key, wi@(word, lemma, tag, level)) =
   if shouldBeTranslated levelToShow dontTranslate wi then
     let (_, _, trs) = toTranslations cache (key, wi)
-        tr = trs ^? element 0
     in
-      maybe word (format word) tr
+      formatTranslation word trs sentence
   else
     word
+
+formatTranslation :: Word -> [Word] -> Sentence -> Word
+formatTranslation word translations sentence =
+  let firstTranslations = map head $ map (T.splitOn ", ") translations
+      validTranslations = filter (notSame word) firstTranslations
+      trs = notTooManyTranslations [] validTranslations
+  in
+    prettyTranslation word trs
   where
-    format :: Word -> Word -> Word
-    format word translation =
-      if word /= translation then
-        case (T.splitOn ", " translation) of
-          (firstTranslation : otherTranslations) ->
-            "<u>" <> word <> "</u>" <> " (<i>" <> firstTranslation <> "</i>)"
-          _ -> word
-      else
-        word
+    notSame word1 word2 =
+      T.toLower word1 /= T.toLower word2
+    notTooManyTranslations :: [T.Text] -> [T.Text] -> [T.Text]
+    notTooManyTranslations valids [] = valids
+    notTooManyTranslations valids (word:words) =
+      let
+        curSize =
+            foldl (\acc x -> acc + (T.length x)) 0 valids
+      in
+        if curSize > 16 then
+          valids
+        else
+          if word `elem` valids then
+            notTooManyTranslations (valids) words
+          else
+            notTooManyTranslations (valids ++ [word]) words
+
+
+prettyTranslation :: Word -> [Word] -> Word
+prettyTranslation word translations =
+  case translations of
+    [] -> word
+    _ -> "<u>" <> word <> "</u>" <> " (<i>" <> T.intercalate ", " translations <> "</i>)"
 
 toTranslations :: Cache -> (Word, WordInfos) -> Translations
 toTranslations cache (key, wi@(word, lemma, tag, level)) =
