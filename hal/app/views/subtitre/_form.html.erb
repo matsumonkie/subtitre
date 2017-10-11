@@ -37,28 +37,34 @@
         </div>
       <% end %>
 
-    <p id="level-explanation" class="text-center">
-      Only words considered to be hard will be translated
-    </p>
-
-    <hr class="primary">
-
-    <div class="form-group text-center">
-      <label for="exampleFormControlFile1">Upload a Subtitle File</label>
-      <%= f.file_field(:file,
-                       id: "file_input",
-                       class: "form-control-file") %>
-      <i class="loading-icon fa fa-spinner fa-pulse fa-3x fa-fw invisible"></i>
-      <p class="loading-icon invisible text-center">
-        Translating a subtitle can take up to 20 seconds
+      <p id="level-explanation" class="text-center">
       </p>
 
-    </div>
-  </div>
+      <hr class="primary">
 
-  <%= f.submit(:submit,
-               id: 'submit',
-               class: "invisible",
-               data: { disable_with: false }) %>
+      <div class="form-group text-center">
+        <p for="exampleFormControlFile1">
+          <b>Subtitle File</b>
+        </p>
+
+        <label class="custom-file">
+          <%= f.file_field(:file,
+                           id: "file_input",
+                           class: "custom-file-input") %>
+          <span class="custom-file-control"></span>
+        </label>
+
+        <i class="loading-icon fa fa-spinner fa-pulse fa-3x fa-fw invisible"></i>
+        <p class="loading-icon invisible text-center">
+          Translating a subtitle can take up to 20 seconds
+        </p>
+
+      </div>
+    </div>
+
+    <%= f.submit(:submit,
+                 id: 'submit',
+                 class: "invisible",
+                 data: { disable_with: false }) %>
 
 <% end %>
